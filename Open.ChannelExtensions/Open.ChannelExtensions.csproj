@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Authors>electricessence</Authors>
+    <Description>A set of extensions for optimizing/simplifying System.Threading.Channels usage.
+
+Part of the "Open" set of libraries.</Description>
+    <PackageProjectUrl>https://github.com/electricessence/Open.ChannelExtensions</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/electricessence/Open.ChannelExtensions/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>https://github.com/electricessence/Open.ChannelExtensions/blob/master/LICENSE</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>channels dotnet threading tasks extensions</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
+  </ItemGroup>
+
+</Project>
