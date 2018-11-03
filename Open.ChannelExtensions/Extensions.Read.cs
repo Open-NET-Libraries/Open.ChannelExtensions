@@ -11,16 +11,15 @@ namespace Open.ChannelExtensions
 		/// Reads items from the channel and passes them to the reciever.
 		/// </summary>
 		/// <typeparam name="T">The item type.</typeparam>
-		/// <param name="channel">The channel to read from.</param>
+		/// <param name="reader">The channel reader to read from.</param>
 		/// <param name="reciever">The reciever function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static async Task Read<T>(this Channel<T> channel,
+		public static async Task ReadAll<T>(this ChannelReader<T> reader,
 			Action<T, int> reciever,
 			CancellationToken cancellationToken = default)
 		{
 			var localCount = 0;
-			var reader = channel.Reader;
 			do
 			{
 				while (
@@ -36,7 +35,6 @@ namespace Open.ChannelExtensions
 					.ConfigureAwait(false));
 		}
 
-
 		/// <summary>
 		/// Reads items from the channel and passes them to the reciever.
 		/// </summary>
@@ -45,11 +43,23 @@ namespace Open.ChannelExtensions
 		/// <param name="reciever">The reciever function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static async Task Read<T>(this Channel<T> channel,
+		public static Task Read<T>(this Channel<T> channel,
+			Action<T, int> reciever,
+			CancellationToken cancellationToken = default)
+			=> channel.Reader.ReadAll(reciever, cancellationToken);
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the reciever.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="reader">The channel reader to read from.</param>
+		/// <param name="reciever">The reciever function.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>A task that completes when no more reading is to be done.</returns>
+		public static async Task ReadAll<T>(this ChannelReader<T> reader,
 			Action<T> reciever,
 			CancellationToken cancellationToken = default)
 		{
-			var reader = channel.Reader;
 			do
 			{
 				while (
@@ -70,15 +80,27 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The item type.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
+		/// <param name="reciever">The reciever function.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>A task that completes when no more reading is to be done.</returns>
+		public static Task Read<T>(this Channel<T> channel,
+			Action<T> reciever,
+			CancellationToken cancellationToken = default)
+			=> channel.Reader.ReadAll(reciever, cancellationToken);
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the reciever.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="reader">The channel reader to read from.</param>
 		/// <param name="reciever">The async reciever function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static async Task Read<T>(this Channel<T> channel,
-			Func<T, int, Task> reciever,
+		public static async Task ReadAllAsync<T>(this ChannelReader<T> reader,
+			Func<T, int, ValueTask> reciever,
 			CancellationToken cancellationToken = default)
 		{
 			var localCount = 0;
-			var reader = channel.Reader;
 			do
 			{
 				while (
@@ -94,6 +116,18 @@ namespace Open.ChannelExtensions
 					.ConfigureAwait(false));
 		}
 
+		/// <summary>
+		/// Reads items from the channel and passes them to the reciever.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="channel">The channel to read from.</param>
+		/// <param name="reciever">The async reciever function.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>A task that completes when no more reading is to be done.</returns>
+		public static Task ReadAsync<T>(this Channel<T> channel,
+			Func<T, int, ValueTask> reciever,
+			CancellationToken cancellationToken = default)
+			=> channel.Reader.ReadAllAsync(reciever, cancellationToken);
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the reciever.
@@ -103,11 +137,10 @@ namespace Open.ChannelExtensions
 		/// <param name="reciever">The async reciever function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static async Task Read<T>(this Channel<T> channel,
-			Func<T, Task> reciever,
+		public static async Task ReadAllAsync<T>(this ChannelReader<T> reader,
+			Func<T, ValueTask> reciever,
 			CancellationToken cancellationToken = default)
 		{
-			var reader = channel.Reader;
 			do
 			{
 				while (
@@ -122,5 +155,18 @@ namespace Open.ChannelExtensions
 				&& await reader.WaitToReadAsync()
 					.ConfigureAwait(false));
 		}
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the reciever.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="channel">The channel to read from.</param>
+		/// <param name="reciever">The async reciever function.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>A task that completes when no more reading is to be done.</returns>
+		public static Task ReadAsync<T>(this Channel<T> channel,
+			Func<T, ValueTask> reciever,
+			CancellationToken cancellationToken = default)
+			=> channel.Reader.ReadAllAsync(reciever);
 	}
 }
