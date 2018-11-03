@@ -9,10 +9,10 @@ Being able to define an asynchronous pipeline with best practice usage using sim
 ```cs
 await Channel
     .CreateBounded<T>(10)
-    .SourceAsync(source /* IEnumerable<Task<T>> */)
-    .PipeAsync(asyncTransform01, 5),
-    .Pipe(transform02, 2)
-    .ReadAllAsync(e=>{
+    .SourceAsync(source /* IEnumerable<Task<T>> */) /* returns ChannelReader<T> */
+    .PipeAsync(asyncTransform01, 5) /* returns ChannelReader<TOut> */
+    .Pipe(transform02, 2) /* returns ChannelReader<TOut> */
+    .ReadAllAsync(finalTransformedValue => {
         // Do something.
     });
 ```
