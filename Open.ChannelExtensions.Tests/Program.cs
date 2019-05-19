@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace Open.ChannelExtensions.Tests
 {
@@ -9,9 +10,24 @@ namespace Open.ChannelExtensions.Tests
     {
         static async Task Main()
         {
-            const int repeat = 100;
+            const int repeat = 50;
+            const int concurrency = 4;
+             
             {
-                Console.WriteLine("Standard operation test...");
+                Console.WriteLine("Standard DataFlow operation test...");
+                var sw = Stopwatch.StartNew();
+                var block = new ActionBlock<int>(async i => await Delay(i));
+                foreach (var i in Enumerable.Range(0, repeat))
+                    block.Post(i);
+                block.Complete();
+                await block.Completion;
+                sw.Stop();
+                Console.WriteLine(sw.Elapsed);
+                Console.WriteLine();
+            }
+
+            {
+                Console.WriteLine("Standard Channel operation test...");
                 var sw = Stopwatch.StartNew();
                 await Enumerable
                     .Repeat((Func<int, ValueTask<int>>)Delay, repeat)
@@ -24,12 +40,25 @@ namespace Open.ChannelExtensions.Tests
             }
 
             {
-                Console.WriteLine("Concurrent operation test...");
+                Console.WriteLine("Concurrent DataFlow operation test...");
+                var sw = Stopwatch.StartNew();
+                var block = new ActionBlock<int>(async i => await Delay(i), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = concurrency });
+                foreach (var i in Enumerable.Range(0, repeat))
+                    block.Post(i);
+                block.Complete();
+                await block.Completion;
+                sw.Stop();
+                Console.WriteLine(sw.Elapsed);
+                Console.WriteLine();
+            }
+
+            {
+                Console.WriteLine("Concurrent Channel operation test...");
                 var sw = Stopwatch.StartNew();
                 await Enumerable
                     .Repeat((Func<int, ValueTask<int>>)Delay, repeat)
                     .Select((t, i) => t(i))
-                    .ToChannelAsync(singleReader: false, maxConcurrency: 4)
+                    .ToChannelAsync(singleReader: false, maxConcurrency: concurrency)
                     .ReadAllConcurrently(4, Dummy);
                 sw.Stop();
                 Console.WriteLine(sw.Elapsed);
