@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
@@ -28,14 +30,80 @@ namespace Open.ChannelExtensions
 		static async ValueTask<bool> TryWriteAsyncCore<T>(ChannelWriter<T> writer,
 			T value, CancellationToken cancellationToken = default)
 		{
-			while (await writer.WaitToWriteAsync(cancellationToken))
-			{
-				if (cancellationToken.IsCancellationRequested)
-					break;
-				if (writer.TryWrite(value))
-					return true;
-			}
-			return false;
+            ValueTask<bool> tryAgain;
+            do
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    break;
+                if (writer.TryWrite(value))
+                    return true;
+
+                tryAgain = writer.WaitToWriteAsync(cancellationToken);
+            }
+            while (tryAgain.IsCompletedSuccessfully ? tryAgain.Result : await tryAgain);
+
+            return false;
 		}
-	}
+
+        /// <summary>
+        /// Writes all entries from the source to a channel and calls complete when finished.
+        /// </summary>
+        /// <typeparam name="T">The input type of the channel.</typeparam>
+        /// <param name="source">The source data to use.</param>
+        /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+        /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>The channel reader containing the results.</returns>
+        public static ChannelReader<T> ToChannel<T>(this IEnumerable<T> source,
+            int capacity = -1, bool singleReader = false, int maxConcurrency = 1,
+            CancellationToken cancellationToken = default)
+            => CreateChannel<T>(capacity, singleReader)
+                .Source(maxConcurrency, source, cancellationToken);
+
+        /// <summary>
+        /// Asynchronously executes all entries and writes their results to a channel.
+        /// </summary>
+        /// <typeparam name="T">The input type of the channel.</typeparam>
+        /// <param name="source">The asynchronous source data to use.</param>
+        /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+        /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>The channel reader containing the results.</returns>
+        public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Func<T>> source,
+            int capacity = -1, bool singleReader = false, int maxConcurrency = 1,
+            CancellationToken cancellationToken = default)
+            => CreateChannel<T>(capacity, singleReader)
+                .SourceAsync(maxConcurrency, source, cancellationToken);
+
+        /// <summary>
+        /// Writes all entries from the source to a channel and calls complete when finished.
+        /// </summary>
+        /// <typeparam name="T">The input type of the channel.</typeparam>
+        /// <param name="source">The asynchronous source data to use.</param>
+        /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+        /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>The channel reader containing the results.</returns>
+        public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<ValueTask<T>> source,
+            int capacity = -1, bool singleReader = false, int maxConcurrency = 1,
+            CancellationToken cancellationToken = default)
+            => CreateChannel<T>(capacity, singleReader)
+                .SourceAsync(maxConcurrency, source, cancellationToken);
+
+        /// <summary>
+        /// Writes all entries from the source to a channel and calls complete when finished.
+        /// </summary>
+        /// <typeparam name="T">The input type of the channel.</typeparam>
+        /// <param name="source">The asynchronous source data to use.</param>
+        /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+        /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>The channel reader containing the results.</returns>
+        public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Task<T>> source,
+            int capacity = -1, bool singleReader = false, int maxConcurrency = 1,
+            CancellationToken cancellationToken = default)
+            => CreateChannel<T>(capacity, singleReader)
+                .SourceAsync(maxConcurrency, source, cancellationToken);
+
+    }
 }

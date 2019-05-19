@@ -6,14 +6,20 @@
     <Authors>electricessence</Authors>
     <Description>A set of extensions for optimizing/simplifying System.Threading.Channels usage.
 
+Includes:
+ReadUntilCancelled, ReadAll, ReadAllConcurrently, WriteAll, WriteAllConcurrently, and Pipe operations.
+
 Part of the "Open" set of libraries.</Description>
     <PackageProjectUrl>https://github.com/electricessence/Open.ChannelExtensions</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/electricessence/Open.ChannelExtensions/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>https://github.com/electricessence/Open.ChannelExtensions/blob/master/LICENSE</Copyright>
     <RepositoryType>git</RepositoryType>
     <PackageTags>channels dotnet threading tasks extensions</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.0</Version>
+    <Version>2.0.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
