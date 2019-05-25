@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Open.ChannelExtensions
 {
-	public static partial class Extensions
+    public static partial class Extensions
 	{
         /// <summary>
         /// Reads items from the channel and passes them to the receiver.
@@ -48,9 +47,9 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="receiver">The async receiver function.</param>
         /// <returns>A task that completes when no more reading is to be done.</returns>
-        public static ValueTask ReadUntilCancelledAsync<T>(this Channel<T> channel,
+        public static ValueTask ReadUntilCancelledAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
             CancellationToken cancellationToken,
-            Func<T, int, ValueTask> receiver)
+            Func<TRead, int, ValueTask> receiver)
             => channel.Reader.ReadUntilCancelledAsync(cancellationToken, receiver);
 
         /// <summary>
@@ -74,9 +73,9 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="receiver">The async receiver function.</param>
         /// <returns>A task that completes when no more reading is to be done.</returns>
-        public static ValueTask ReadUntilCancelledAsync<T>(this Channel<T> channel,
+        public static ValueTask ReadUntilCancelledAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
             CancellationToken cancellationToken,
-            Func<T, ValueTask> receiver)
+            Func<TRead, ValueTask> receiver)
             => channel.Reader.ReadUntilCancelledAsync(cancellationToken, receiver);
 
         /// <summary>
@@ -107,9 +106,9 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="receiver">The receiver function.</param>
         /// <returns>A task that completes when no more reading is to be done.</returns>
-        public static ValueTask ReadUntilCancelled<T>(this Channel<T> channel,
+        public static ValueTask ReadUntilCancelled<TWrite, TRead>(this Channel<TWrite, TRead> channel,
             CancellationToken cancellationToken,
-            Action<T, int> receiver)
+            Action<TRead, int> receiver)
             => channel.Reader.ReadUntilCancelled(cancellationToken, receiver);
 
         /// <summary>
@@ -139,8 +138,8 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="receiver">The receiver function.</param>
         /// <returns>A task that completes when no more reading is to be done.</returns>
-        public static ValueTask ReadUntilCancelled<T>(this Channel<T> channel,
-            Action<T> receiver,
+        public static ValueTask ReadUntilCancelled<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+            Action<TRead> receiver,
             CancellationToken cancellationToken)
             => channel.Reader.ReadUntilCancelled(cancellationToken, receiver);
 
@@ -168,8 +167,8 @@ namespace Open.ChannelExtensions
         /// <param name="receiver">The async receiver function.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>A task that completes when no more reading is to be done.</returns>
-        public static ValueTask ReadAllAsync<T>(this Channel<T> channel,
-			Func<T, int, ValueTask> receiver,
+        public static ValueTask ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+			Func<TRead, int, ValueTask> receiver,
 			CancellationToken cancellationToken = default)
 			=> channel.Reader.ReadAllAsync(receiver, cancellationToken);
 
@@ -194,8 +193,8 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static ValueTask ReadAllAsync<T>(this Channel<T> channel,
-			Func<T, ValueTask> receiver,
+		public static ValueTask ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+			Func<TRead, ValueTask> receiver,
 			CancellationToken cancellationToken = default)
 			=> channel.Reader.ReadAllAsync(receiver, cancellationToken);
 
@@ -226,8 +225,8 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static ValueTask ReadAll<T>(this Channel<T> channel,
-			Action<T, int> receiver,
+		public static ValueTask ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+			Action<TRead, int> receiver,
 			CancellationToken cancellationToken = default)
 			=> channel.Reader.ReadAll(receiver, cancellationToken);
 
@@ -257,8 +256,8 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static ValueTask ReadAll<T>(this Channel<T> channel,
-			Action<T> receiver,
+		public static ValueTask ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+			Action<TRead> receiver,
 			CancellationToken cancellationToken = default)
 			=> channel.Reader.ReadAll(receiver, cancellationToken);
 
