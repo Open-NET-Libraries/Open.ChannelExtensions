@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
@@ -260,6 +261,32 @@ namespace Open.ChannelExtensions
 			Action<T> receiver,
 			CancellationToken cancellationToken = default)
 			=> channel.Reader.ReadAll(receiver, cancellationToken);
+
+        /// <summary>
+        /// Reads items from the channel and writes to the target writer.
+        /// </summary>
+        /// <typeparam name="T">The item type.</typeparam>
+        /// <param name="reader">The channel reader to read from.</param>
+        /// <param name="receiver">The receiver function.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>A task that completes when no more reading is to be done.</returns>
+        public static ValueTask ReadAllAsLines(this ChannelReader<string> reader,
+            TextWriter receiver,
+            CancellationToken cancellationToken = default)
+            => reader.ReadAllAsync(line => new ValueTask(receiver.WriteLineAsync(line)), cancellationToken);
+
+        /// <summary>
+        /// Reads items from the channel and writes to the target writer.
+        /// </summary>
+        /// <typeparam name="T">The item type.</typeparam>
+        /// <param name="channel">The channel to read from.</param>
+        /// <param name="receiver">The TextWriter to recieve the lines.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>A task that completes when no more reading is to be done.</returns>
+        public static ValueTask ReadAllAsLines<T>(this Channel<T, string> channel,
+            TextWriter receiver,
+            CancellationToken cancellationToken = default)
+            => channel.Reader.ReadAllAsLines(receiver, cancellationToken);
 
     }
 }
