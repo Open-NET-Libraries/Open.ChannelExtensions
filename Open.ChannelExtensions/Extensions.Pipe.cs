@@ -69,7 +69,8 @@ namespace Open.ChannelExtensions
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
         /// </summary>
-        /// <typeparam name="TIn">The type contained by the source channel.</typeparam>
+        /// <typeparam name="TWrite">The type being accepted by the channel.</typeparam>
+        /// <typeparam name="TRead">The type contained by the source channel.</typeparam>
         /// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
         /// <param name="source">The source channel.</param>
         /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
@@ -78,8 +79,8 @@ namespace Open.ChannelExtensions
         /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
-        public static ChannelReader<TOut> PipeAsync<TIn, TOut>(this Channel<TIn> source,
-            int maxConcurrency, Func<TIn, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
+        public static ChannelReader<TOut> PipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
+            int maxConcurrency, Func<TRead, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
             => source.Reader.PipeAsync(maxConcurrency, transform, capacity, singleReader, cancellationToken);
 
@@ -103,7 +104,8 @@ namespace Open.ChannelExtensions
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
         /// </summary>
-        /// <typeparam name="TIn">The type contained by the source channel.</typeparam>
+        /// <typeparam name="TWrite">The type being accepted by the channel.</typeparam>
+        /// <typeparam name="TRead">The type contained by the source channel.</typeparam>
         /// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
         /// <param name="source">The source channel.</param>
         /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
@@ -112,8 +114,8 @@ namespace Open.ChannelExtensions
         /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
-        public static ChannelReader<TOut> PipeAsync<TIn, TOut>(this Channel<TIn> source,
-            int maxConcurrency, Func<TIn, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
+        public static ChannelReader<TOut> PipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
+            int maxConcurrency, Func<TRead, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
             => source.Reader.PipeAsync(maxConcurrency, transform, capacity, singleReader, cancellationToken);
 
@@ -137,7 +139,8 @@ namespace Open.ChannelExtensions
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
         /// </summary>
-        /// <typeparam name="TIn">The type contained by the source channel.</typeparam>
+        /// <typeparam name="TWrite">The type being accepted by the channel.</typeparam>
+        /// <typeparam name="TRead">The type contained by the source channel.</typeparam>
         /// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
         /// <param name="source">The source channel.</param>
         /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
@@ -146,8 +149,8 @@ namespace Open.ChannelExtensions
         /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
-        public static ChannelReader<TOut> Pipe<TIn, TOut>(this Channel<TIn> source,
-            int maxConcurrency, Func<TIn, TOut> transform, int capacity = -1, bool singleReader = false,
+        public static ChannelReader<TOut> Pipe<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
+            int maxConcurrency, Func<TRead, TOut> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
             => source.Reader.Pipe(maxConcurrency, transform, capacity, singleReader, cancellationToken);
 
@@ -170,7 +173,8 @@ namespace Open.ChannelExtensions
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
         /// </summary>
-        /// <typeparam name="TIn">The type contained by the source channel.</typeparam>
+        /// <typeparam name="TWrite">The type being accepted by the channel.</typeparam>
+        /// <typeparam name="TRead">The type contained by the source channel.</typeparam>
         /// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
         /// <param name="source">The source channel.</param>
         /// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
@@ -178,8 +182,8 @@ namespace Open.ChannelExtensions
         /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
-        public static ChannelReader<TOut> PipeAsync<TIn, TOut>(this Channel<TIn> source,
-			Func<TIn, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
+        public static ChannelReader<TOut> PipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
+			Func<TRead, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
 			=> source.Reader.PipeAsync(transform, capacity, singleReader, cancellationToken);
 
@@ -202,7 +206,8 @@ namespace Open.ChannelExtensions
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
         /// </summary>
-        /// <typeparam name="TIn">The type contained by the source channel.</typeparam>
+        /// <typeparam name="TWrite">The type being accepted by the channel.</typeparam>
+        /// <typeparam name="TRead">The type contained by the source channel.</typeparam>
         /// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
         /// <param name="source">The source channel.</param>
         /// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
@@ -210,8 +215,8 @@ namespace Open.ChannelExtensions
         /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
-        public static ChannelReader<TOut> PipeAsync<TIn, TOut>(this Channel<TIn> source,
-			Func<TIn, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
+        public static ChannelReader<TOut> PipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
+			Func<TRead, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
 			=> source.Reader.PipeAsync(transform, capacity, singleReader, cancellationToken);
 
@@ -234,7 +239,8 @@ namespace Open.ChannelExtensions
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
         /// </summary>
-        /// <typeparam name="TIn">The type contained by the source channel.</typeparam>
+        /// <typeparam name="TWrite">The type being accepted by the channel.</typeparam>
+        /// <typeparam name="TRead">The type contained by the source channel.</typeparam>
         /// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
         /// <param name="source">The source channel.</param>
         /// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
@@ -242,8 +248,8 @@ namespace Open.ChannelExtensions
         /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
-        public static ChannelReader<TOut> Pipe<TIn, TOut>(this Channel<TIn> source,
-			Func<TIn, TOut> transform, int capacity = -1, bool singleReader = false,
+        public static ChannelReader<TOut> Pipe<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
+			Func<TRead, TOut> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
 			=> source.Reader.Pipe(transform, capacity, singleReader, cancellationToken);
 	}
