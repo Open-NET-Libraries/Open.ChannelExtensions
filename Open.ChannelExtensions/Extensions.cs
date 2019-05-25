@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -44,6 +45,32 @@ namespace Open.ChannelExtensions
 
             return false;
 		}
+
+        /// <summary>
+        /// Calls complete on the writer and returns the completion from the reader.
+        /// </summary>
+        /// <typeparam name="TWrite">The type being received by the writer.</typeparam>
+        /// <typeparam name="TRead">The type being read from the reader.</typeparam>
+        /// <returns>The reader's completion task.</returns>
+        public static Task CompleteAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel)
+        {
+            channel.Writer.Complete();
+            return channel.Reader.Completion;
+        }
+
+        /// <summary>
+        /// Writes all lines from the source to a channel and calls complete when finished.
+        /// </summary>
+        /// <typeparam name="T">The input type of the channel.</typeparam>
+        /// <param name="source">The source data to use.</param>
+        /// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>The channel reader containing the results.</returns>
+        public static ChannelReader<string> ToChannel(this TextReader source,
+            int capacity = -1, bool singleReader = false,
+            CancellationToken cancellationToken = default)
+            => CreateChannel<string>(capacity, singleReader)
+                .Source(source, cancellationToken);
 
         /// <summary>
         /// Writes all entries from the source to a channel and calls complete when finished.

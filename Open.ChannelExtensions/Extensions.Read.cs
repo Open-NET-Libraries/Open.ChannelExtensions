@@ -23,14 +23,15 @@ namespace Open.ChannelExtensions
             var localCount = 0;
             do
             {
+                var next = new ValueTask();
                 while (
                     !cancellationToken.IsCancellationRequested
                     && reader.TryRead(out var item))
                 {
-                    var result = receiver(item, localCount++);
-                    if (!result.IsCompletedSuccessfully)
-                        await result.ConfigureAwait(false);
+                    if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
+                    next = receiver(item, localCount++); 
                 }
+                if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
             }
             while (
                 !cancellationToken.IsCancellationRequested
@@ -259,5 +260,6 @@ namespace Open.ChannelExtensions
 			Action<T> receiver,
 			CancellationToken cancellationToken = default)
 			=> channel.Reader.ReadAll(receiver, cancellationToken);
-	}
+
+    }
 }

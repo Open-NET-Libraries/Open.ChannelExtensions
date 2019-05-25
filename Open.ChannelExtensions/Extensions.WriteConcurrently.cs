@@ -57,13 +57,15 @@ namespace Open.ChannelExtensions
 
             async Task WriteAllAsyncCore()
             {
+                var next = new ValueTask();
                 while (!cancellationToken.IsCancellationRequested
                     && TryMoveNextSynchronized(enumerator, out var e))
                 {
-                    var value = e.IsCompletedSuccessfully ? e.Result : await e;
-                    var test = target.WriteAsync(value, cancellationToken);
-                    if (!test.IsCompletedSuccessfully) await test;
+                    var value = e.IsCompletedSuccessfully ? e.Result : await e.ConfigureAwait(false);
+                    if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
+                    if (!target.TryWrite(value)) next = target.WriteAsync(value, cancellationToken);
                 }
+                if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
             }
         }
 
@@ -124,80 +126,5 @@ namespace Open.ChannelExtensions
             int maxConcurrency, IEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default)
             => WriteAllConcurrentlyAsync(target, maxConcurrency, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
 
-        /// <summary>
-        /// Executes all entries from the source and passes their result to the channel.  Calls complete when finished.
-        /// </summary>
-        /// <typeparam name="T">The input type of the channel.</typeparam>
-        /// <param name="target">The channel to write to.</param>
-        /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
-        /// <param name="source">The asynchronous source data to use.</param>
-        /// <param name="cancellationToken">An optional cancellation token.</param>
-        /// <returns>The channel reader.</returns>
-        public static ChannelReader<T> SourceAsync<T>(this Channel<T> target,
-            int maxConcurrency, IEnumerable<Func<T>> source, CancellationToken cancellationToken = default)
-        {
-            if (maxConcurrency == 1)
-                return target.SourceAsync(source, cancellationToken);
-            
-            target.Writer.WriteAllConcurrentlyAsync(maxConcurrency, source, true, cancellationToken).ConfigureAwait(false);
-            return target.Reader;
-        }
-
-        /// <summary>
-        /// Writes all entries from the source to the channel.  Calls complete when finished.
-        /// </summary>
-        /// <typeparam name="T">The input type of the channel.</typeparam>
-        /// <param name="target">The channel to write to.</param>
-        /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
-        /// <param name="source">The asynchronous source data to use.</param>
-        /// <param name="cancellationToken">An optional cancellation token.</param>
-        /// <returns>The channel reader.</returns>
-        public static ChannelReader<T> SourceAsync<T>(this Channel<T> target,
-            int maxConcurrency, IEnumerable<ValueTask<T>> source, CancellationToken cancellationToken = default)
-        {
-            if (maxConcurrency == 1)
-                return target.SourceAsync(source, cancellationToken);
-
-            target.Writer.WriteAllConcurrentlyAsync(maxConcurrency, source, true, cancellationToken).ConfigureAwait(false);
-            return target.Reader;
-        }
-
-        /// <summary>
-        /// Writes all entries from the source to the channel.  Calls complete when finished.
-        /// </summary>
-        /// <typeparam name="T">The input type of the channel.</typeparam>
-        /// <param name="target">The channel to write to.</param>
-        /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
-        /// <param name="source">The asynchronous source data to use.</param>
-        /// <param name="cancellationToken">An optional cancellation token.</param>
-        /// <returns>The channel reader.</returns>
-        public static ChannelReader<T> SourceAsync<T>(this Channel<T> target,
-            int maxConcurrency, IEnumerable<Task<T>> source, CancellationToken cancellationToken = default)
-        {
-            if (maxConcurrency == 1)
-                return target.SourceAsync(source, cancellationToken);
-
-            target.Writer.WriteAllConcurrentlyAsync(maxConcurrency, source, true, cancellationToken).ConfigureAwait(false);
-            return target.Reader;
-        }
-
-        /// <summary>
-        /// Writes all entries from the source to the channel.  Calls complete when finished.
-        /// </summary>
-        /// <typeparam name="T">The input type of the channel.</typeparam>
-        /// <param name="target">The channel to write to.</param>
-        /// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
-        /// <param name="source">The source data to use.</param>
-        /// <param name="cancellationToken">An optional cancellation token.</param>
-        /// <returns>The channel reader.</returns>
-        public static ChannelReader<T> Source<T>(this Channel<T> target,
-            int maxConcurrency, IEnumerable<T> source, CancellationToken cancellationToken = default)
-        {
-            if (maxConcurrency == 1)
-                return target.Source(source, cancellationToken);
-
-            target.Writer.WriteAllConcurrently(maxConcurrency, source, true, cancellationToken).ConfigureAwait(false);
-            return target.Reader;
-        }
     }
 }
