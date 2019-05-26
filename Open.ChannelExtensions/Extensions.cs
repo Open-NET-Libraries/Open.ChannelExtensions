@@ -7,44 +7,74 @@ using System.Threading.Tasks;
 
 namespace Open.ChannelExtensions
 {
-	public static partial class Extensions
-	{
-		/// <summary>
-		/// Attempts to write to a channel and will asynchronously return false if the channel is closed/complete.
-		/// First attempt is synchronous and it may return immediately.
-		/// Subsequent attempts will continue until the channel is closed or value is accepted by the writer.
-		/// </summary>
-		/// <typeparam name="T">The type accepted by the channel writer.</typeparam>
-		/// <param name="writer">The channel writer to write to.</param>
-		/// <param name="value">The value to attempt to write.</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A ValueTask containing true if successfully added and false if the channel is closed/complete.</returns>
-		public static ValueTask<bool> TryWriteAsync<T>(this ChannelWriter<T> writer,
-			T value, CancellationToken cancellationToken = default)
-		{
-			if (writer.TryWrite(value))
-				return new ValueTask<bool>(true);
+    public static partial class Extensions
+    {
+        /// <summary>
+        /// Attempts to write to a channel and will asynchronously return false if the channel is closed/complete.
+        /// First attempt is synchronous and it may return immediately.
+        /// Subsequent attempts will continue until the channel is closed or value is accepted by the writer.
+        /// </summary>
+        /// <typeparam name="T">The type accepted by the channel writer.</typeparam>
+        /// <param name="writer">The channel writer to write to.</param>
+        /// <param name="value">The value to attempt to write.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <returns>A ValueTask containing true if successfully added and false if the channel is closed/complete.</returns>
+        public static ValueTask<bool> TryWriteAsync<T>(this ChannelWriter<T> writer,
+            T value, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
-			return TryWriteAsyncCore(writer, value, cancellationToken);
-		}
+            if (writer.TryWrite(value))
+                return new ValueTask<bool>(true);
 
-		static async ValueTask<bool> TryWriteAsyncCore<T>(ChannelWriter<T> writer,
-			T value, CancellationToken cancellationToken = default)
-		{
+            return TryWriteAsyncCore(writer, value, cancellationToken);
+        }
+
+        static async ValueTask<bool> TryWriteAsyncCore<T>(ChannelWriter<T> writer,
+            T value, CancellationToken cancellationToken = default)
+        {
             ValueTask<bool> tryAgain;
             do
             {
-                if (cancellationToken.IsCancellationRequested)
-                    break;
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (writer.TryWrite(value))
                     return true;
 
                 tryAgain = writer.WaitToWriteAsync(cancellationToken);
             }
-            while (tryAgain.IsCompletedSuccessfully ? tryAgain.Result : await tryAgain);
+            while (tryAgain.IsCompletedSuccessfully ? tryAgain.Result : await tryAgain.ConfigureAwait(false));
 
             return false;
-		}
+        }
+
+        /// <summary>
+        /// Attempts to write to a channel and throws if the channel is closed/complete.
+        /// First attempt is synchronous and it may return immediately.
+        /// Subsequent attempts will continue until the channel is closed or value is accepted by the writer.
+        /// </summary>
+        /// <typeparam name="T">The type accepted by the channel writer.</typeparam>
+        /// <param name="writer">The channel writer to write to.</param>
+        /// <param name="value">The value to attempt to write.</param>
+        /// <param name="cancellationToken">An optional cancellation token.</param>
+        /// <exception cref="ChannelClosedException">If the channel is closed.</exception>
+        public static ValueTask WriteIfOpenAsync<T>(this ChannelWriter<T> writer,
+            T value, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (writer.TryWrite(value))
+                return new ValueTask();
+
+            return ThrowChannelClosedExceptionIfFalse(
+                TryWriteAsyncCore(writer, value, cancellationToken));
+        }
+
+        static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write)
+        {
+            var ok = write.IsCompletedSuccessfully ? write.Result : await write;
+            if (!ok) throw new ChannelClosedException();
+        }
 
         /// <summary>
         /// Calls complete on the writer and returns the completion from the reader.

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Open.ChannelExtensions
 {
-	public static partial class Extensions
-	{
+    public static partial class Extensions
+    {
         private static Channel<T> CreateChannel<T>(int capacity = -1, bool singleReader = false)
             => capacity > 0
                 ? Channel.CreateBounded<T>(new BoundedChannelOptions(capacity)
@@ -49,8 +49,8 @@ namespace Open.ChannelExtensions
                         return new ValueTask(Task.FromCanceled(cancellationToken));
                     var result = transform(e);
                     return result.IsCompletedSuccessfully
-                        ? writer.WriteAsync(result.Result, cancellationToken)
-                        : ValueNotReady(result); // Result is not ready, so we need to wait for it.
+                        ? writer.WriteIfOpenAsync(result.Result, cancellationToken)
+                        : ValueNotReady(result, cancellationToken); // Result is not ready, so we need to wait for it.
                 }, cancellationToken)
                 .ContinueWith(t =>
                 {
@@ -59,10 +59,11 @@ namespace Open.ChannelExtensions
 
             return channel.Reader;
 
-            async ValueTask ValueNotReady(ValueTask<TOut> value)
+            async ValueTask ValueNotReady(ValueTask<TOut> value, CancellationToken token)
             {
-                var r = await value;
-                await writer.WriteAsync(r, cancellationToken);
+                var r = value.IsCompletedSuccessfully ? value.Result : await value.ConfigureAwait(false);
+                var w = writer.WriteIfOpenAsync(r, token);
+                if (!w.IsCompletedSuccessfully) await w.ConfigureAwait(false);
             }
         }
 
@@ -183,9 +184,9 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
         public static ChannelReader<TOut> PipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
-			Func<TRead, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
-			CancellationToken cancellationToken = default)
-			=> source.Reader.PipeAsync(transform, capacity, singleReader, cancellationToken);
+            Func<TRead, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
+            CancellationToken cancellationToken = default)
+            => source.Reader.PipeAsync(transform, capacity, singleReader, cancellationToken);
 
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -199,9 +200,9 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
         public static ChannelReader<TOut> PipeAsync<TIn, TOut>(this ChannelReader<TIn> source,
-			Func<TIn, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
+            Func<TIn, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
-			=> source.PipeAsync(e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
+            => source.PipeAsync(e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
 
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -216,9 +217,9 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
         public static ChannelReader<TOut> PipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
-			Func<TRead, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
+            Func<TRead, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
-			=> source.Reader.PipeAsync(transform, capacity, singleReader, cancellationToken);
+            => source.Reader.PipeAsync(transform, capacity, singleReader, cancellationToken);
 
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -232,9 +233,9 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
         public static ChannelReader<TOut> Pipe<TIn, TOut>(this ChannelReader<TIn> source,
-			Func<TIn, TOut> transform, int capacity = -1, bool singleReader = false,
+            Func<TIn, TOut> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
-			=> source.PipeAsync(e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
+            => source.PipeAsync(e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
 
         /// <summary>
         /// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -249,8 +250,8 @@ namespace Open.ChannelExtensions
         /// <param name="cancellationToken">An optional cancellation token.</param>
         /// <returns>The channel reader containing the output.</returns>
         public static ChannelReader<TOut> Pipe<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
-			Func<TRead, TOut> transform, int capacity = -1, bool singleReader = false,
+            Func<TRead, TOut> transform, int capacity = -1, bool singleReader = false,
             CancellationToken cancellationToken = default)
-			=> source.Reader.Pipe(transform, capacity, singleReader, cancellationToken);
-	}
+            => source.Reader.Pipe(transform, capacity, singleReader, cancellationToken);
+    }
 }

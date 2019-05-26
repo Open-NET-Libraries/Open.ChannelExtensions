@@ -57,13 +57,14 @@ namespace Open.ChannelExtensions
 
             async Task WriteAllAsyncCore()
             {
-                var next = new ValueTask();
+                var next = shouldWait;
                 while (!cancellationToken.IsCancellationRequested
                     && TryMoveNextSynchronized(enumerator, out var e))
                 {
                     var value = e.IsCompletedSuccessfully ? e.Result : await e.ConfigureAwait(false);
-                    if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
-                    if (!target.TryWrite(value)) next = target.WriteAsync(value, cancellationToken);
+                    if (next.IsCompletedSuccessfully ? !next.Result : !await next.ConfigureAwait(false))
+                        throw new ChannelClosedException();
+                    next = target.TryWriteAsync(value, cancellationToken);
                 }
                 if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
             }
