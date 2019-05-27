@@ -9,71 +9,53 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
-		/// <summary>
-		/// Attempts to write to a channel and will asynchronously return false if the channel is closed/complete.
-		/// First attempt is synchronous and it may return immediately.
-		/// Subsequent attempts will continue until the channel is closed or value is accepted by the writer.
-		/// </summary>
-		/// <typeparam name="T">The type accepted by the channel writer.</typeparam>
-		/// <param name="writer">The channel writer to write to.</param>
-		/// <param name="value">The value to attempt to write.</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A ValueTask containing true if successfully added and false if the channel is closed/complete.</returns>
-		public static ValueTask<bool> TryWriteAsync<T>(this ChannelWriter<T> writer,
-			T value, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (writer.TryWrite(value))
-				return new ValueTask<bool>(true);
-
-			return TryWriteAsyncCore(writer, value, cancellationToken);
-		}
-
-		static async ValueTask<bool> TryWriteAsyncCore<T>(ChannelWriter<T> writer,
-			T value, CancellationToken cancellationToken = default)
-		{
-			ValueTask<bool> tryAgain;
-			do
-			{
-				cancellationToken.ThrowIfCancellationRequested();
-
-				if (writer.TryWrite(value))
-					return true;
-
-				tryAgain = writer.WaitToWriteAsync(cancellationToken);
-			}
-			while (tryAgain.IsCompletedSuccessfully ? tryAgain.Result : await tryAgain.ConfigureAwait(false));
-
-			return false;
-		}
-
-		/// <summary>
-		/// Attempts to write to a channel and throws if the channel is closed/complete.
-		/// First attempt is synchronous and it may return immediately.
-		/// Subsequent attempts will continue until the channel is closed or value is accepted by the writer.
-		/// </summary>
-		/// <typeparam name="T">The type accepted by the channel writer.</typeparam>
-		/// <param name="writer">The channel writer to write to.</param>
-		/// <param name="value">The value to attempt to write.</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <exception cref="ChannelClosedException">If the channel is closed.</exception>
-		public static ValueTask WriteIfOpenAsync<T>(this ChannelWriter<T> writer,
-			T value, CancellationToken cancellationToken = default)
-		{
-			cancellationToken.ThrowIfCancellationRequested();
-
-			if (writer.TryWrite(value))
-				return new ValueTask();
-
-			return ThrowChannelClosedExceptionIfFalse(
-				TryWriteAsyncCore(writer, value, cancellationToken));
-		}
-
 		static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write)
 		{
-			var ok = write.IsCompletedSuccessfully ? write.Result : await write.ConfigureAwait(false);
-			if (!ok) throw new ChannelClosedException();
+			if (!await write.ConfigureAwait(false))
+				throw new ChannelClosedException();
+		}
+
+		static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write, string message)
+		{
+			if (!await write.ConfigureAwait(false))
+				throw new ChannelClosedException(message);
+		}
+
+		/// <summary>
+		/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
+		/// </summary>
+		/// <typeparam name="T">The type being written to the channel</typeparam>
+		/// <param name="writer">The channel writer.</param>
+		/// <param name="ifClosedMessage">The message to include with the ChannelClosedException if thrown.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		public static ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, string ifClosedMessage, CancellationToken cancellationToken = default)
+		{
+			var waitForWrite = writer.WaitToWriteAsync(cancellationToken);
+			if (!waitForWrite.IsCompletedSuccessfully)
+				return ThrowChannelClosedExceptionIfFalse(waitForWrite, ifClosedMessage);
+
+			if (waitForWrite.Result)
+				return new ValueTask();
+
+			throw new ChannelClosedException(ifClosedMessage);
+		}
+
+		/// <summary>
+		/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
+		/// </summary>
+		/// <typeparam name="T">The type being written to the channel</typeparam>
+		/// <param name="writer">The channel writer.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		public static ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, CancellationToken cancellationToken = default)
+		{
+			var waitForWrite = writer.WaitToWriteAsync(cancellationToken);
+			if (!waitForWrite.IsCompletedSuccessfully)
+				return ThrowChannelClosedExceptionIfFalse(waitForWrite);
+
+			if (waitForWrite.Result)
+				return new ValueTask();
+
+			throw new ChannelClosedException();
 		}
 
 		/// <summary>
@@ -81,10 +63,11 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="TWrite">The type being received by the writer.</typeparam>
 		/// <typeparam name="TRead">The type being read from the reader.</typeparam>
+		/// <typeparam name="Exception">The optional exception to include with completion.</typeparam>
 		/// <returns>The reader's completion task.</returns>
-		public static Task CompleteAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel)
+		public static Task CompleteAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel, Exception exception = null)
 		{
-			channel.Writer.Complete();
+			channel.Writer.Complete(exception);
 			return channel.Reader.Completion;
 		}
 

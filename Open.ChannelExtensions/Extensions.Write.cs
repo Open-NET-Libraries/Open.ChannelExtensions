@@ -22,22 +22,18 @@ namespace Open.ChannelExtensions
 		public static async ValueTask WriteAllAsync<T>(this ChannelWriter<T> target,
 			IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 		{
-			cancellationToken.ThrowIfCancellationRequested();
-			var next = target.WaitToWriteAsync();
-			if (next.IsCompletedSuccessfully ? !next.Result : !await next.ConfigureAwait(false))
-				throw new ChannelClosedException("The target channel was closed before writing could begin.");
-			cancellationToken.ThrowIfCancellationRequested();
+			await target.WaitToWriteAndThrowIfClosedAsync(
+				"The target channel was closed before writing could begin.",
+				cancellationToken);
 
+			var next = new ValueTask();
 			foreach (var e in source)
 			{
-				var value = e.IsCompletedSuccessfully ? e.Result : await e.ConfigureAwait(false);
-				if (next.IsCompletedSuccessfully ? !next.Result : !await next.ConfigureAwait(false))
-					throw new ChannelClosedException();
-				next = target.TryWriteAsync(value, cancellationToken);
-				if (cancellationToken.IsCancellationRequested) break;
+				var value = await e.ConfigureAwait(false);
+				await next.ConfigureAwait(false);
+				next = target.WriteAsync(value, cancellationToken);
 			}
-			if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
-			cancellationToken.ThrowIfCancellationRequested();
+			await next.ConfigureAwait(false);
 
 			if (complete)
 				target.Complete();
@@ -92,22 +88,32 @@ namespace Open.ChannelExtensions
 		public static async ValueTask WriteAllLines(this ChannelWriter<string> target,
 			TextReader source, bool complete = false, CancellationToken cancellationToken = default)
 		{
-			cancellationToken.ThrowIfCancellationRequested();
-			var next = target.WaitToWriteAsync();
-			if (next.IsCompletedSuccessfully ? !next.Result : !await next.ConfigureAwait(false))
-				throw new ChannelClosedException("The target channel was closed before writing could begin.");
-			cancellationToken.ThrowIfCancellationRequested();
+			var next = target.WaitToWriteAndThrowIfClosedAsync(
+				"The target channel was closed before writing could begin.",
+				cancellationToken);
 
+			await next.ConfigureAwait(false);
+			var more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 			while (!cancellationToken.IsCancellationRequested)
 			{
 				var line = await source.ReadLineAsync().ConfigureAwait(false);
-				if (line == null) break;
-				if (next.IsCompletedSuccessfully ? !next.Result : !await next.ConfigureAwait(false))
-					throw new ChannelClosedException();
-				next = target.TryWriteAsync(line, cancellationToken);
+				if (line == null)
+				{
+					more = false;
+					break;
+				}
+				else
+				{
+					more = true;
+				}
+
+				await next.ConfigureAwait(false);
+				next = target.WriteAsync(line, cancellationToken);
 			}
-			if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
-			cancellationToken.ThrowIfCancellationRequested();
+			await next.ConfigureAwait(false);
+
+			if(more)
+				cancellationToken.ThrowIfCancellationRequested();
 
 			if (complete)
 				target.Complete();

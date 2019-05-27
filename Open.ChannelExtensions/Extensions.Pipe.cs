@@ -45,26 +45,20 @@ namespace Open.ChannelExtensions
 			source
 				.ReadAllConcurrentlyAsync(maxConcurrency, e =>
 				{
-					if (cancellationToken.IsCancellationRequested)
-						return new ValueTask(Task.FromCanceled(cancellationToken));
+					cancellationToken.ThrowIfCancellationRequested();
 					var result = transform(e);
 					return result.IsCompletedSuccessfully
-						? writer.WriteIfOpenAsync(result.Result, cancellationToken)
+						? writer.WriteAsync(result.Result, cancellationToken)
 						: ValueNotReady(result, cancellationToken); // Result is not ready, so we need to wait for it.
 				}, cancellationToken)
-				.ContinueWith(t =>
-				{
-					writer.Complete(t.Exception);
-				});
+				.ContinueWith(
+					t => writer.Complete(t.Exception),
+					TaskContinuationOptions.ExecuteSynchronously);
 
 			return channel.Reader;
 
 			async ValueTask ValueNotReady(ValueTask<TOut> value, CancellationToken token)
-			{
-				var r = value.IsCompletedSuccessfully ? value.Result : await value.ConfigureAwait(false);
-				var w = writer.WriteIfOpenAsync(r, token);
-				if (!w.IsCompletedSuccessfully) await w.ConfigureAwait(false);
-			}
+				=> await writer.WriteAsync(await value.ConfigureAwait(false), token).ConfigureAwait(false);
 		}
 
 		/// <summary>

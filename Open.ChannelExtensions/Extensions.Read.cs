@@ -21,21 +21,22 @@ namespace Open.ChannelExtensions
 			Func<T, int, ValueTask> receiver)
 		{
 			var localCount = 0;
+			var completed = new ValueTask();
 			do
 			{
-				var next = new ValueTask();
+				var next = completed;
 				while (
 					!cancellationToken.IsCancellationRequested
 					&& reader.TryRead(out var item))
 				{
-					if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
+					await next.ConfigureAwait(false);
 					next = receiver(item, localCount++);
 				}
-				if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
+				await next.ConfigureAwait(false);
 			}
 			while (
 				!cancellationToken.IsCancellationRequested
-				&& await reader.WaitToReadAsync().ConfigureAwait(false));
+				&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 		}
 
 		/// <summary>

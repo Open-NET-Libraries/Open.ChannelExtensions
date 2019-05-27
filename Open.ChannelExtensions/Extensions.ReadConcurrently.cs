@@ -26,23 +26,17 @@ namespace Open.ChannelExtensions
 			Contract.EndContractBlock();
 
 			if (maxConcurrency == 1)
-				return reader.ReadAllAsync(receiver, cancellationToken).AsTask();
+				return reader
+					.ReadAllAsync(receiver, cancellationToken)
+					.AsTask();
 
 			var readers = new Task[maxConcurrency];
-			for (var r = 0; r < maxConcurrency; r++)
-				readers[r] = reader.ReadUntilCancelledAsync(cancellationToken, ParallelReceiver).AsTask();
+			for (var r = 0; r < maxConcurrency; ++r)
+				readers[r] = reader
+					.ReadUntilCancelledAsync(cancellationToken, ParallelReceiver)
+					.AsTask();
 
-			return Task.WhenAll(readers)
-				.ContinueWith(t =>
-				{
-					if (t.IsFaulted)
-						return t;
-
-					if (cancellationToken.IsCancellationRequested)
-						return Task.FromCanceled(cancellationToken);
-
-					return t;
-				});
+			return Task.WhenAll(readers);
 
 			ValueTask ParallelReceiver(T item, int i) => receiver(item);
 		}
@@ -75,10 +69,11 @@ namespace Open.ChannelExtensions
 			int maxConcurrency,
 			Action<T> receiver,
 			CancellationToken cancellationToken = default)
-			=> reader.ReadAllConcurrentlyAsync(maxConcurrency, e =>
+			=> reader.ReadAllConcurrentlyAsync(maxConcurrency,
+				e =>
 				{
 					receiver(e);
-					return new ValueTask(Task.CompletedTask);
+					return new ValueTask();
 				},
 				cancellationToken);
 

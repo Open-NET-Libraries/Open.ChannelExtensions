@@ -29,9 +29,9 @@ namespace Open.ChannelExtensions
 			if (maxConcurrency == 1)
 				return target.WriteAllAsync(source, complete, cancellationToken).AsTask();
 
-			var shouldWait = target.WaitToWriteAsync();
-			if (shouldWait.IsCompletedSuccessfully && !shouldWait.Result)
-				throw new ChannelClosedException("The target channel was closed before writing could begin.");
+			var shouldWait = target
+				.WaitToWriteAndThrowIfClosedAsync("The target channel was closed before writing could begin.", cancellationToken)
+				.AsTask(); // ValueTasks can only have a single await.
 
 			var enumerator = source.GetEnumerator();
 			var writers = new Task[maxConcurrency];
@@ -42,31 +42,27 @@ namespace Open.ChannelExtensions
 				.WhenAll(writers)
 				.ContinueWith(t =>
 				{
-					if (t.IsFaulted)
-						return t;
-
-					if (cancellationToken.IsCancellationRequested)
-						return Task.FromCanceled(cancellationToken);
-
 					if (complete)
 						target.Complete();
 
 					return t;
-				})
+				}, TaskContinuationOptions.ExecuteSynchronously)
 				.Unwrap();
 
 			async Task WriteAllAsyncCore()
 			{
-				var next = shouldWait;
+				await shouldWait;
+				var next = new ValueTask();
+				var more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 				while (!cancellationToken.IsCancellationRequested
-					&& TryMoveNextSynchronized(enumerator, out var e))
+					&& (more = TryMoveNextSynchronized(enumerator, out var e)))
 				{
-					var value = e.IsCompletedSuccessfully ? e.Result : await e.ConfigureAwait(false);
-					if (next.IsCompletedSuccessfully ? !next.Result : !await next.ConfigureAwait(false))
-						throw new ChannelClosedException();
-					next = target.TryWriteAsync(value, cancellationToken);
+					var value = await e.ConfigureAwait(false);
+					await next.ConfigureAwait(false);
+					next = target.WriteAsync(value, cancellationToken);
 				}
-				if (!next.IsCompletedSuccessfully) await next.ConfigureAwait(false);
+				await next.ConfigureAwait(false);
+				if(more) cancellationToken.ThrowIfCancellationRequested();
 			}
 		}
 
