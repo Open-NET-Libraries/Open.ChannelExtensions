@@ -45,7 +45,8 @@ namespace Open.ChannelExtensions
 			source
 				.ReadAllConcurrentlyAsync(maxConcurrency, e =>
 				{
-					cancellationToken.ThrowIfCancellationRequested();
+					if (cancellationToken.IsCancellationRequested)
+						return new ValueTask(Task.FromCanceled(cancellationToken));
 					var result = transform(e);
 					return result.IsCompletedSuccessfully
 						? writer.WriteAsync(result.Result, cancellationToken)

@@ -25,18 +25,23 @@ namespace Open.ChannelExtensions
 			if (maxConcurrency < 1) throw new ArgumentOutOfRangeException(nameof(maxConcurrency), maxConcurrency, "Must be at least 1.");
 			Contract.EndContractBlock();
 
+			if (cancellationToken.IsCancellationRequested)
+				return Task.FromCanceled(cancellationToken);
+
 			if (maxConcurrency == 1)
-				return reader
-					.ReadAllAsync(receiver, cancellationToken)
-					.AsTask();
+				return reader.ReadAllAsync(receiver, cancellationToken).AsTask();
 
 			var readers = new Task[maxConcurrency];
 			for (var r = 0; r < maxConcurrency; ++r)
 				readers[r] = reader
-					.ReadUntilCancelledAsync(cancellationToken, ParallelReceiver)
-					.AsTask();
+					.ReadUntilCancelledAsync(cancellationToken, ParallelReceiver).AsTask();
 
-			return Task.WhenAll(readers);
+			return Task
+				.WhenAll(readers)
+				.ContinueWith(
+					t => (!t.IsFaulted && !t.IsCanceled && cancellationToken.IsCancellationRequested) ? Task.FromCanceled(cancellationToken) : t,
+					TaskContinuationOptions.ExecuteSynchronously)
+				.Unwrap();
 
 			ValueTask ParallelReceiver(T item, int i) => receiver(item);
 		}

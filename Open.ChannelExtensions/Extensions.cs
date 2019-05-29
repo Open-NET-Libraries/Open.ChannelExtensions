@@ -30,6 +30,9 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		public static ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, string ifClosedMessage, CancellationToken cancellationToken = default)
 		{
+			if (cancellationToken.IsCancellationRequested)
+				return new ValueTask(Task.FromCanceled(cancellationToken));
+
 			var waitForWrite = writer.WaitToWriteAsync(cancellationToken);
 			if (!waitForWrite.IsCompletedSuccessfully)
 				return ThrowChannelClosedExceptionIfFalse(waitForWrite, ifClosedMessage);
@@ -48,6 +51,9 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		public static ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, CancellationToken cancellationToken = default)
 		{
+			if (cancellationToken.IsCancellationRequested)
+				return new ValueTask(Task.FromCanceled(cancellationToken));
+
 			var waitForWrite = writer.WaitToWriteAsync(cancellationToken);
 			if (!waitForWrite.IsCompletedSuccessfully)
 				return ThrowChannelClosedExceptionIfFalse(waitForWrite);

@@ -26,6 +26,9 @@ namespace Open.ChannelExtensions
 			if (maxConcurrency < 1) throw new ArgumentOutOfRangeException(nameof(maxConcurrency), maxConcurrency, "Must be at least 1.");
 			Contract.EndContractBlock();
 
+			if (cancellationToken.IsCancellationRequested)
+				return Task.FromCanceled(cancellationToken);
+
 			if (maxConcurrency == 1)
 				return target.WriteAllAsync(source, complete, cancellationToken).AsTask();
 
@@ -34,7 +37,7 @@ namespace Open.ChannelExtensions
 				.AsTask(); // ValueTasks can only have a single await.
 
 			var enumerator = source.GetEnumerator();
-			var writers = new Task[maxConcurrency];
+			var writers = new Task<bool>[maxConcurrency];
 			for (var w = 0; w < maxConcurrency; w++)
 				writers[w] = WriteAllAsyncCore();
 
@@ -45,11 +48,12 @@ namespace Open.ChannelExtensions
 					if (complete)
 						target.Complete();
 
-					return t;
+					return (!t.IsFaulted && !t.IsCanceled && t.Result.Any(r => r)) ? Task.FromCanceled(cancellationToken) : t;
 				}, TaskContinuationOptions.ExecuteSynchronously)
 				.Unwrap();
 
-			async Task WriteAllAsyncCore()
+			// returns false if there's no more (wasn't cancelled).
+			async Task<bool> WriteAllAsyncCore()
 			{
 				await shouldWait;
 				var next = new ValueTask();
@@ -62,7 +66,7 @@ namespace Open.ChannelExtensions
 					next = target.WriteAsync(value, cancellationToken);
 				}
 				await next.ConfigureAwait(false);
-				if(more) cancellationToken.ThrowIfCancellationRequested();
+				return more;
 			}
 		}
 
