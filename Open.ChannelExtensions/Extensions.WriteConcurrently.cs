@@ -19,15 +19,16 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static Task WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
 			int maxConcurrency, IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 		{
 			if (maxConcurrency < 1) throw new ArgumentOutOfRangeException(nameof(maxConcurrency), maxConcurrency, "Must be at least 1.");
 			Contract.EndContractBlock();
 
 			if (cancellationToken.IsCancellationRequested)
-				return Task.FromCanceled(cancellationToken);
+				return Task.FromCanceled<long>(cancellationToken);
 
 			if (maxConcurrency == 1)
 				return target.WriteAllAsync(source, complete, cancellationToken).AsTask();
@@ -37,7 +38,7 @@ namespace Open.ChannelExtensions
 				.AsTask(); // ValueTasks can only have a single await.
 
 			var enumerator = source.GetEnumerator();
-			var writers = new Task<bool>[maxConcurrency];
+			var writers = new Task<long>[maxConcurrency];
 			for (var w = 0; w < maxConcurrency; w++)
 				writers[w] = WriteAllAsyncCore();
 
@@ -48,25 +49,36 @@ namespace Open.ChannelExtensions
 					if (complete)
 						target.Complete();
 
-					return (!t.IsFaulted && !t.IsCanceled && t.Result.Any(r => r)) ? Task.FromCanceled(cancellationToken) : t;
+					if (t.IsFaulted)
+						return Task.FromException<long>(t.Exception);
+
+					if (t.IsCanceled)
+						return Task.FromCanceled<long>(cancellationToken);
+
+					return Task.FromResult(t.Result.Sum());
 				}, TaskContinuationOptions.ExecuteSynchronously)
 				.Unwrap();
 
 			// returns false if there's no more (wasn't cancelled).
-			async Task<bool> WriteAllAsyncCore()
+			async Task<long> WriteAllAsyncCore()
 			{
 				await shouldWait;
+				long count = 0;
 				var next = new ValueTask();
-				var more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
+				var potentiallyCancelled = true; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 				while (!cancellationToken.IsCancellationRequested
-					&& (more = TryMoveNextSynchronized(enumerator, out var e)))
+					&& (potentiallyCancelled = TryMoveNextSynchronized(enumerator, out var e)))
 				{
 					var value = await e.ConfigureAwait(false);
 					await next.ConfigureAwait(false);
-					next = target.WriteAsync(value, cancellationToken);
+					count++;
+					next = target.TryWrite(value) // do this to avoid unneccesary early cancel.
+						? new ValueTask()
+						: target.WriteAsync(value, cancellationToken);
 				}
 				await next.ConfigureAwait(false);
-				return more;
+				if (potentiallyCancelled) cancellationToken.ThrowIfCancellationRequested();
+				return count;
 			}
 		}
 
@@ -94,8 +106,9 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static Task WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
 			int maxConcurrency, IEnumerable<Task<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 			=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
 
@@ -108,8 +121,9 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static Task WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
 			int maxConcurrency, IEnumerable<Func<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 			=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.Select(e => new ValueTask<T>(e())), complete, cancellationToken);
 
@@ -122,8 +136,9 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static Task WriteAllConcurrently<T>(this ChannelWriter<T> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static Task<long> WriteAllConcurrently<T>(this ChannelWriter<T> target,
 			int maxConcurrency, IEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default)
 			=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
 

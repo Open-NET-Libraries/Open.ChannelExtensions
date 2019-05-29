@@ -18,25 +18,30 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static async ValueTask WriteAllAsync<T>(this ChannelWriter<T> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static async ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
 			IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 		{
 			await target.WaitToWriteAndThrowIfClosedAsync(
 				"The target channel was closed before writing could begin.",
 				cancellationToken);
 
+			long count = 0;
 			var next = new ValueTask();
 			foreach (var e in source)
 			{
 				var value = await e.ConfigureAwait(false);
 				await next.ConfigureAwait(false);
+				count++;
 				next = target.WriteAsync(value, cancellationToken);
 			}
 			await next.ConfigureAwait(false);
 
 			if (complete)
 				target.Complete();
+
+			return count;
 		}
 
 		/// <summary>
@@ -47,8 +52,9 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static ValueTask WriteAllAsync<T>(this ChannelWriter<T> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
 			IEnumerable<Task<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
 
@@ -60,8 +66,9 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static ValueTask WriteAllAsync<T>(this ChannelWriter<T> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
 			IEnumerable<Func<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e())), complete, cancellationToken);
 
@@ -73,8 +80,9 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static ValueTask WriteAll<T>(this ChannelWriter<T> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static ValueTask<long> WriteAll<T>(this ChannelWriter<T> target,
 			IEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default)
 			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
 
@@ -84,8 +92,9 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The text reader to consume from.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task which completes when all the data has been written to the channel writer.</returns>
-		public static async ValueTask WriteAllLines(this ChannelWriter<string> target,
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static async ValueTask<long> WriteAllLines(this ChannelWriter<string> target,
 			TextReader source, bool complete = false, CancellationToken cancellationToken = default)
 		{
 			var next = target.WaitToWriteAndThrowIfClosedAsync(
@@ -93,6 +102,7 @@ namespace Open.ChannelExtensions
 				cancellationToken);
 
 			await next.ConfigureAwait(false);
+			long count = 0;
 			var more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 			while (!cancellationToken.IsCancellationRequested)
 			{
@@ -108,15 +118,18 @@ namespace Open.ChannelExtensions
 				}
 
 				await next.ConfigureAwait(false);
+				count++;
 				next = target.WriteAsync(line, cancellationToken);
 			}
 			await next.ConfigureAwait(false);
 
-			if(more)
+			if (more)
 				cancellationToken.ThrowIfCancellationRequested();
 
 			if (complete)
 				target.Complete();
+
+			return count;
 		}
 	}
 }

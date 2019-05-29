@@ -44,7 +44,7 @@ namespace Open.ChannelExtensions
 					{
 						if (t.IsFaulted)
 							return Task.FromException<long>(t.Exception);
-						if (cancellationToken.IsCancellationRequested)
+						if (t.IsCanceled)
 							return Task.FromCanceled<long>(cancellationToken);
 						return Task.FromResult(t.Result.Sum());
 					},
