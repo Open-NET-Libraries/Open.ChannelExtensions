@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics.Contracts;
 using System.Threading;
 using System.Threading.Channels;
@@ -17,7 +18,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static Task ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
+		public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
 			int maxConcurrency,
 			Func<T, ValueTask> receiver,
 			CancellationToken cancellationToken = default)
@@ -26,12 +27,12 @@ namespace Open.ChannelExtensions
 			Contract.EndContractBlock();
 
 			if (cancellationToken.IsCancellationRequested)
-				return Task.FromCanceled(cancellationToken);
+				return Task.FromCanceled<long>(cancellationToken);
 
 			if (maxConcurrency == 1)
 				return reader.ReadAllAsync(receiver, cancellationToken).AsTask();
 
-			var readers = new Task[maxConcurrency];
+			var readers = new Task<long>[maxConcurrency];
 			for (var r = 0; r < maxConcurrency; ++r)
 				readers[r] = reader
 					.ReadUntilCancelledAsync(cancellationToken, ParallelReceiver).AsTask();
@@ -39,11 +40,18 @@ namespace Open.ChannelExtensions
 			return Task
 				.WhenAll(readers)
 				.ContinueWith(
-					t => (!t.IsFaulted && !t.IsCanceled && cancellationToken.IsCancellationRequested) ? Task.FromCanceled(cancellationToken) : t,
+					t =>
+					{
+						if (t.IsFaulted)
+							return Task.FromException<long>(t.Exception);
+						if (cancellationToken.IsCancellationRequested)
+							return Task.FromCanceled<long>(cancellationToken);
+						return Task.FromResult(t.Result.Sum());
+					},
 					TaskContinuationOptions.ExecuteSynchronously)
 				.Unwrap();
 
-			ValueTask ParallelReceiver(T item, int i) => receiver(item);
+			ValueTask ParallelReceiver(T item, long i) => receiver(item);
 		}
 
 		/// <summary>
@@ -55,7 +63,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static Task ReadAllConcurrentlyAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+		public static Task<long> ReadAllConcurrentlyAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			int maxConcurrency,
 			Func<TRead, ValueTask> receiver,
 			CancellationToken cancellationToken = default)
@@ -70,7 +78,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static Task ReadAllConcurrently<T>(this ChannelReader<T> reader,
+		public static Task<long> ReadAllConcurrently<T>(this ChannelReader<T> reader,
 			int maxConcurrency,
 			Action<T> receiver,
 			CancellationToken cancellationToken = default)
@@ -91,7 +99,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		public static Task ReadAllConcurrently<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+		public static Task<long> ReadAllConcurrently<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			int maxConcurrency,
 			Action<TRead> receiver,
 			CancellationToken cancellationToken = default)
