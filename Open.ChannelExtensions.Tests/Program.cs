@@ -79,9 +79,28 @@ namespace Open.ChannelExtensions.Tests
 				Console.WriteLine();
 			}
 
+			{
+				Console.WriteLine("Transform operation test...");
+				var sw = Stopwatch.StartNew();
+				await Enumerable
+					.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
+					.Select((t, i) => t(i))
+					.ToChannelAsync()
+					.Transform(i => i * 2L)
+					.ReadAll(Dummy);
+				sw.Stop();
+				Console.WriteLine(sw.Elapsed);
+				Console.WriteLine();
+			}
+
 		}
 
 		static void Dummy(int i)
+		{
+
+		}
+
+		static void Dummy(long i)
 		{
 
 		}
