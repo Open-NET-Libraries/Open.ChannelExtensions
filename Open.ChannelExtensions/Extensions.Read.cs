@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Threading;
 using System.Threading.Channels;
@@ -8,6 +10,47 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
+
+		/// <summary>
+		/// Creates an enumerator that will read from the channel until no more are available for read.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="reader">The channel reader to read from.</param>
+		/// <returns>An enumerator that will read from the channel until no more are available for read</returns>
+		public static IEnumerator<T> ReadAvailable<T>(this ChannelReader<T> reader)
+		{
+			if (reader == null) throw new NullReferenceException();
+			Contract.EndContractBlock();
+
+			while (reader.TryRead(out var e))
+				yield return e;
+		}
+
+		public static async ValueTask<List<T>> ReadBatchAsync<T>(this ChannelReader<T> reader, int max, CancellationToken cancellationToken = default)
+		{
+			if (reader == null) throw new NullReferenceException();
+			if (max < 1) throw new ArgumentOutOfRangeException(nameof(max), max, "Must be at least 1.");
+			Contract.EndContractBlock();
+
+			var results = new List<T>(max);
+
+			do
+			{
+				while (
+					results.Count < max
+					&& !cancellationToken.IsCancellationRequested
+					&& reader.TryRead(out var item))
+				{
+					results.Add(item);
+				}
+				cancellationToken.ThrowIfCancellationRequested();
+			}
+			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
+
+			results.TrimExcess();
+			return results;
+		}
+
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
 		/// </summary>
@@ -21,6 +64,10 @@ namespace Open.ChannelExtensions
 			CancellationToken cancellationToken,
 			Func<T, long, ValueTask> receiver)
 		{
+			if (reader == null) throw new NullReferenceException();
+			if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+			Contract.EndContractBlock();
+
 			long index = 0;
 			do
 			{
@@ -224,13 +271,19 @@ namespace Open.ChannelExtensions
 		public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
 			Action<T, long> receiver,
 			CancellationToken cancellationToken = default)
-			=> reader
+		{
+			if (reader == null) throw new NullReferenceException();
+			if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+			Contract.EndContractBlock();
+
+			return reader
 				.ReadAllAsync((e, i) =>
 				{
 					receiver(e, i);
 					return new ValueTask();
 				},
 				cancellationToken);
+		}
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
@@ -258,12 +311,19 @@ namespace Open.ChannelExtensions
 		public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
 			Action<T> receiver,
 			CancellationToken cancellationToken = default)
-			=> reader.ReadAllAsync((e, i) =>
+		{
+			if (reader == null) throw new NullReferenceException();
+			if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+			Contract.EndContractBlock();
+
+			return reader.ReadAllAsync(
+				(e, i) =>
 				{
 					receiver(e);
 					return new ValueTask();
 				},
 				cancellationToken);
+		}
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.

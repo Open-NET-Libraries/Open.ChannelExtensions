@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace Open.ChannelExtensions
 			{
 				_source = source ?? throw new ArgumentNullException(nameof(source));
 				_transform = transform ?? throw new ArgumentNullException(nameof(transform));
+				Contract.EndContractBlock();
 			}
 
 			private readonly ChannelReader<TIn> _source;

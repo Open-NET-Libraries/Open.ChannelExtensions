@@ -16,7 +16,7 @@ Part of the "Open" set of libraries.</Description>
     <RepositoryType>git</RepositoryType>
     <PackageTags>channels dotnet threading tasks extensions</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.2.3</Version>
+    <Version>2.2.4</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AssemblyVersion>2.2.3.0</AssemblyVersion>
     <FileVersion>2.2.3.0</FileVersion>
