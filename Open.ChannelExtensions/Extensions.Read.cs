@@ -12,12 +12,12 @@ namespace Open.ChannelExtensions
 	{
 
 		/// <summary>
-		/// Creates an enumerator that will read from the channel until no more are available for read.
+		/// Creates an enumerable that will read from the channel until no more are available for read.
 		/// </summary>
 		/// <typeparam name="T">The item type.</typeparam>
 		/// <param name="reader">The channel reader to read from.</param>
-		/// <returns>An enumerator that will read from the channel until no more are available for read</returns>
-		public static IEnumerator<T> ReadAvailable<T>(this ChannelReader<T> reader)
+		/// <returns>An enumerable that will read from the channel until no more are available for read</returns>
+		public static IEnumerable<T> ReadAvailable<T>(this ChannelReader<T> reader)
 		{
 			if (reader == null) throw new NullReferenceException();
 			Contract.EndContractBlock();
@@ -43,6 +43,10 @@ namespace Open.ChannelExtensions
 				{
 					results.Add(item);
 				}
+
+				if (results.Count == max)
+					return results;
+
 				cancellationToken.ThrowIfCancellationRequested();
 			}
 			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));

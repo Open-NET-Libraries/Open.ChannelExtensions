@@ -29,12 +29,28 @@ namespace Open.ChannelExtensions.Tests
 			{
 				Console.WriteLine("Standard Channel operation test...");
 				var sw = Stopwatch.StartNew();
-				await Enumerable
+				var total = await Enumerable
 					.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
 					.Select((t, i) => t(i))
 					.ToChannelAsync(singleReader: true)
 					.ReadAll(Dummy);
 				sw.Stop();
+				Debug.Assert(total == repeat);
+				Console.WriteLine(sw.Elapsed);
+				Console.WriteLine();
+			}
+
+			{
+				Console.WriteLine("Standard Channel filter test...");
+				var sw = Stopwatch.StartNew();
+				var total = await Enumerable
+					.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
+					.Select((t, i) => t(i))
+					.ToChannelAsync(singleReader: true)
+					.Filter(i => i % 2 == 0)
+					.ReadAll(Dummy);
+				sw.Stop();
+				Debug.Assert(total == repeat / 2);
 				Console.WriteLine(sw.Elapsed);
 				Console.WriteLine();
 			}
@@ -68,13 +84,14 @@ namespace Open.ChannelExtensions.Tests
 			{
 				Console.WriteLine("Pipe operation test...");
 				var sw = Stopwatch.StartNew();
-				await Enumerable
+				var total = await Enumerable
 					.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
 					.Select((t, i) => t(i))
 					.ToChannelAsync()
 					.Pipe(i => i * 2)
 					.ReadAll(Dummy);
 				sw.Stop();
+				Debug.Assert(total == repeat);
 				Console.WriteLine(sw.Elapsed);
 				Console.WriteLine();
 			}
