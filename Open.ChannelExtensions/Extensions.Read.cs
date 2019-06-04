@@ -244,10 +244,52 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+			Func<TRead, long, Task> receiver,
+			CancellationToken cancellationToken = default)
+			=> channel.Reader.ReadAllAsync((e, i) => new ValueTask(receiver(e, i)), cancellationToken);
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the receiver.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="channel">The channel to read from.</param>
+		/// <param name="receiver">The async receiver function.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
 			Func<T, ValueTask> receiver,
 			CancellationToken cancellationToken = default)
 			=> reader.ReadAllAsync((e, i) => receiver(e), cancellationToken);
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the receiver.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="channel">The channel to read from.</param>
+		/// <param name="receiver">The async receiver function.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
+			Func<T, Task> receiver,
+			CancellationToken cancellationToken = default)
+			=> reader.ReadAllAsync((e, i) => new ValueTask(receiver(e)), cancellationToken);
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the receiver.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="channel">The channel to read from.</param>
+		/// <param name="receiver">The async receiver function.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+			Func<TRead, Task> receiver,
+			CancellationToken cancellationToken = default)
+			=> channel.Reader.ReadAllAsync((e, i) => new ValueTask(receiver(e)), cancellationToken);
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
