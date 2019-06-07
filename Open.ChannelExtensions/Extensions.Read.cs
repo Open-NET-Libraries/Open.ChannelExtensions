@@ -244,7 +244,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+		public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, long, Task> receiver,
 			CancellationToken cancellationToken = default)
 			=> channel.Reader.ReadAllAsync((e, i) => new ValueTask(receiver(e, i)), cancellationToken);
@@ -272,7 +272,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-		public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
+		public static ValueTask<long> TaskReadAllAsync<T>(this ChannelReader<T> reader,
 			Func<T, Task> receiver,
 			CancellationToken cancellationToken = default)
 			=> reader.ReadAllAsync((e, i) => new ValueTask(receiver(e)), cancellationToken);
@@ -286,7 +286,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+		public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, Task> receiver,
 			CancellationToken cancellationToken = default)
 			=> channel.Reader.ReadAllAsync((e, i) => new ValueTask(receiver(e)), cancellationToken);
