@@ -8,25 +8,26 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
-		class FilteringChannelReader<T> : ChannelReader<T>
+		class TypeFilteringChannelReader<TSource, T> : ChannelReader<T>
 		{
-			public FilteringChannelReader(ChannelReader<T> source, Func<T, bool> predicate)
+			public TypeFilteringChannelReader(ChannelReader<TSource> source)
 			{
 				_source = source ?? throw new ArgumentNullException(nameof(source));
-				_predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
 				Contract.EndContractBlock();
 			}
 
-			private readonly ChannelReader<T> _source;
-			private readonly Func<T, bool> _predicate;
+			private readonly ChannelReader<TSource> _source;
 			public override Task Completion => _source.Completion;
 
 			public override bool TryRead(out T item)
 			{
-				while (_source.TryRead(out item))
+				while (_source.TryRead(out TSource s))
 				{
-					if (_predicate(item))
+					if(s is T i)
+					{
+						item = i;
 						return true;
+					}
 				}
 
 				item = default;
@@ -37,7 +38,7 @@ namespace Open.ChannelExtensions
 				=> _source.WaitToReadAsync(cancellationToken);
 		}
 
-		public static ChannelReader<T> Filter<T>(this ChannelReader<T> source, Func<T, bool> predicate)
-			=> new FilteringChannelReader<T>(source, predicate);
+		public static ChannelReader<T> OfType<TSource, T>(this ChannelReader<TSource> source)
+			=> new TypeFilteringChannelReader<TSource, T>(source);
 	}
 }

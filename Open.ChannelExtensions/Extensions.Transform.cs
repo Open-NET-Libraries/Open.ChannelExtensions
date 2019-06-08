@@ -8,36 +8,39 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
-		class FilteringChannelReader<T> : ChannelReader<T>
+		class TransformingChannelReader<TIn, TOut> : ChannelReader<TOut>
 		{
-			public FilteringChannelReader(ChannelReader<T> source, Func<T, bool> predicate)
+			public TransformingChannelReader(ChannelReader<TIn> source, Func<TIn, TOut> transform)
 			{
 				_source = source ?? throw new ArgumentNullException(nameof(source));
-				_predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
+				_transform = transform ?? throw new ArgumentNullException(nameof(transform));
 				Contract.EndContractBlock();
 			}
 
-			private readonly ChannelReader<T> _source;
-			private readonly Func<T, bool> _predicate;
+			private readonly ChannelReader<TIn> _source;
+			private readonly Func<TIn, TOut> _transform;
 			public override Task Completion => _source.Completion;
 
-			public override bool TryRead(out T item)
+			public override bool TryRead(out TOut item)
 			{
-				while (_source.TryRead(out item))
+				if (_source.TryRead(out var e))
 				{
-					if (_predicate(item))
-						return true;
+					item = _transform(e);
+					return true;
 				}
 
 				item = default;
 				return false;
 			}
 
+			public override async ValueTask<TOut> ReadAsync(CancellationToken cancellationToken = default)
+				=> _transform(await _source.ReadAsync(cancellationToken));
+
 			public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
 				=> _source.WaitToReadAsync(cancellationToken);
 		}
 
-		public static ChannelReader<T> Filter<T>(this ChannelReader<T> source, Func<T, bool> predicate)
-			=> new FilteringChannelReader<T>(source, predicate);
+		public static ChannelReader<TOut> Transform<TIn, TOut>(this ChannelReader<TIn> source, Func<TIn, TOut> transform)
+			=> new TransformingChannelReader<TIn, TOut>(source, transform);
 	}
 }
