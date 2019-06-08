@@ -95,8 +95,20 @@ namespace Open.ChannelExtensions
 			}
 		}
 
-		public static ChannelReader<T> Join<TList, T>(this ChannelReader<TList> source)
-			where TList : IEnumerable<T>
-			=> new JoiningChannelReader<TList, T>(source);
+		public static ChannelReader<T> Join<T>(this ChannelReader<IEnumerable<T>> source)
+			=> new JoiningChannelReader<IEnumerable<T>, T>(source);
+
+		public static ChannelReader<T> Join<T>(this ChannelReader<ICollection<T>> source)
+			=> new JoiningChannelReader<ICollection<T>, T>(source);
+
+		public static ChannelReader<T> Join<T>(this ChannelReader<IList<T>> source)
+			=> new JoiningChannelReader<IList<T>, T>(source);
+
+		public static ChannelReader<T> Join<T>(this ChannelReader<List<T>> source)
+			=> new JoiningChannelReader<List<T>, T>(source);
+
+		public static ChannelReader<T> Join<T>(this ChannelReader<T[]> source)
+			=> new JoiningChannelReader<T[], T>(source);
+
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,15 +28,41 @@ namespace Open.ChannelExtensions.Tests
 			}
 
 			{
-				Console.WriteLine("Standard Channel operation test...");
+				Console.WriteLine("Batch + join test 1...");
 				var sw = Stopwatch.StartNew();
-				var total = await Enumerable
-					.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
-					.Select((t, i) => t(i))
-					.ToChannelAsync(singleReader: true)
-					.ReadAll(Dummy);
+				var range = Enumerable
+					.Range(0, 2000000);
+
+				var result = new List<int>(2000000);
+
+				var total = await range
+					.ToChannel()
+					.Batch(5000)
+					.Join()
+					.ReadAll(i=> result.Add(i));
+
 				sw.Stop();
-				Debug.Assert(total == repeat);
+				Debug.Assert(result.SequenceEqual(range));
+				Console.WriteLine(sw.Elapsed);
+				Console.WriteLine();
+			}
+
+			{
+				Console.WriteLine("Batch + join test 2...");
+				var sw = Stopwatch.StartNew();
+				var range = Enumerable
+					.Range(0, 2000000);
+
+				var result = new List<int>(2000000);
+
+				var total = await range
+					.ToChannel()
+					.Batch(50)
+					.Join()
+					.ReadAll(i => result.Add(i));
+
+				sw.Stop();
+				Debug.Assert(result.SequenceEqual(range));
 				Console.WriteLine(sw.Elapsed);
 				Console.WriteLine();
 			}
