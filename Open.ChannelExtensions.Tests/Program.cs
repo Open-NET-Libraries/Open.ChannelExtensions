@@ -31,9 +31,9 @@ namespace Open.ChannelExtensions.Tests
 				Console.WriteLine("Batch + join test 1...");
 				var sw = Stopwatch.StartNew();
 				var range = Enumerable
-					.Range(0, 2000000);
+					.Range(0, 10000000);
 
-				var result = new List<int>(2000000);
+				var result = new List<int>(10000000);
 
 				var total = await range
 					.ToChannel()
@@ -51,9 +51,9 @@ namespace Open.ChannelExtensions.Tests
 				Console.WriteLine("Batch + join test 2...");
 				var sw = Stopwatch.StartNew();
 				var range = Enumerable
-					.Range(0, 2000000);
+					.Range(0, 10000000);
 
-				var result = new List<int>(2000000);
+				var result = new List<int>(10000000);
 
 				var total = await range
 					.ToChannel()

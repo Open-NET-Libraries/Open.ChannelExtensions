@@ -17,23 +17,25 @@ namespace Open.ChannelExtensions
 			{
 				_source = source ?? throw new ArgumentNullException(nameof(source));
 				Contract.EndContractBlock();
-			}
 
-			private readonly ChannelReader<TList> _source;
-			public override Task Completion
-				=> _source.Completion.ContinueWith(t =>
+				_source.Completion.ContinueWith(t =>
 				{
 					// Need to be sure writing is done before we continue...
 					lock (_buffer)
 					{
 						_buffer.Writer.Complete(t.Exception);
 					}
-					return _buffer.Reader.Completion;
-				})
-				.Unwrap();
+				});
+			}
+
+			private readonly ChannelReader<TList> _source;
+			public override Task Completion => _buffer.Reader.Completion;
 
 			bool TryPipeItems()
 			{
+				if (_source.Completion.IsCompleted)
+					return false;
+
 				lock (_buffer)
 				{
 					if (!_source.TryRead(out TList batch))
@@ -72,8 +74,8 @@ namespace Open.ChannelExtensions
 					return b;
 
 				var s = _source.WaitToReadAsync(cancellationToken);
-				if (s.IsCompletedSuccessfully && !s.Result)
-					return b;
+				if (s.IsCompletedSuccessfully)
+					return s.Result ? new ValueTask<bool>(true) : b;
 
 				return WaitCore();
 
