@@ -47,17 +47,14 @@ namespace Open.ChannelExtensions
 				.ContinueWith(t =>
 				{
 					if (complete)
-						target.Complete();
+						target.Complete(t.Exception);
 
-					if (t.IsFaulted)
-						return Task.FromException<long>(t.Exception);
-
-					if (t.IsCanceled)
-						return Task.FromCanceled<long>(cancellationToken);
-
-					return Task.FromResult(t.Result.Sum());
+					return t;
 				}, TaskContinuationOptions.ExecuteSynchronously)
-				.Unwrap();
+				.Unwrap()
+				.ContinueWith(
+					t => t.Result.Sum(),
+					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
 
 			// returns false if there's no more (wasn't cancelled).
 			async Task<long> WriteAllAsyncCore()

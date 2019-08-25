@@ -40,16 +40,8 @@ namespace Open.ChannelExtensions
 			return Task
 				.WhenAll(readers)
 				.ContinueWith(
-					t =>
-					{
-						if (t.IsFaulted)
-							return Task.FromException<long>(t.Exception);
-						if (t.IsCanceled)
-							return Task.FromCanceled<long>(cancellationToken);
-						return Task.FromResult(t.Result.Sum());
-					},
-					TaskContinuationOptions.ExecuteSynchronously)
-				.Unwrap();
+					t => t.Result.Sum(),
+					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
 
 			ValueTask ParallelReceiver(T item, long i) => receiver(item);
 		}
