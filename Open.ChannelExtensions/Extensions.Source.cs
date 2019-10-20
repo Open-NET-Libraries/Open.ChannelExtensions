@@ -136,26 +136,6 @@ namespace Open.ChannelExtensions
 		/// <summary>
 		/// Writes all entries from the source to the channel.  Calls complete when finished.
 		/// </summary>
-		/// <typeparam name="TWrite">The input type of the channel.</typeparam>
-		/// <typeparam name="TRead">The output type of the channel.</typeparam>
-		/// <param name="target">The channel to write to.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
-		/// <param name="source">The source data to use.</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>The channel reader.</returns>
-		public static ChannelReader<TRead> Source<TWrite, TRead>(this Channel<TWrite, TRead> target,
-			int maxConcurrency, IEnumerable<TWrite> source, CancellationToken cancellationToken = default)
-		{
-			if (maxConcurrency == 1)
-				return target.Source(source, cancellationToken);
-
-			target.Writer.WriteAllConcurrently(maxConcurrency, source, true, cancellationToken).ConfigureAwait(false);
-			return target.Reader;
-		}
-
-		/// <summary>
-		/// Writes all entries from the source to the channel.  Calls complete when finished.
-		/// </summary>
 		/// <typeparam name="T">The output type of the channel.</typeparam>
 		/// <param name="target">The channel to write to.</param>
 		/// <param name="source">The source data to use.</param>
@@ -167,5 +147,23 @@ namespace Open.ChannelExtensions
 			target.Writer.WriteAllLines(source, true, cancellationToken).ConfigureAwait(false);
 			return target.Reader;
 		}
+
+#if NETSTANDARD2_1
+		/// <summary>
+		/// Executes all entries from the source and passes their result to the channel.  Calls complete when finished.
+		/// </summary>
+		/// <typeparam name="TWrite">The input type of the channel.</typeparam>
+		/// <typeparam name="TRead">The output type of the channel.</typeparam>
+		/// <param name="target">The channel to write to.</param>
+		/// <param name="source">The asynchronous source data to use.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>The channel reader.</returns>
+		public static ChannelReader<TRead> Source<TWrite, TRead>(this Channel<TWrite, TRead> target,
+			IAsyncEnumerable<TWrite> source, CancellationToken cancellationToken = default)
+		{
+			target.Writer.WriteAllAsync(source, true, cancellationToken).ConfigureAwait(false);
+			return target.Reader;
+		}
+#endif
 	}
 }

@@ -123,21 +123,5 @@ namespace Open.ChannelExtensions
 		public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
 			int maxConcurrency, IEnumerable<Func<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 			=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.Select(e => new ValueTask<T>(e())), complete, cancellationToken);
-
-		/// <summary>
-		/// Asynchronously writes all entries from the source to the channel.
-		/// </summary>
-		/// <typeparam name="T">The input type of the channel.</typeparam>
-		/// <param name="target">The channel to write to.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
-		/// <param name="source">The source data to use.</param>
-		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
-		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-		public static Task<long> WriteAllConcurrently<T>(this ChannelWriter<T> target,
-			int maxConcurrency, IEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default)
-			=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
-
 	}
 }

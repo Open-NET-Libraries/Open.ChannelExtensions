@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+		<NullableReferenceTypes>true</NullableReferenceTypes>
     <Authors>electricessence</Authors>
     <Description>
       A set of extensions for optimizing/simplifying System.Threading.Channels usage.
@@ -18,15 +19,15 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>channels dotnet threading tasks extensions</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.5.0</Version>
+    <Version>2.6.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>2.5.0.0</AssemblyVersion>
-    <FileVersion>2.5.0.0</FileVersion>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <AssemblyVersion>2.6.0.0</AssemblyVersion>
+    <FileVersion>2.6.0.0</FileVersion>
+    <PackageReleaseNotes>Support for .NET Standard 2.1 and IAsyncEnumerable.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
+    <PackageReference Include="System.Threading.Channels" Version="4.6.0" />
   </ItemGroup>
 
 </Project>

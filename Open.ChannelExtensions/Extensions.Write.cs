@@ -131,5 +131,40 @@ namespace Open.ChannelExtensions
 
 			return count;
 		}
+
+#if NETSTANDARD2_1
+		/// <summary>
+		/// Asynchronously writes all entries from the source to the channel.
+		/// </summary>
+		/// <typeparam name="T">The input type of the channel.</typeparam>
+		/// <param name="target">The channel to write to.</param>
+		/// <param name="source">The asynchronous source data to use.</param>
+		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static async ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
+			IAsyncEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default)
+		{
+			await target.WaitToWriteAndThrowIfClosedAsync(
+				"The target channel was closed before writing could begin.",
+				cancellationToken);
+
+			long count = 0;
+			var next = new ValueTask();
+			await foreach (var value in source)
+			{
+				await next.ConfigureAwait(false);
+				count++;
+				next = target.WriteAsync(value, cancellationToken);
+			}
+			await next.ConfigureAwait(false);
+
+			if (complete)
+				target.Complete();
+
+			return count;
+		}
+#endif
 	}
 }
