@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0; netstandard2.1</TargetFrameworks>
     <LangVersion>latest</LangVersion>
-		<NullableReferenceTypes>true</NullableReferenceTypes>
+		<Nullable>enable</Nullable>
     <Authors>electricessence</Authors>
     <Description>
       A set of extensions for optimizing/simplifying System.Threading.Channels usage.
@@ -24,6 +24,7 @@
     <AssemblyVersion>2.6.0.0</AssemblyVersion>
     <FileVersion>2.6.0.0</FileVersion>
     <PackageReleaseNotes>Support for .NET Standard 2.1 and IAsyncEnumerable.</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/electricessence/Open.ChannelExtensions</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
