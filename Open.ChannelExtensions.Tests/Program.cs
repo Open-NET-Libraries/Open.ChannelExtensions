@@ -137,6 +137,22 @@ namespace Open.ChannelExtensions.Tests
 				Console.WriteLine();
 			}
 
+#if NETCOREAPP3_0
+			{
+				Console.WriteLine("Async Enumerable test...");
+				var sw = Stopwatch.StartNew();
+				await foreach(var e in Enumerable
+					.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
+					.Select((t, i) => t(i))
+					.ToChannelAsync()
+					.ReadAllAsync())
+					Dummy(e);
+				sw.Stop();
+				Console.WriteLine(sw.Elapsed);
+				Console.WriteLine();
+			}
+#endif
+
 		}
 
 		static void Dummy(int i)
