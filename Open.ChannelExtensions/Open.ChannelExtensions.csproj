@@ -6,12 +6,12 @@
 		<Nullable>enable</Nullable>
     <Authors>electricessence</Authors>
     <Description>
-      A set of extensions for optimizing/simplifying System.Threading.Channels usage.
+A set of extensions for optimizing/simplifying System.Threading.Channels usage.
 
-      Includes:
-      ReadUntilCancelled, ReadAll, ReadAllConcurrently, WriteAll, WriteAllConcurrently, and Pipe operations.
+Includes:
+ReadUntilCancelled, ReadAll, ReadAllConcurrently, WriteAll, WriteAllConcurrently, and Pipe operations.
 
-      Part of the "Open" set of libraries.
+Part of the "Open" set of libraries.
     </Description>
     <PackageProjectUrl>https://github.com/electricessence/Open.ChannelExtensions</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
