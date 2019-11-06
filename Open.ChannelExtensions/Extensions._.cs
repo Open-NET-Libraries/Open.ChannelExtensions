@@ -71,7 +71,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TRead">The type being read from the reader.</typeparam>
 		/// <typeparam name="Exception">The optional exception to include with completion.</typeparam>
 		/// <returns>The reader's completion task.</returns>
-		public static Task CompleteAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel, Exception exception = null)
+		public static Task CompleteAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel, Exception? exception = null)
 		{
 			channel.Writer.Complete(exception);
 			return channel.Reader.Completion;
