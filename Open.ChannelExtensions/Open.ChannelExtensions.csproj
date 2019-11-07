@@ -19,15 +19,21 @@ Part of the "Open" set of libraries.
     <RepositoryType>git</RepositoryType>
     <PackageTags>channels dotnet threading tasks extensions</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.6.0</Version>
+    <Version>2.7.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>2.6.0.0</AssemblyVersion>
-    <FileVersion>2.6.0.0</FileVersion>
-    <PackageReleaseNotes>Support for .NET Standard 2.1 and IAsyncEnumerable.</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <RepositoryUrl>https://github.com/electricessence/Open.ChannelExtensions</RepositoryUrl>
   </PropertyGroup>
 
-  <ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>Documentation.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>docs\Documentation.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
     <PackageReference Include="System.Threading.Channels" Version="4.6.0" />
   </ItemGroup>
 

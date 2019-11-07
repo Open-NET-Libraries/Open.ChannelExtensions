@@ -39,6 +39,13 @@ namespace Open.ChannelExtensions
 				=> _source.WaitToReadAsync(cancellationToken);
 		}
 
+		/// <summary>
+		/// Produces a reader that only contains results that pass the predicate condition.  Ones that fail the predicate are discarded.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="source">The source channel reader.</param>
+		/// <param name="predicate">The predicate function.</param>
+		/// <returns>A channel reader representing the filtered results.</returns>
 		public static ChannelReader<T> Filter<T>(this ChannelReader<T> source, Func<T, bool> predicate)
 			=> new FilteringChannelReader<T>(source, predicate);
 	}

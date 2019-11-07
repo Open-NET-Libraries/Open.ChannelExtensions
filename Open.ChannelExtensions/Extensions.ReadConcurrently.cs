@@ -30,12 +30,12 @@ namespace Open.ChannelExtensions
 				return Task.FromCanceled<long>(cancellationToken);
 
 			if (maxConcurrency == 1)
-				return reader.ReadAllAsync(receiver, cancellationToken).AsTask();
+				return reader.ReadAllAsync(receiver, cancellationToken, true).AsTask();
 
 			var readers = new Task<long>[maxConcurrency];
 			for (var r = 0; r < maxConcurrency; ++r)
 				readers[r] = reader
-					.ReadUntilCancelledAsync(cancellationToken, ParallelReceiver).AsTask();
+					.ReadUntilCancelledAsync(cancellationToken, ParallelReceiver, true).AsTask();
 
 			return Task
 				.WhenAll(readers)
@@ -64,7 +64,8 @@ namespace Open.ChannelExtensions
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
 		/// </summary>
-		/// <typeparam name="T">The item type.</typeparam>
+		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
+		/// <typeparam name="TRead">The item type of the reader.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
 		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
 		/// <param name="receiver">The async receiver function.</param>
@@ -79,7 +80,8 @@ namespace Open.ChannelExtensions
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
 		/// </summary>
-		/// <typeparam name="T">The item type.</typeparam>
+		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
+		/// <typeparam name="TRead">The item type of the reader.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
 		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
 		/// <param name="receiver">The async receiver function.</param>
@@ -89,7 +91,7 @@ namespace Open.ChannelExtensions
 			int maxConcurrency,
 			Func<TRead, Task> receiver,
 			CancellationToken cancellationToken = default)
-			=> channel.Reader.ReadAllConcurrentlyAsync(maxConcurrency, item=> new ValueTask(receiver(item)), cancellationToken);
+			=> channel.Reader.ReadAllConcurrentlyAsync(maxConcurrency, item => new ValueTask(receiver(item)), cancellationToken);
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
@@ -115,7 +117,8 @@ namespace Open.ChannelExtensions
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
 		/// </summary>
-		/// <typeparam name="T">The item type.</typeparam>
+		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
+		/// <typeparam name="TRead">The item type of the reader.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
 		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
 		/// <param name="receiver">The receiver function.</param>

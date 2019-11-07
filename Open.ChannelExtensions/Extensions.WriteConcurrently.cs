@@ -31,7 +31,7 @@ namespace Open.ChannelExtensions
 				return Task.FromCanceled<long>(cancellationToken);
 
 			if (maxConcurrency == 1)
-				return target.WriteAllAsync(source, complete, cancellationToken).AsTask();
+				return target.WriteAllAsync(source, complete, cancellationToken, true).AsTask();
 
 			var shouldWait = target
 				.WaitToWriteAndThrowIfClosedAsync("The target channel was closed before writing could begin.", cancellationToken)
@@ -59,6 +59,7 @@ namespace Open.ChannelExtensions
 			// returns false if there's no more (wasn't cancelled).
 			async Task<long> WriteAllAsyncCore()
 			{
+				await Task.Yield();
 				await shouldWait;
 				long count = 0;
 				var next = new ValueTask();
@@ -90,7 +91,9 @@ namespace Open.ChannelExtensions
 				}
 			}
 
+#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
 			value = default;
+#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
 			return false;
 		}
 

@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.ChannelExtensions", "Open.ChannelExtensions\Open.ChannelExtensions.csproj", "{04768159-4AD9-434D-A849-8901D7B0E846}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Open.ChannelExtensions.Tests", "Open.ChannelExtensions.Tests\Open.ChannelExtensions.Tests.csproj", "{CEB5E3C7-E8A9-4F30-92AD-46838A152BD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.ChannelExtensions.Tests", "Open.ChannelExtensions.Tests\Open.ChannelExtensions.Tests.csproj", "{CEB5E3C7-E8A9-4F30-92AD-46838A152BD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Open.ChannelExtensions.ComparisonTests", "Open.ChannelExtensions.ComparisonTests\Open.ChannelExtensions.ComparisonTests.csproj", "{F13B7605-FB04-4769-B182-77482C900B28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CEB5E3C7-E8A9-4F30-92AD-46838A152BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEB5E3C7-E8A9-4F30-92AD-46838A152BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEB5E3C7-E8A9-4F30-92AD-46838A152BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F13B7605-FB04-4769-B182-77482C900B28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F13B7605-FB04-4769-B182-77482C900B28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F13B7605-FB04-4769-B182-77482C900B28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F13B7605-FB04-4769-B182-77482C900B28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

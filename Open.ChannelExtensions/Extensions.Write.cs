@@ -10,6 +10,8 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
+		const string ChannelClosedMessage = "The target channel was closed before writing could begin.";
+
 		/// <summary>
 		/// Asynchronously writes all entries from the source to the channel.
 		/// </summary>
@@ -18,14 +20,13 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static async ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-			IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default)
+			IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			await target.WaitToWriteAndThrowIfClosedAsync(
-				"The target channel was closed before writing could begin.",
-				cancellationToken);
+			await target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken).ConfigureAwait(false);
 
 			long count = 0;
 			var next = new ValueTask();
@@ -52,11 +53,12 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-			IEnumerable<Task<T>> source, bool complete = false, CancellationToken cancellationToken = default)
-			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
+			IEnumerable<Task<T>> source, bool complete = false, CancellationToken cancellationToken = default, bool deferredExecution = false)
+			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken, deferredExecution);
 
 		/// <summary>
 		/// Asynchronously executes all entries and writes their results to the channel.
@@ -66,11 +68,12 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-			IEnumerable<Func<T>> source, bool complete = false, CancellationToken cancellationToken = default)
-			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e())), complete, cancellationToken);
+			IEnumerable<Func<T>> source, bool complete = false, CancellationToken cancellationToken = default, bool deferredExecution = false)
+			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e())), complete, cancellationToken, deferredExecution);
 
 		/// <summary>
 		/// Asynchronously writes all entries from the source to the channel.
@@ -80,28 +83,29 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> WriteAll<T>(this ChannelWriter<T> target,
-			IEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default)
-			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
+			IEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default, bool deferredExecution = false)
+			=> WriteAllAsync(target, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken, deferredExecution);
 
 		/// <summary>
 		/// Consumes all lines from a TextReader and writes them to a channel.
 		/// </summary>
 		/// <param name="source">The text reader to consume from.</param>
+		/// <param name="target">The channel to write to.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static async ValueTask<long> WriteAllLines(this ChannelWriter<string> target,
-			TextReader source, bool complete = false, CancellationToken cancellationToken = default)
+			TextReader source, bool complete = false, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			var next = target.WaitToWriteAndThrowIfClosedAsync(
-				"The target channel was closed before writing could begin.",
-				cancellationToken);
-
+			var next = target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken);
 			await next.ConfigureAwait(false);
+
 			long count = 0;
 			var more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 			while (!cancellationToken.IsCancellationRequested)
@@ -141,14 +145,15 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static async ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-			IAsyncEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default)
+			IAsyncEnumerable<T> source, bool complete = false, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			await target.WaitToWriteAndThrowIfClosedAsync(
-				"The target channel was closed before writing could begin.",
-				cancellationToken);
+			await target
+				.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken)
+				.ConfigureAwait(false);
 
 			long count = 0;
 			var next = new ValueTask();

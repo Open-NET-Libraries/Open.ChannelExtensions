@@ -7,22 +7,6 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
-		private static Channel<T> CreateChannel<T>(int capacity = -1, bool singleReader = false)
-			=> capacity > 0
-				? Channel.CreateBounded<T>(new BoundedChannelOptions(capacity)
-				{
-					SingleWriter = true,
-					SingleReader = singleReader,
-					AllowSynchronousContinuations = true,
-					FullMode = BoundedChannelFullMode.Wait
-				})
-				: Channel.CreateUnbounded<T>(new UnboundedChannelOptions
-				{
-					SingleWriter = true,
-					SingleReader = singleReader,
-					AllowSynchronousContinuations = true
-				});
-
 		/// <summary>
 		/// Reads all entries concurrently and applies the values to the provided transform function before buffering the results into another channel for consumption.
 		/// </summary>

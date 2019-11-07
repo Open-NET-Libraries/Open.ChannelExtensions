@@ -17,11 +17,12 @@ namespace Open.ChannelExtensions
 		/// <param name="target">The channel to write to.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 		/// <returns>The channel reader.</returns>
 		public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-			IEnumerable<Func<TWrite>> source, CancellationToken cancellationToken = default)
+			IEnumerable<Func<TWrite>> source, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			target.Writer.WriteAllAsync(source, true, cancellationToken).ConfigureAwait(false);
+			target.Writer.WriteAllAsync(source, true, cancellationToken, deferredExecution).ConfigureAwait(false);
 			return target.Reader;
 		}
 
@@ -33,11 +34,12 @@ namespace Open.ChannelExtensions
 		/// <param name="target">The channel to write to.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 		/// <returns>The channel reader.</returns>
 		public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-			IEnumerable<ValueTask<TWrite>> source, CancellationToken cancellationToken = default)
+			IEnumerable<ValueTask<TWrite>> source, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			target.Writer.WriteAllAsync(source, true, cancellationToken).ConfigureAwait(false);
+			target.Writer.WriteAllAsync(source, true, cancellationToken, deferredExecution).ConfigureAwait(false);
 			return target.Reader;
 		}
 
@@ -49,11 +51,12 @@ namespace Open.ChannelExtensions
 		/// <param name="target">The channel to write to.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 		/// <returns>The channel reader.</returns>
 		public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-			IEnumerable<Task<TWrite>> source, CancellationToken cancellationToken = default)
+			IEnumerable<Task<TWrite>> source, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			target.Writer.WriteAllAsync(source, true, cancellationToken).ConfigureAwait(false);
+			target.Writer.WriteAllAsync(source, true, cancellationToken, deferredExecution).ConfigureAwait(false);
 			return target.Reader;
 		}
 
@@ -65,11 +68,12 @@ namespace Open.ChannelExtensions
 		/// <param name="target">The channel to write to.</param>
 		/// <param name="source">The source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 		/// <returns>The channel reader.</returns>
 		public static ChannelReader<TRead> Source<TWrite, TRead>(this Channel<TWrite, TRead> target,
-			IEnumerable<TWrite> source, CancellationToken cancellationToken = default)
+			IEnumerable<TWrite> source, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			target.Writer.WriteAll(source, true, cancellationToken).ConfigureAwait(false);
+			target.Writer.WriteAll(source, true, cancellationToken, deferredExecution).ConfigureAwait(false);
 			return target.Reader;
 		}
 
@@ -87,7 +91,7 @@ namespace Open.ChannelExtensions
 			int maxConcurrency, IEnumerable<Func<TWrite>> source, CancellationToken cancellationToken = default)
 		{
 			if (maxConcurrency == 1)
-				return target.SourceAsync(source, cancellationToken);
+				return target.SourceAsync(source, cancellationToken, true);
 
 			target.Writer.WriteAllConcurrentlyAsync(maxConcurrency, source, true, cancellationToken).ConfigureAwait(false);
 			return target.Reader;
@@ -107,9 +111,12 @@ namespace Open.ChannelExtensions
 			int maxConcurrency, IEnumerable<ValueTask<TWrite>> source, CancellationToken cancellationToken = default)
 		{
 			if (maxConcurrency == 1)
-				return target.SourceAsync(source, cancellationToken);
+				return target.SourceAsync(source, cancellationToken, true);
 
-			target.Writer.WriteAllConcurrentlyAsync(maxConcurrency, source, true, cancellationToken).ConfigureAwait(false);
+			target.Writer
+				.WriteAllConcurrentlyAsync(maxConcurrency, source, true, cancellationToken)
+				.ConfigureAwait(false);
+
 			return target.Reader;
 		}
 
@@ -127,9 +134,12 @@ namespace Open.ChannelExtensions
 			int maxConcurrency, IEnumerable<Task<TWrite>> source, CancellationToken cancellationToken = default)
 		{
 			if (maxConcurrency == 1)
-				return target.SourceAsync(source, cancellationToken);
+				return target.SourceAsync(source, cancellationToken, true);
 
-			target.Writer.WriteAllConcurrentlyAsync(maxConcurrency, source, true, cancellationToken).ConfigureAwait(false);
+			target.Writer
+				.WriteAllConcurrentlyAsync(maxConcurrency, source, true, cancellationToken)
+				.ConfigureAwait(false);
+
 			return target.Reader;
 		}
 
@@ -140,11 +150,12 @@ namespace Open.ChannelExtensions
 		/// <param name="target">The channel to write to.</param>
 		/// <param name="source">The source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 		/// <returns>The channel reader.</returns>
 		public static ChannelReader<T> Source<T>(this Channel<string, T> target,
-			TextReader source, CancellationToken cancellationToken = default)
+			TextReader source, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			target.Writer.WriteAllLines(source, true, cancellationToken).ConfigureAwait(false);
+			target.Writer.WriteAllLines(source, true, cancellationToken, deferredExecution).ConfigureAwait(false);
 			return target.Reader;
 		}
 
@@ -157,11 +168,12 @@ namespace Open.ChannelExtensions
 		/// <param name="target">The channel to write to.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 		/// <returns>The channel reader.</returns>
 		public static ChannelReader<TRead> Source<TWrite, TRead>(this Channel<TWrite, TRead> target,
-			IAsyncEnumerable<TWrite> source, CancellationToken cancellationToken = default)
+			IAsyncEnumerable<TWrite> source, CancellationToken cancellationToken = default, bool deferredExecution = false)
 		{
-			target.Writer.WriteAllAsync(source, true, cancellationToken).ConfigureAwait(false);
+			target.Writer.WriteAllAsync(source, true, cancellationToken, deferredExecution).ConfigureAwait(false);
 			return target.Reader;
 		}
 #endif

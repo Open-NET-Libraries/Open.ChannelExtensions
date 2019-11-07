@@ -30,7 +30,9 @@ namespace Open.ChannelExtensions
 					}
 				}
 
+#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
 				item = default;
+#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
 				return false;
 			}
 
@@ -38,6 +40,13 @@ namespace Open.ChannelExtensions
 				=> _source.WaitToReadAsync(cancellationToken);
 		}
 
+		/// <summary>
+		/// Produces a reader that only contains results of a specific type.  Others are discarded.
+		/// </summary>
+		/// <typeparam name="TSource">The source item type.</typeparam>
+		/// <typeparam name="T">The desired item type.</typeparam>
+		/// <param name="source">The source channel reader.</param>
+		/// <returns>A channel reader representing the filtered results.</returns>
 		public static ChannelReader<T> OfType<TSource, T>(this ChannelReader<TSource> source)
 			=> new TypeFilteringChannelReader<TSource, T>(source);
 	}

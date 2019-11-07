@@ -29,7 +29,9 @@ namespace Open.ChannelExtensions
 					return true;
 				}
 
+#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
 				item = default;
+#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
 				return false;
 			}
 
@@ -40,6 +42,14 @@ namespace Open.ChannelExtensions
 				=> _source.WaitToReadAsync(cancellationToken);
 		}
 
+		/// <summary>
+		/// Transforms the 
+		/// </summary>
+		/// <typeparam name="TIn">The output type of the provided source reader and input type of the transform.</typeparam>
+		/// <typeparam name="TOut">The output type of the transform.</typeparam>
+		/// <param name="source">The source channel reader.</param>
+		/// <param name="transform">The transform function.</param>
+		/// <returns>A channel reader representing the tranformed results.</returns>
 		public static ChannelReader<TOut> Transform<TIn, TOut>(this ChannelReader<TIn> source, Func<TIn, TOut> transform)
 			=> new TransformingChannelReader<TIn, TOut>(source, transform);
 	}

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
@@ -9,108 +8,137 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
-		class JoiningChannelReader<TList, T> : ChannelReader<T>
+		class JoiningChannelReader<TList, T> : BufferingChannelReader<TList, T>
 			where TList : IEnumerable<T>
 		{
-			readonly Channel<T> _buffer = Channel.CreateUnbounded<T>(new UnboundedChannelOptions { AllowSynchronousContinuations = true });
-			public JoiningChannelReader(ChannelReader<TList> source)
+			public JoiningChannelReader(ChannelReader<TList> source, bool singleReader) : base(source, singleReader)
 			{
-				_source = source ?? throw new ArgumentNullException(nameof(source));
-				Contract.EndContractBlock();
-
-				_source.Completion.ContinueWith(t =>
-				{
-					// Need to be sure writing is done before we continue...
-					lock (_buffer)
-					{
-						_buffer.Writer.Complete(t.Exception);
-					}
-				});
 			}
 
-			private readonly ChannelReader<TList> _source;
-			public override Task Completion => _buffer.Reader.Completion;
-
-			bool TryPipeItems()
+			protected override bool TryPipeItems()
 			{
-				if (_source.Completion.IsCompleted)
+				if (Source.Completion.IsCompleted)
 					return false;
 
-				lock (_buffer)
+				lock (Buffer)
 				{
-					if (!_source.TryRead(out TList batch))
+					if (!Source.TryRead(out TList batch))
 						return false;
 
 					foreach (var i in batch)
 					{
 						// Assume this will always be true for our internal unbound channel.
-						_buffer.Writer.TryWrite(i);
+						Buffer.Writer.TryWrite(i);
 					}
 
 					return true;
 				}
 			}
-
-			public override bool TryRead(out T item)
-			{
-				do
-				{
-					if (_buffer.Reader.TryRead(out item))
-						return true;
-				}
-				while (TryPipeItems());
-
-				item = default;
-				return false;
-			}
-
-			public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
-			{
-				if (cancellationToken.IsCancellationRequested)
-					return new ValueTask<bool>(Task.FromCanceled<bool>(cancellationToken));
-
-				var b = _buffer.Reader.WaitToReadAsync(cancellationToken);
-				if (b.IsCompletedSuccessfully || _source.Completion.IsCompleted)
-					return b;
-
-				var s = _source.WaitToReadAsync(cancellationToken);
-				if (s.IsCompletedSuccessfully)
-					return s.Result ? new ValueTask<bool>(true) : b;
-
-				return WaitCore();
-
-				async ValueTask<bool> WaitCore()
-				{
-					cancellationToken.ThrowIfCancellationRequested();
-
-					// Not sure if there's a better way to 'WhenAny' with a ValueTask yet.
-					var bt = b.AsTask();
-					var st = s.AsTask();
-					var first = await Task.WhenAny(bt, st);
-					// Either one? Ok go.
-					if (first.Result) return true;
-					// Buffer returned false? We're done.
-					if (first == bt) return false;
-					// Second return false? Wait for buffer.
-					return await bt;
-				}
-			}
 		}
 
-		public static ChannelReader<T> Join<T>(this ChannelReader<IEnumerable<T>> source)
-			=> new JoiningChannelReader<IEnumerable<T>, T>(source);
+		const int DefaultBufferSize = 100;
 
-		public static ChannelReader<T> Join<T>(this ChannelReader<ICollection<T>> source)
-			=> new JoiningChannelReader<ICollection<T>, T>(source);
+		static ChannelReader<T> JoinInternal<T, TEnumerable>(ChannelReader<TEnumerable> source, int bufferSize, bool singleReader)
+			where TEnumerable : IEnumerable<T>
+		{
+			if (source == null) throw new ArgumentNullException(nameof(source));
+			if (bufferSize < 1) throw new ArgumentOutOfRangeException(nameof(bufferSize), bufferSize, "Must be at least 1.");
+			Contract.EndContractBlock();
 
-		public static ChannelReader<T> Join<T>(this ChannelReader<IList<T>> source)
-			=> new JoiningChannelReader<IList<T>, T>(source);
+			var buffer = CreateChannel<T>(bufferSize, singleReader);
+			var writer = buffer.Writer;
 
-		public static ChannelReader<T> Join<T>(this ChannelReader<List<T>> source)
-			=> new JoiningChannelReader<List<T>, T>(source);
+			Task.Run(async () =>
+				await source.ReadAllAsync(
+					async (batch, i) =>
+					{
+						foreach (var e in batch)
+						{
+							if(!writer.TryWrite(e))
+								await writer.WriteAsync(e).ConfigureAwait(false);
+						}
+					}))
+				.ContinueWith(
+					t => buffer.CompleteAsync(t.Exception), TaskContinuationOptions.ExecuteSynchronously);
 
-		public static ChannelReader<T> Join<T>(this ChannelReader<T[]> source)
-			=> new JoiningChannelReader<T[], T>(source);
+			return buffer.Reader;
+		}
 
+		/// <summary>
+		/// Joins collections of the same type into a single channel reader in the order provided.
+		/// </summary>
+		/// <typeparam name="T">The result type.</typeparam>
+		/// <param name="source">The source reader.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <returns>A channel reader containing the joined results.</returns>
+		public static ChannelReader<T> Join<T>(this ChannelReader<IEnumerable<T>> source, bool singleReader = false)
+			=> new JoiningChannelReader<IEnumerable<T>, T>(source, singleReader);
+
+		/// <summary>
+		/// Joins collections of the same type into a single channel reader in the order provided.
+		/// </summary>
+		/// <typeparam name="T">The result type.</typeparam>
+		/// <param name="source">The source reader.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <returns>A channel reader containing the joined results.</returns>
+		public static ChannelReader<T> Join<T>(this ChannelReader<ICollection<T>> source, bool singleReader = false)
+			=> new JoiningChannelReader<ICollection<T>, T>(source, singleReader);
+
+		/// <summary>
+		/// Joins collections of the same type into a single channel reader in the order provided.
+		/// </summary>
+		/// <typeparam name="T">The result type.</typeparam>
+		/// <param name="source">The source reader.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <returns>A channel reader containing the joined results.</returns>
+		public static ChannelReader<T> Join<T>(this ChannelReader<IList<T>> source, bool singleReader = false)
+			=> new JoiningChannelReader<IList<T>, T>(source, singleReader);
+
+		/// <summary>
+		/// Joins collections of the same type into a single channel reader in the order provided.
+		/// </summary>
+		/// <typeparam name="T">The result type.</typeparam>
+		/// <param name="source">The source reader.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <returns>A channel reader containing the joined results.</returns>
+		public static ChannelReader<T> Join<T>(this ChannelReader<List<T>> source, bool singleReader = false)
+			=> new JoiningChannelReader<List<T>, T>(source, singleReader);
+
+		/// <summary>
+		/// Joins collections of the same type into a single channel reader in the order provided.
+		/// </summary>
+		/// <typeparam name="T">The result type.</typeparam>
+		/// <param name="source">The source reader.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <returns>A channel reader containing the joined results.</returns>
+		public static ChannelReader<T> Join<T>(this ChannelReader<T[]> source, bool singleReader = false)
+			=> new JoiningChannelReader<T[], T>(source, singleReader);
+
+#if NETSTANDARD2_1
+		/// <summary>
+		/// Joins collections of the same type into a single channel reader in the order provided.
+		/// </summary>
+		/// <typeparam name="T">The result type.</typeparam>
+		/// <param name="source">The source reader.</param>
+		/// <param name="bufferSize">The capacity of the resultant channel.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <returns>A channel reader containing the joined results.</returns>
+		public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, int bufferSize = DefaultBufferSize, bool singleReader = false)
+		{
+			var buffer = CreateChannel<T>(bufferSize, singleReader);
+
+			Task.Run(async () =>
+				await source.ReadAllAsync(
+					async (batch, i) =>
+					{
+						await foreach (var e in batch)
+							await buffer.Writer.WriteAsync(e).ConfigureAwait(false);
+					}))
+				.ContinueWith(
+					t => buffer.CompleteAsync(t.Exception), TaskContinuationOptions.ExecuteSynchronously);
+
+			return buffer.Reader;
+		}
+#endif
 	}
 }
