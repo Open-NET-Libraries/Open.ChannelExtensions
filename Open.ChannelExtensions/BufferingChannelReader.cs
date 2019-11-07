@@ -8,7 +8,7 @@ namespace Open.ChannelExtensions
 {
 	abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	{
-		protected readonly ChannelReader<TIn> Source;
+		protected ChannelReader<TIn>? Source;
 		protected readonly Channel<TOut> Buffer;
 		public BufferingChannelReader(ChannelReader<TIn> source, bool singleReader)
 		{
@@ -17,13 +17,13 @@ namespace Open.ChannelExtensions
 
 			Buffer = Extensions.CreateChannel<TOut>(-1, singleReader);
 
-			if (Source.Completion.IsCompleted)
+			if (source.Completion.IsCompleted)
 			{
-				Buffer.Writer.Complete(Source.Completion.Exception);
+				Buffer.Writer.Complete(source.Completion.Exception);
 			}
 			else
 			{
-				Source.Completion.ContinueWith(t =>
+				source.Completion.ContinueWith(t =>
 				{
 					// Need to be sure writing is done before we continue...
 					lock (Buffer)
@@ -31,6 +31,8 @@ namespace Open.ChannelExtensions
 						while (TryPipeItems()) { }
 						Buffer.Writer.Complete(t.Exception);
 					}
+
+					Source = null;
 				});
 			}
 		}
@@ -59,11 +61,12 @@ namespace Open.ChannelExtensions
 			if (cancellationToken.IsCancellationRequested)
 				return new ValueTask<bool>(Task.FromCanceled<bool>(cancellationToken));
 
+			var source = Source;
 			var b = Buffer.Reader.WaitToReadAsync(cancellationToken);
-			if (b.IsCompletedSuccessfully || Source.Completion.IsCompleted)
+			if (b.IsCompletedSuccessfully || source==null || source.Completion.IsCompleted)
 				return b;
 
-			var s = Source.WaitToReadAsync(cancellationToken);
+			var s = source.WaitToReadAsync(cancellationToken);
 			if (s.IsCompletedSuccessfully)
 				return s.Result ? new ValueTask<bool>(true) : b;
 

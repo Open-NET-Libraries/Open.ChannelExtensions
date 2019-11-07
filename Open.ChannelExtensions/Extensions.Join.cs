@@ -17,12 +17,13 @@ namespace Open.ChannelExtensions
 
 			protected override bool TryPipeItems()
 			{
-				if (Source.Completion.IsCompleted)
+				var source = Source;
+				if (source==null || source.Completion.IsCompleted)
 					return false;
 
 				lock (Buffer)
 				{
-					if (!Source.TryRead(out TList batch))
+					if (!source.TryRead(out TList batch))
 						return false;
 
 					foreach (var i in batch)
@@ -34,34 +35,6 @@ namespace Open.ChannelExtensions
 					return true;
 				}
 			}
-		}
-
-		const int DefaultBufferSize = 100;
-
-		static ChannelReader<T> JoinInternal<T, TEnumerable>(ChannelReader<TEnumerable> source, int bufferSize, bool singleReader)
-			where TEnumerable : IEnumerable<T>
-		{
-			if (source == null) throw new ArgumentNullException(nameof(source));
-			if (bufferSize < 1) throw new ArgumentOutOfRangeException(nameof(bufferSize), bufferSize, "Must be at least 1.");
-			Contract.EndContractBlock();
-
-			var buffer = CreateChannel<T>(bufferSize, singleReader);
-			var writer = buffer.Writer;
-
-			Task.Run(async () =>
-				await source.ReadAllAsync(
-					async (batch, i) =>
-					{
-						foreach (var e in batch)
-						{
-							if(!writer.TryWrite(e))
-								await writer.WriteAsync(e).ConfigureAwait(false);
-						}
-					}))
-				.ContinueWith(
-					t => buffer.CompleteAsync(t.Exception), TaskContinuationOptions.ExecuteSynchronously);
-
-			return buffer.Reader;
 		}
 
 		/// <summary>
@@ -123,7 +96,7 @@ namespace Open.ChannelExtensions
 		/// <param name="bufferSize">The capacity of the resultant channel.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 		/// <returns>A channel reader containing the joined results.</returns>
-		public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, int bufferSize = DefaultBufferSize, bool singleReader = false)
+		public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, int bufferSize = 100, bool singleReader = false)
 		{
 			var buffer = CreateChannel<T>(bufferSize, singleReader);
 

@@ -39,7 +39,8 @@ namespace Open.ChannelExtensions
 					if (Buffer.Reader.Completion.IsCompleted)
 						return false;
 
-					if (Source.Completion.IsCompleted)
+					var source = Source;
+					if (source == null || source.Completion.IsCompleted)
 					{
 						c.TrimExcess();
 						_current = null;
@@ -50,7 +51,7 @@ namespace Open.ChannelExtensions
 						return true;
 					}
 
-					while (Source.TryRead(out T item))
+					while (source.TryRead(out T item))
 					{
 						if (c.Count == _batchSize)
 						{
