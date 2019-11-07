@@ -18,7 +18,7 @@ namespace Open.ChannelExtensions
 				Contract.EndContractBlock();
 
 				_batchSize = batchSize;
-				_current = new List<T>(batchSize);
+				_current = source.Completion.IsCompleted ? null : new List<T>(batchSize);
 			}
 
 
@@ -36,6 +36,9 @@ namespace Open.ChannelExtensions
 					if (c == null)
 						return false;
 
+					if (Buffer.Reader.Completion.IsCompleted)
+						return false;
+
 					if (Source.Completion.IsCompleted)
 					{
 						c.TrimExcess();
@@ -47,22 +50,19 @@ namespace Open.ChannelExtensions
 						return true;
 					}
 
-					bool piped = false;
 					while (Source.TryRead(out T item))
 					{
-						piped = true;
-
 						if (c.Count == _batchSize)
 						{
-							_current = new List<T>(_batchSize);
+							_current = new List<T>(_batchSize) { item };
 							Buffer.Writer.TryWrite(c);
-							break;
+							return true;
 						}
 
 						c.Add(item);
 					}
 
-					return piped;
+					return false;
 				}
 			}
 		}

@@ -18,7 +18,9 @@ namespace Open.ChannelExtensions
 			Buffer = Extensions.CreateChannel<TOut>(-1, singleReader);
 
 			if (Source.Completion.IsCompleted)
+			{
 				Buffer.Writer.Complete(Source.Completion.Exception);
+			}
 			else
 			{
 				Source.Completion.ContinueWith(t =>
@@ -26,7 +28,7 @@ namespace Open.ChannelExtensions
 					// Need to be sure writing is done before we continue...
 					lock (Buffer)
 					{
-						TryPipeItems();
+						while (TryPipeItems()) { }
 						Buffer.Writer.Complete(t.Exception);
 					}
 				});
