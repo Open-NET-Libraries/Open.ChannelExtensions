@@ -1,0 +1,899 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: Open.ChannelExtensions
+  name: Open.ChannelExtensions
+  href: api/Open.ChannelExtensions.html
+  commentId: N:Open.ChannelExtensions
+  fullName: Open.ChannelExtensions
+  nameWithType: Open.ChannelExtensions
+- uid: Open.ChannelExtensions.Extensions
+  name: Extensions
+  href: api/Open.ChannelExtensions.Extensions.html
+  commentId: T:Open.ChannelExtensions.Extensions
+  fullName: Open.ChannelExtensions.Extensions
+  nameWithType: Extensions
+- uid: Open.ChannelExtensions.Extensions.Batch*
+  name: Batch
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Batch_
+  commentId: Overload:Open.ChannelExtensions.Extensions.Batch
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.Batch
+  nameWithType: Extensions.Batch
+- uid: Open.ChannelExtensions.Extensions.Batch``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Boolean)
+  name: Batch<T>(ChannelReader<T>, Int32, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Batch__1_System_Threading_Channels_ChannelReader___0__System_Int32_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.Batch``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Boolean)
+  name.vb: Batch(Of T)(ChannelReader(Of T), Int32, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.Batch<T>(System.Threading.Channels.ChannelReader<T>, System.Int32, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.Batch(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Int32, System.Boolean)
+  nameWithType: Extensions.Batch<T>(ChannelReader<T>, Int32, Boolean)
+  nameWithType.vb: Extensions.Batch(Of T)(ChannelReader(Of T), Int32, Boolean)
+- uid: Open.ChannelExtensions.Extensions.CompleteAsync*
+  name: CompleteAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_CompleteAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.CompleteAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.CompleteAsync
+  nameWithType: Extensions.CompleteAsync
+- uid: Open.ChannelExtensions.Extensions.CompleteAsync``2(System.Threading.Channels.Channel{``0,``1},System.Exception)
+  name: CompleteAsync<TWrite, TRead>(Channel<TWrite, TRead>, Exception)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_CompleteAsync__2_System_Threading_Channels_Channel___0___1__System_Exception_
+  commentId: M:Open.ChannelExtensions.Extensions.CompleteAsync``2(System.Threading.Channels.Channel{``0,``1},System.Exception)
+  name.vb: CompleteAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Exception)
+  fullName: Open.ChannelExtensions.Extensions.CompleteAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Exception)
+  fullName.vb: Open.ChannelExtensions.Extensions.CompleteAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Exception)
+  nameWithType: Extensions.CompleteAsync<TWrite, TRead>(Channel<TWrite, TRead>, Exception)
+  nameWithType.vb: Extensions.CompleteAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Exception)
+- uid: Open.ChannelExtensions.Extensions.Filter*
+  name: Filter
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Filter_
+  commentId: Overload:Open.ChannelExtensions.Extensions.Filter
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.Filter
+  nameWithType: Extensions.Filter
+- uid: Open.ChannelExtensions.Extensions.Filter``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Boolean})
+  name: Filter<T>(ChannelReader<T>, Func<T, Boolean>)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Filter__1_System_Threading_Channels_ChannelReader___0__System_Func___0_System_Boolean__
+  commentId: M:Open.ChannelExtensions.Extensions.Filter``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Boolean})
+  name.vb: Filter(Of T)(ChannelReader(Of T), Func(Of T, Boolean))
+  fullName: Open.ChannelExtensions.Extensions.Filter<T>(System.Threading.Channels.ChannelReader<T>, System.Func<T, System.Boolean>)
+  fullName.vb: Open.ChannelExtensions.Extensions.Filter(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Func(Of T, System.Boolean))
+  nameWithType: Extensions.Filter<T>(ChannelReader<T>, Func<T, Boolean>)
+  nameWithType.vb: Extensions.Filter(Of T)(ChannelReader(Of T), Func(Of T, Boolean))
+- uid: Open.ChannelExtensions.Extensions.Join*
+  name: Join
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Join_
+  commentId: Overload:Open.ChannelExtensions.Extensions.Join
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.Join
+  nameWithType: Extensions.Join
+- uid: Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{``0[]},System.Boolean)
+  name: Join<T>(ChannelReader<T[]>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Join__1_System_Threading_Channels_ChannelReader___0____System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{``0[]},System.Boolean)
+  name.vb: Join(Of T)(ChannelReader(Of T()), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.Join<T>(System.Threading.Channels.ChannelReader<T[]>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.Join(Of T)(System.Threading.Channels.ChannelReader(Of T()), System.Boolean)
+  nameWithType: Extensions.Join<T>(ChannelReader<T[]>, Boolean)
+  nameWithType.vb: Extensions.Join(Of T)(ChannelReader(Of T()), Boolean)
+- uid: Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.ICollection{``0}},System.Boolean)
+  name: Join<T>(ChannelReader<ICollection<T>>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Join__1_System_Threading_Channels_ChannelReader_System_Collections_Generic_ICollection___0___System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.ICollection{``0}},System.Boolean)
+  name.vb: Join(Of T)(ChannelReader(Of ICollection(Of T)), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.Join<T>(System.Threading.Channels.ChannelReader<System.Collections.Generic.ICollection<T>>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.Join(Of T)(System.Threading.Channels.ChannelReader(Of System.Collections.Generic.ICollection(Of T)), System.Boolean)
+  nameWithType: Extensions.Join<T>(ChannelReader<ICollection<T>>, Boolean)
+  nameWithType.vb: Extensions.Join(Of T)(ChannelReader(Of ICollection(Of T)), Boolean)
+- uid: Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.IEnumerable{``0}},System.Boolean)
+  name: Join<T>(ChannelReader<IEnumerable<T>>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Join__1_System_Threading_Channels_ChannelReader_System_Collections_Generic_IEnumerable___0___System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.IEnumerable{``0}},System.Boolean)
+  name.vb: Join(Of T)(ChannelReader(Of IEnumerable(Of T)), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.Join<T>(System.Threading.Channels.ChannelReader<System.Collections.Generic.IEnumerable<T>>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.Join(Of T)(System.Threading.Channels.ChannelReader(Of System.Collections.Generic.IEnumerable(Of T)), System.Boolean)
+  nameWithType: Extensions.Join<T>(ChannelReader<IEnumerable<T>>, Boolean)
+  nameWithType.vb: Extensions.Join(Of T)(ChannelReader(Of IEnumerable(Of T)), Boolean)
+- uid: Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.IList{``0}},System.Boolean)
+  name: Join<T>(ChannelReader<IList<T>>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Join__1_System_Threading_Channels_ChannelReader_System_Collections_Generic_IList___0___System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.IList{``0}},System.Boolean)
+  name.vb: Join(Of T)(ChannelReader(Of IList(Of T)), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.Join<T>(System.Threading.Channels.ChannelReader<System.Collections.Generic.IList<T>>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.Join(Of T)(System.Threading.Channels.ChannelReader(Of System.Collections.Generic.IList(Of T)), System.Boolean)
+  nameWithType: Extensions.Join<T>(ChannelReader<IList<T>>, Boolean)
+  nameWithType.vb: Extensions.Join(Of T)(ChannelReader(Of IList(Of T)), Boolean)
+- uid: Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.List{``0}},System.Boolean)
+  name: Join<T>(ChannelReader<List<T>>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Join__1_System_Threading_Channels_ChannelReader_System_Collections_Generic_List___0___System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.List{``0}},System.Boolean)
+  name.vb: Join(Of T)(ChannelReader(Of List(Of T)), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.Join<T>(System.Threading.Channels.ChannelReader<System.Collections.Generic.List<T>>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.Join(Of T)(System.Threading.Channels.ChannelReader(Of System.Collections.Generic.List(Of T)), System.Boolean)
+  nameWithType: Extensions.Join<T>(ChannelReader<List<T>>, Boolean)
+  nameWithType.vb: Extensions.Join(Of T)(ChannelReader(Of List(Of T)), Boolean)
+- uid: Open.ChannelExtensions.Extensions.OfType*
+  name: OfType
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_OfType_
+  commentId: Overload:Open.ChannelExtensions.Extensions.OfType
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.OfType
+  nameWithType: Extensions.OfType
+- uid: Open.ChannelExtensions.Extensions.OfType``2(System.Threading.Channels.ChannelReader{``0})
+  name: OfType<TSource, T>(ChannelReader<TSource>)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_OfType__2_System_Threading_Channels_ChannelReader___0__
+  commentId: M:Open.ChannelExtensions.Extensions.OfType``2(System.Threading.Channels.ChannelReader{``0})
+  name.vb: OfType(Of TSource, T)(ChannelReader(Of TSource))
+  fullName: Open.ChannelExtensions.Extensions.OfType<TSource, T>(System.Threading.Channels.ChannelReader<TSource>)
+  fullName.vb: Open.ChannelExtensions.Extensions.OfType(Of TSource, T)(System.Threading.Channels.ChannelReader(Of TSource))
+  nameWithType: Extensions.OfType<TSource, T>(ChannelReader<TSource>)
+  nameWithType.vb: Extensions.OfType(Of TSource, T)(ChannelReader(Of TSource))
+- uid: Open.ChannelExtensions.Extensions.Pipe*
+  name: Pipe
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Pipe_
+  commentId: Overload:Open.ChannelExtensions.Extensions.Pipe
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.Pipe
+  nameWithType: Extensions.Pipe
+- uid: Open.ChannelExtensions.Extensions.Pipe``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,``1},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: Pipe<TIn, TOut>(ChannelReader<TIn>, Func<TIn, TOut>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Pipe__2_System_Threading_Channels_ChannelReader___0__System_Func___0___1__System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.Pipe``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,``1},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: Pipe(Of TIn, TOut)(ChannelReader(Of TIn), Func(Of TIn, TOut), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.Pipe<TIn, TOut>(System.Threading.Channels.ChannelReader<TIn>, System.Func<TIn, TOut>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.Pipe(Of TIn, TOut)(System.Threading.Channels.ChannelReader(Of TIn), System.Func(Of TIn, TOut), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.Pipe<TIn, TOut>(ChannelReader<TIn>, Func<TIn, TOut>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.Pipe(Of TIn, TOut)(ChannelReader(Of TIn), Func(Of TIn, TOut), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.Pipe``2(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,``1},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: Pipe<TIn, TOut>(ChannelReader<TIn>, Int32, Func<TIn, TOut>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Pipe__2_System_Threading_Channels_ChannelReader___0__System_Int32_System_Func___0___1__System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.Pipe``2(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,``1},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: Pipe(Of TIn, TOut)(ChannelReader(Of TIn), Int32, Func(Of TIn, TOut), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.Pipe<TIn, TOut>(System.Threading.Channels.ChannelReader<TIn>, System.Int32, System.Func<TIn, TOut>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.Pipe(Of TIn, TOut)(System.Threading.Channels.ChannelReader(Of TIn), System.Int32, System.Func(Of TIn, TOut), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.Pipe<TIn, TOut>(ChannelReader<TIn>, Int32, Func<TIn, TOut>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.Pipe(Of TIn, TOut)(ChannelReader(Of TIn), Int32, Func(Of TIn, TOut), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.Pipe``3(System.Threading.Channels.Channel{``0,``1},System.Func{``1,``2},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: Pipe<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Func<TRead, TOut>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Pipe__3_System_Threading_Channels_Channel___0___1__System_Func___1___2__System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.Pipe``3(System.Threading.Channels.Channel{``0,``1},System.Func{``1,``2},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: Pipe(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Func(Of TRead, TOut), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.Pipe<TWrite, TRead, TOut>(System.Threading.Channels.Channel<TWrite, TRead>, System.Func<TRead, TOut>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.Pipe(Of TWrite, TRead, TOut)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Func(Of TRead, TOut), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.Pipe<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Func<TRead, TOut>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.Pipe(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Func(Of TRead, TOut), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.Pipe``3(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,``2},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: Pipe<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Int32, Func<TRead, TOut>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Pipe__3_System_Threading_Channels_Channel___0___1__System_Int32_System_Func___1___2__System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.Pipe``3(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,``2},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: Pipe(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, TOut), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.Pipe<TWrite, TRead, TOut>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Func<TRead, TOut>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.Pipe(Of TWrite, TRead, TOut)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Func(Of TRead, TOut), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.Pipe<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Int32, Func<TRead, TOut>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.Pipe(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, TOut), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.PipeAsync*
+  name: PipeAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_PipeAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.PipeAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.PipeAsync
+  nameWithType: Extensions.PipeAsync
+- uid: Open.ChannelExtensions.Extensions.PipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.ValueTask{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: PipeAsync<TIn, TOut>(ChannelReader<TIn>, Func<TIn, ValueTask<TOut>>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_PipeAsync__2_System_Threading_Channels_ChannelReader___0__System_Func___0_System_Threading_Tasks_ValueTask___1___System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.PipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.ValueTask{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: PipeAsync(Of TIn, TOut)(ChannelReader(Of TIn), Func(Of TIn, ValueTask(Of TOut)), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.PipeAsync<TIn, TOut>(System.Threading.Channels.ChannelReader<TIn>, System.Func<TIn, System.Threading.Tasks.ValueTask<TOut>>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.PipeAsync(Of TIn, TOut)(System.Threading.Channels.ChannelReader(Of TIn), System.Func(Of TIn, System.Threading.Tasks.ValueTask(Of TOut)), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.PipeAsync<TIn, TOut>(ChannelReader<TIn>, Func<TIn, ValueTask<TOut>>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.PipeAsync(Of TIn, TOut)(ChannelReader(Of TIn), Func(Of TIn, ValueTask(Of TOut)), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.PipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.ValueTask{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: PipeAsync<TIn, TOut>(ChannelReader<TIn>, Int32, Func<TIn, ValueTask<TOut>>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_PipeAsync__2_System_Threading_Channels_ChannelReader___0__System_Int32_System_Func___0_System_Threading_Tasks_ValueTask___1___System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.PipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.ValueTask{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: PipeAsync(Of TIn, TOut)(ChannelReader(Of TIn), Int32, Func(Of TIn, ValueTask(Of TOut)), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.PipeAsync<TIn, TOut>(System.Threading.Channels.ChannelReader<TIn>, System.Int32, System.Func<TIn, System.Threading.Tasks.ValueTask<TOut>>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.PipeAsync(Of TIn, TOut)(System.Threading.Channels.ChannelReader(Of TIn), System.Int32, System.Func(Of TIn, System.Threading.Tasks.ValueTask(Of TOut)), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.PipeAsync<TIn, TOut>(ChannelReader<TIn>, Int32, Func<TIn, ValueTask<TOut>>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.PipeAsync(Of TIn, TOut)(ChannelReader(Of TIn), Int32, Func(Of TIn, ValueTask(Of TOut)), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.PipeAsync``3(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.ValueTask{``2}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: PipeAsync<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Func<TRead, ValueTask<TOut>>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_PipeAsync__3_System_Threading_Channels_Channel___0___1__System_Func___1_System_Threading_Tasks_ValueTask___2___System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.PipeAsync``3(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.ValueTask{``2}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: PipeAsync(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Func(Of TRead, ValueTask(Of TOut)), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.PipeAsync<TWrite, TRead, TOut>(System.Threading.Channels.Channel<TWrite, TRead>, System.Func<TRead, System.Threading.Tasks.ValueTask<TOut>>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.PipeAsync(Of TWrite, TRead, TOut)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Func(Of TRead, System.Threading.Tasks.ValueTask(Of TOut)), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.PipeAsync<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Func<TRead, ValueTask<TOut>>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.PipeAsync(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Func(Of TRead, ValueTask(Of TOut)), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.PipeAsync``3(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,System.Threading.Tasks.ValueTask{``2}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: PipeAsync<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Int32, Func<TRead, ValueTask<TOut>>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_PipeAsync__3_System_Threading_Channels_Channel___0___1__System_Int32_System_Func___1_System_Threading_Tasks_ValueTask___2___System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.PipeAsync``3(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,System.Threading.Tasks.ValueTask{``2}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: PipeAsync(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, ValueTask(Of TOut)), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.PipeAsync<TWrite, TRead, TOut>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Func<TRead, System.Threading.Tasks.ValueTask<TOut>>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.PipeAsync(Of TWrite, TRead, TOut)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Func(Of TRead, System.Threading.Tasks.ValueTask(Of TOut)), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.PipeAsync<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Int32, Func<TRead, ValueTask<TOut>>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.PipeAsync(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, ValueTask(Of TOut)), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ReadAll*
+  name: ReadAll
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAll_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadAll
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadAll
+  nameWithType: Extensions.ReadAll
+- uid: Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Action{``0,System.Int64},System.Threading.CancellationToken,System.Boolean)
+  name: ReadAll<T>(ChannelReader<T>, Action<T, Int64>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAll__1_System_Threading_Channels_ChannelReader___0__System_Action___0_System_Int64__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Action{``0,System.Int64},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAll(Of T)(ChannelReader(Of T), Action(Of T, Int64), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAll<T>(System.Threading.Channels.ChannelReader<T>, System.Action<T, System.Int64>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAll(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Action(Of T, System.Int64), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAll<T>(ChannelReader<T>, Action<T, Int64>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAll(Of T)(ChannelReader(Of T), Action(Of T, Int64), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Action{``0},System.Threading.CancellationToken,System.Boolean)
+  name: ReadAll<T>(ChannelReader<T>, Action<T>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAll__1_System_Threading_Channels_ChannelReader___0__System_Action___0__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Action{``0},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAll(Of T)(ChannelReader(Of T), Action(Of T), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAll<T>(System.Threading.Channels.ChannelReader<T>, System.Action<T>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAll(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Action(Of T), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAll<T>(ChannelReader<T>, Action<T>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAll(Of T)(ChannelReader(Of T), Action(Of T), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1,System.Int64},System.Threading.CancellationToken,System.Boolean)
+  name: ReadAll<TWrite, TRead>(Channel<TWrite, TRead>, Action<TRead, Int64>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAll__2_System_Threading_Channels_Channel___0___1__System_Action___1_System_Int64__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1,System.Int64},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAll(Of TWrite, TRead)(Channel(Of TWrite, TRead), Action(Of TRead, Int64), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAll<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Action<TRead, System.Int64>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAll(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Action(Of TRead, System.Int64), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAll<TWrite, TRead>(Channel<TWrite, TRead>, Action<TRead, Int64>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAll(Of TWrite, TRead)(Channel(Of TWrite, TRead), Action(Of TRead, Int64), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1},System.Threading.CancellationToken,System.Boolean)
+  name: ReadAll<TWrite, TRead>(Channel<TWrite, TRead>, Action<TRead>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAll__2_System_Threading_Channels_Channel___0___1__System_Action___1__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAll(Of TWrite, TRead)(Channel(Of TWrite, TRead), Action(Of TRead), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAll<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Action<TRead>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAll(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Action(Of TRead), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAll<TWrite, TRead>(Channel<TWrite, TRead>, Action<TRead>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAll(Of TWrite, TRead)(Channel(Of TWrite, TRead), Action(Of TRead), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAllAsLines(System.Threading.Channels.ChannelReader{System.String},System.IO.TextWriter,System.Threading.CancellationToken,System.Boolean)
+  name: ReadAllAsLines(ChannelReader<String>, TextWriter, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllAsLines_System_Threading_Channels_ChannelReader_System_String__System_IO_TextWriter_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllAsLines(System.Threading.Channels.ChannelReader{System.String},System.IO.TextWriter,System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAllAsLines(ChannelReader(Of String), TextWriter, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllAsLines(System.Threading.Channels.ChannelReader<System.String>, System.IO.TextWriter, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllAsLines(System.Threading.Channels.ChannelReader(Of System.String), System.IO.TextWriter, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAllAsLines(ChannelReader<String>, TextWriter, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAllAsLines(ChannelReader(Of String), TextWriter, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAllAsLines*
+  name: ReadAllAsLines
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllAsLines_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadAllAsLines
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadAllAsLines
+  nameWithType: Extensions.ReadAllAsLines
+- uid: Open.ChannelExtensions.Extensions.ReadAllAsLines``1(System.Threading.Channels.Channel{``0,System.String},System.IO.TextWriter,System.Threading.CancellationToken,System.Boolean)
+  name: ReadAllAsLines<T>(Channel<T, String>, TextWriter, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllAsLines__1_System_Threading_Channels_Channel___0_System_String__System_IO_TextWriter_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllAsLines``1(System.Threading.Channels.Channel{``0,System.String},System.IO.TextWriter,System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAllAsLines(Of T)(Channel(Of T, String), TextWriter, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllAsLines<T>(System.Threading.Channels.Channel<T, System.String>, System.IO.TextWriter, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllAsLines(Of T)(System.Threading.Channels.Channel(Of T, System.String), System.IO.TextWriter, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAllAsLines<T>(Channel<T, String>, TextWriter, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAllAsLines(Of T)(Channel(Of T, String), TextWriter, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAllAsync*
+  name: ReadAllAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadAllAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadAllAsync
+  nameWithType: Extensions.ReadAllAsync
+- uid: Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Int64,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)
+  name: ReadAllAsync<T>(ChannelReader<T>, Func<T, Int64, ValueTask>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllAsync__1_System_Threading_Channels_ChannelReader___0__System_Func___0_System_Int64_System_Threading_Tasks_ValueTask__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Int64,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAllAsync(Of T)(ChannelReader(Of T), Func(Of T, Int64, ValueTask), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllAsync<T>(System.Threading.Channels.ChannelReader<T>, System.Func<T, System.Int64, System.Threading.Tasks.ValueTask>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllAsync(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Func(Of T, System.Int64, System.Threading.Tasks.ValueTask), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAllAsync<T>(ChannelReader<T>, Func<T, Int64, ValueTask>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAllAsync(Of T)(ChannelReader(Of T), Func(Of T, Int64, ValueTask), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)
+  name: ReadAllAsync<T>(ChannelReader<T>, Func<T, ValueTask>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllAsync__1_System_Threading_Channels_ChannelReader___0__System_Func___0_System_Threading_Tasks_ValueTask__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAllAsync(Of T)(ChannelReader(Of T), Func(Of T, ValueTask), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllAsync<T>(System.Threading.Channels.ChannelReader<T>, System.Func<T, System.Threading.Tasks.ValueTask>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllAsync(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Func(Of T, System.Threading.Tasks.ValueTask), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAllAsync<T>(ChannelReader<T>, Func<T, ValueTask>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAllAsync(Of T)(ChannelReader(Of T), Func(Of T, ValueTask), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Int64,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)
+  name: ReadAllAsync<TWrite, TRead>(Channel<TWrite, TRead>, Func<TRead, Int64, ValueTask>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllAsync__2_System_Threading_Channels_Channel___0___1__System_Func___1_System_Int64_System_Threading_Tasks_ValueTask__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Int64,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAllAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Func(Of TRead, Int64, ValueTask), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Func<TRead, System.Int64, System.Threading.Tasks.ValueTask>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Func(Of TRead, System.Int64, System.Threading.Tasks.ValueTask), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAllAsync<TWrite, TRead>(Channel<TWrite, TRead>, Func<TRead, Int64, ValueTask>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAllAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Func(Of TRead, Int64, ValueTask), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)
+  name: ReadAllAsync<TWrite, TRead>(Channel<TWrite, TRead>, Func<TRead, ValueTask>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllAsync__2_System_Threading_Channels_Channel___0___1__System_Func___1_System_Threading_Tasks_ValueTask__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadAllAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Func(Of TRead, ValueTask), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Func<TRead, System.Threading.Tasks.ValueTask>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Func(Of TRead, System.Threading.Tasks.ValueTask), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadAllAsync<TWrite, TRead>(Channel<TWrite, TRead>, Func<TRead, ValueTask>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadAllAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Func(Of TRead, ValueTask), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadAllConcurrently*
+  name: ReadAllConcurrently
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllConcurrently_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadAllConcurrently
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadAllConcurrently
+  nameWithType: Extensions.ReadAllConcurrently
+- uid: Open.ChannelExtensions.Extensions.ReadAllConcurrently``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Action{``0},System.Threading.CancellationToken)
+  name: ReadAllConcurrently<T>(ChannelReader<T>, Int32, Action<T>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllConcurrently__1_System_Threading_Channels_ChannelReader___0__System_Int32_System_Action___0__System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllConcurrently``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Action{``0},System.Threading.CancellationToken)
+  name.vb: ReadAllConcurrently(Of T)(ChannelReader(Of T), Int32, Action(Of T), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllConcurrently<T>(System.Threading.Channels.ChannelReader<T>, System.Int32, System.Action<T>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllConcurrently(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Int32, System.Action(Of T), System.Threading.CancellationToken)
+  nameWithType: Extensions.ReadAllConcurrently<T>(ChannelReader<T>, Int32, Action<T>, CancellationToken)
+  nameWithType.vb: Extensions.ReadAllConcurrently(Of T)(ChannelReader(Of T), Int32, Action(Of T), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ReadAllConcurrently``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Action{``1},System.Threading.CancellationToken)
+  name: ReadAllConcurrently<TWrite, TRead>(Channel<TWrite, TRead>, Int32, Action<TRead>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllConcurrently__2_System_Threading_Channels_Channel___0___1__System_Int32_System_Action___1__System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllConcurrently``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Action{``1},System.Threading.CancellationToken)
+  name.vb: ReadAllConcurrently(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, Action(Of TRead), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllConcurrently<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Action<TRead>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllConcurrently(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Action(Of TRead), System.Threading.CancellationToken)
+  nameWithType: Extensions.ReadAllConcurrently<TWrite, TRead>(Channel<TWrite, TRead>, Int32, Action<TRead>, CancellationToken)
+  nameWithType.vb: Extensions.ReadAllConcurrently(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, Action(Of TRead), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync*
+  name: ReadAllConcurrentlyAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllConcurrentlyAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync
+  nameWithType: Extensions.ReadAllConcurrentlyAsync
+- uid: Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)
+  name: ReadAllConcurrentlyAsync<T>(ChannelReader<T>, Int32, Func<T, ValueTask>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllConcurrentlyAsync__1_System_Threading_Channels_ChannelReader___0__System_Int32_System_Func___0_System_Threading_Tasks_ValueTask__System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)
+  name.vb: ReadAllConcurrentlyAsync(Of T)(ChannelReader(Of T), Int32, Func(Of T, ValueTask), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync<T>(System.Threading.Channels.ChannelReader<T>, System.Int32, System.Func<T, System.Threading.Tasks.ValueTask>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Int32, System.Func(Of T, System.Threading.Tasks.ValueTask), System.Threading.CancellationToken)
+  nameWithType: Extensions.ReadAllConcurrentlyAsync<T>(ChannelReader<T>, Int32, Func<T, ValueTask>, CancellationToken)
+  nameWithType.vb: Extensions.ReadAllConcurrentlyAsync(Of T)(ChannelReader(Of T), Int32, Func(Of T, ValueTask), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)
+  name: ReadAllConcurrentlyAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, Func<TRead, ValueTask>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAllConcurrentlyAsync__2_System_Threading_Channels_Channel___0___1__System_Int32_System_Func___1_System_Threading_Tasks_ValueTask__System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken)
+  name.vb: ReadAllConcurrentlyAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, ValueTask), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Func<TRead, System.Threading.Tasks.ValueTask>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAllConcurrentlyAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Func(Of TRead, System.Threading.Tasks.ValueTask), System.Threading.CancellationToken)
+  nameWithType: Extensions.ReadAllConcurrentlyAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, Func<TRead, ValueTask>, CancellationToken)
+  nameWithType.vb: Extensions.ReadAllConcurrentlyAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, ValueTask), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ReadAvailable*
+  name: ReadAvailable
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAvailable_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadAvailable
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadAvailable
+  nameWithType: Extensions.ReadAvailable
+- uid: Open.ChannelExtensions.Extensions.ReadAvailable``1(System.Threading.Channels.ChannelReader{``0})
+  name: ReadAvailable<T>(ChannelReader<T>)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadAvailable__1_System_Threading_Channels_ChannelReader___0__
+  commentId: M:Open.ChannelExtensions.Extensions.ReadAvailable``1(System.Threading.Channels.ChannelReader{``0})
+  name.vb: ReadAvailable(Of T)(ChannelReader(Of T))
+  fullName: Open.ChannelExtensions.Extensions.ReadAvailable<T>(System.Threading.Channels.ChannelReader<T>)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadAvailable(Of T)(System.Threading.Channels.ChannelReader(Of T))
+  nameWithType: Extensions.ReadAvailable<T>(ChannelReader<T>)
+  nameWithType.vb: Extensions.ReadAvailable(Of T)(ChannelReader(Of T))
+- uid: Open.ChannelExtensions.Extensions.ReadBatchAsync*
+  name: ReadBatchAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadBatchAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadBatchAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadBatchAsync
+  nameWithType: Extensions.ReadBatchAsync
+- uid: Open.ChannelExtensions.Extensions.ReadBatchAsync``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Threading.CancellationToken)
+  name: ReadBatchAsync<T>(ChannelReader<T>, Int32, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadBatchAsync__1_System_Threading_Channels_ChannelReader___0__System_Int32_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadBatchAsync``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Threading.CancellationToken)
+  name.vb: ReadBatchAsync(Of T)(ChannelReader(Of T), Int32, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.ReadBatchAsync<T>(System.Threading.Channels.ChannelReader<T>, System.Int32, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadBatchAsync(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Int32, System.Threading.CancellationToken)
+  nameWithType: Extensions.ReadBatchAsync<T>(ChannelReader<T>, Int32, CancellationToken)
+  nameWithType.vb: Extensions.ReadBatchAsync(Of T)(ChannelReader(Of T), Int32, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelled*
+  name: ReadUntilCancelled
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelled_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadUntilCancelled
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelled
+  nameWithType: Extensions.ReadUntilCancelled
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelled``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Action{``0,System.Int64},System.Boolean)
+  name: ReadUntilCancelled<T>(ChannelReader<T>, CancellationToken, Action<T, Int64>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelled__1_System_Threading_Channels_ChannelReader___0__System_Threading_CancellationToken_System_Action___0_System_Int64__System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadUntilCancelled``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Action{``0,System.Int64},System.Boolean)
+  name.vb: ReadUntilCancelled(Of T)(ChannelReader(Of T), CancellationToken, Action(Of T, Int64), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelled<T>(System.Threading.Channels.ChannelReader<T>, System.Threading.CancellationToken, System.Action<T, System.Int64>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadUntilCancelled(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Threading.CancellationToken, System.Action(Of T, System.Int64), System.Boolean)
+  nameWithType: Extensions.ReadUntilCancelled<T>(ChannelReader<T>, CancellationToken, Action<T, Int64>, Boolean)
+  nameWithType.vb: Extensions.ReadUntilCancelled(Of T)(ChannelReader(Of T), CancellationToken, Action(Of T, Int64), Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelled``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Action{``0},System.Boolean)
+  name: ReadUntilCancelled<T>(ChannelReader<T>, CancellationToken, Action<T>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelled__1_System_Threading_Channels_ChannelReader___0__System_Threading_CancellationToken_System_Action___0__System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadUntilCancelled``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Action{``0},System.Boolean)
+  name.vb: ReadUntilCancelled(Of T)(ChannelReader(Of T), CancellationToken, Action(Of T), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelled<T>(System.Threading.Channels.ChannelReader<T>, System.Threading.CancellationToken, System.Action<T>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadUntilCancelled(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Threading.CancellationToken, System.Action(Of T), System.Boolean)
+  nameWithType: Extensions.ReadUntilCancelled<T>(ChannelReader<T>, CancellationToken, Action<T>, Boolean)
+  nameWithType.vb: Extensions.ReadUntilCancelled(Of T)(ChannelReader(Of T), CancellationToken, Action(Of T), Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelled``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1},System.Threading.CancellationToken,System.Boolean)
+  name: ReadUntilCancelled<TWrite, TRead>(Channel<TWrite, TRead>, Action<TRead>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelled__2_System_Threading_Channels_Channel___0___1__System_Action___1__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadUntilCancelled``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1},System.Threading.CancellationToken,System.Boolean)
+  name.vb: ReadUntilCancelled(Of TWrite, TRead)(Channel(Of TWrite, TRead), Action(Of TRead), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelled<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Action<TRead>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadUntilCancelled(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Action(Of TRead), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ReadUntilCancelled<TWrite, TRead>(Channel<TWrite, TRead>, Action<TRead>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ReadUntilCancelled(Of TWrite, TRead)(Channel(Of TWrite, TRead), Action(Of TRead), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelled``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Action{``1,System.Int64},System.Boolean)
+  name: ReadUntilCancelled<TWrite, TRead>(Channel<TWrite, TRead>, CancellationToken, Action<TRead, Int64>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelled__2_System_Threading_Channels_Channel___0___1__System_Threading_CancellationToken_System_Action___1_System_Int64__System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadUntilCancelled``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Action{``1,System.Int64},System.Boolean)
+  name.vb: ReadUntilCancelled(Of TWrite, TRead)(Channel(Of TWrite, TRead), CancellationToken, Action(Of TRead, Int64), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelled<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Threading.CancellationToken, System.Action<TRead, System.Int64>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadUntilCancelled(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Threading.CancellationToken, System.Action(Of TRead, System.Int64), System.Boolean)
+  nameWithType: Extensions.ReadUntilCancelled<TWrite, TRead>(Channel<TWrite, TRead>, CancellationToken, Action<TRead, Int64>, Boolean)
+  nameWithType.vb: Extensions.ReadUntilCancelled(Of TWrite, TRead)(Channel(Of TWrite, TRead), CancellationToken, Action(Of TRead, Int64), Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync*
+  name: ReadUntilCancelledAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelledAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync
+  nameWithType: Extensions.ReadUntilCancelledAsync
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Func{``0,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean)
+  name: ReadUntilCancelledAsync<T>(ChannelReader<T>, CancellationToken, Func<T, Int64, ValueTask>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelledAsync__1_System_Threading_Channels_ChannelReader___0__System_Threading_CancellationToken_System_Func___0_System_Int64_System_Threading_Tasks_ValueTask__System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Func{``0,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean)
+  name.vb: ReadUntilCancelledAsync(Of T)(ChannelReader(Of T), CancellationToken, Func(Of T, Int64, ValueTask), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync<T>(System.Threading.Channels.ChannelReader<T>, System.Threading.CancellationToken, System.Func<T, System.Int64, System.Threading.Tasks.ValueTask>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Threading.CancellationToken, System.Func(Of T, System.Int64, System.Threading.Tasks.ValueTask), System.Boolean)
+  nameWithType: Extensions.ReadUntilCancelledAsync<T>(ChannelReader<T>, CancellationToken, Func<T, Int64, ValueTask>, Boolean)
+  nameWithType.vb: Extensions.ReadUntilCancelledAsync(Of T)(ChannelReader(Of T), CancellationToken, Func(Of T, Int64, ValueTask), Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Func{``0,System.Threading.Tasks.ValueTask},System.Boolean)
+  name: ReadUntilCancelledAsync<T>(ChannelReader<T>, CancellationToken, Func<T, ValueTask>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelledAsync__1_System_Threading_Channels_ChannelReader___0__System_Threading_CancellationToken_System_Func___0_System_Threading_Tasks_ValueTask__System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Func{``0,System.Threading.Tasks.ValueTask},System.Boolean)
+  name.vb: ReadUntilCancelledAsync(Of T)(ChannelReader(Of T), CancellationToken, Func(Of T, ValueTask), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync<T>(System.Threading.Channels.ChannelReader<T>, System.Threading.CancellationToken, System.Func<T, System.Threading.Tasks.ValueTask>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Threading.CancellationToken, System.Func(Of T, System.Threading.Tasks.ValueTask), System.Boolean)
+  nameWithType: Extensions.ReadUntilCancelledAsync<T>(ChannelReader<T>, CancellationToken, Func<T, ValueTask>, Boolean)
+  nameWithType.vb: Extensions.ReadUntilCancelledAsync(Of T)(ChannelReader(Of T), CancellationToken, Func(Of T, ValueTask), Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean)
+  name: ReadUntilCancelledAsync<TWrite, TRead>(Channel<TWrite, TRead>, CancellationToken, Func<TRead, Int64, ValueTask>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelledAsync__2_System_Threading_Channels_Channel___0___1__System_Threading_CancellationToken_System_Func___1_System_Int64_System_Threading_Tasks_ValueTask__System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean)
+  name.vb: ReadUntilCancelledAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), CancellationToken, Func(Of TRead, Int64, ValueTask), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Threading.CancellationToken, System.Func<TRead, System.Int64, System.Threading.Tasks.ValueTask>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Threading.CancellationToken, System.Func(Of TRead, System.Int64, System.Threading.Tasks.ValueTask), System.Boolean)
+  nameWithType: Extensions.ReadUntilCancelledAsync<TWrite, TRead>(Channel<TWrite, TRead>, CancellationToken, Func<TRead, Int64, ValueTask>, Boolean)
+  nameWithType.vb: Extensions.ReadUntilCancelledAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), CancellationToken, Func(Of TRead, Int64, ValueTask), Boolean)
+- uid: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Threading.Tasks.ValueTask},System.Boolean)
+  name: ReadUntilCancelledAsync<TWrite, TRead>(Channel<TWrite, TRead>, CancellationToken, Func<TRead, ValueTask>, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ReadUntilCancelledAsync__2_System_Threading_Channels_Channel___0___1__System_Threading_CancellationToken_System_Func___1_System_Threading_Tasks_ValueTask__System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Threading.Tasks.ValueTask},System.Boolean)
+  name.vb: ReadUntilCancelledAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), CancellationToken, Func(Of TRead, ValueTask), Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Threading.CancellationToken, System.Func<TRead, System.Threading.Tasks.ValueTask>, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Threading.CancellationToken, System.Func(Of TRead, System.Threading.Tasks.ValueTask), System.Boolean)
+  nameWithType: Extensions.ReadUntilCancelledAsync<TWrite, TRead>(Channel<TWrite, TRead>, CancellationToken, Func<TRead, ValueTask>, Boolean)
+  nameWithType.vb: Extensions.ReadUntilCancelledAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), CancellationToken, Func(Of TRead, ValueTask), Boolean)
+- uid: Open.ChannelExtensions.Extensions.Source*
+  name: Source
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Source_
+  commentId: Overload:Open.ChannelExtensions.Extensions.Source
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.Source
+  nameWithType: Extensions.Source
+- uid: Open.ChannelExtensions.Extensions.Source``1(System.Threading.Channels.Channel{System.String,``0},System.IO.TextReader,System.Threading.CancellationToken,System.Boolean)
+  name: Source<T>(Channel<String, T>, TextReader, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Source__1_System_Threading_Channels_Channel_System_String___0__System_IO_TextReader_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.Source``1(System.Threading.Channels.Channel{System.String,``0},System.IO.TextReader,System.Threading.CancellationToken,System.Boolean)
+  name.vb: Source(Of T)(Channel(Of String, T), TextReader, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.Source<T>(System.Threading.Channels.Channel<System.String, T>, System.IO.TextReader, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.Source(Of T)(System.Threading.Channels.Channel(Of System.String, T), System.IO.TextReader, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.Source<T>(Channel<String, T>, TextReader, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.Source(Of T)(Channel(Of String, T), TextReader, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.Source``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IEnumerable{``0},System.Threading.CancellationToken,System.Boolean)
+  name: Source<TWrite, TRead>(Channel<TWrite, TRead>, IEnumerable<TWrite>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Source__2_System_Threading_Channels_Channel___0___1__System_Collections_Generic_IEnumerable___0__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.Source``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IEnumerable{``0},System.Threading.CancellationToken,System.Boolean)
+  name.vb: Source(Of TWrite, TRead)(Channel(Of TWrite, TRead), IEnumerable(Of TWrite), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.Source<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Collections.Generic.IEnumerable<TWrite>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.Source(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Collections.Generic.IEnumerable(Of TWrite), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.Source<TWrite, TRead>(Channel<TWrite, TRead>, IEnumerable<TWrite>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.Source(Of TWrite, TRead)(Channel(Of TWrite, TRead), IEnumerable(Of TWrite), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.SourceAsync*
+  name: SourceAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_SourceAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.SourceAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.SourceAsync
+  nameWithType: Extensions.SourceAsync
+- uid: Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IEnumerable{System.Func{``0}},System.Threading.CancellationToken,System.Boolean)
+  name: SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, IEnumerable<Func<TWrite>>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_SourceAsync__2_System_Threading_Channels_Channel___0___1__System_Collections_Generic_IEnumerable_System_Func___0___System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IEnumerable{System.Func{``0}},System.Threading.CancellationToken,System.Boolean)
+  name.vb: SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), IEnumerable(Of Func(Of TWrite)), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.SourceAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Collections.Generic.IEnumerable<System.Func<TWrite>>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.SourceAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Collections.Generic.IEnumerable(Of System.Func(Of TWrite)), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, IEnumerable<Func<TWrite>>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), IEnumerable(Of Func(Of TWrite)), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken,System.Boolean)
+  name: SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, IEnumerable<Task<TWrite>>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_SourceAsync__2_System_Threading_Channels_Channel___0___1__System_Collections_Generic_IEnumerable_System_Threading_Tasks_Task___0___System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken,System.Boolean)
+  name.vb: SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), IEnumerable(Of Task(Of TWrite)), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.SourceAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<TWrite>>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.SourceAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.Task(Of TWrite)), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, IEnumerable<Task<TWrite>>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), IEnumerable(Of Task(Of TWrite)), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Threading.CancellationToken,System.Boolean)
+  name: SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, IEnumerable<ValueTask<TWrite>>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_SourceAsync__2_System_Threading_Channels_Channel___0___1__System_Collections_Generic_IEnumerable_System_Threading_Tasks_ValueTask___0___System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Threading.CancellationToken,System.Boolean)
+  name.vb: SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), IEnumerable(Of ValueTask(Of TWrite)), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.SourceAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Collections.Generic.IEnumerable<System.Threading.Tasks.ValueTask<TWrite>>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.SourceAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.ValueTask(Of TWrite)), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, IEnumerable<ValueTask<TWrite>>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), IEnumerable(Of ValueTask(Of TWrite)), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Collections.Generic.IEnumerable{System.Func{``0}},System.Threading.CancellationToken)
+  name: SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, IEnumerable<Func<TWrite>>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_SourceAsync__2_System_Threading_Channels_Channel___0___1__System_Int32_System_Collections_Generic_IEnumerable_System_Func___0___System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Collections.Generic.IEnumerable{System.Func{``0}},System.Threading.CancellationToken)
+  name.vb: SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, IEnumerable(Of Func(Of TWrite)), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.SourceAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Collections.Generic.IEnumerable<System.Func<TWrite>>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.SourceAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Collections.Generic.IEnumerable(Of System.Func(Of TWrite)), System.Threading.CancellationToken)
+  nameWithType: Extensions.SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, IEnumerable<Func<TWrite>>, CancellationToken)
+  nameWithType.vb: Extensions.SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, IEnumerable(Of Func(Of TWrite)), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)
+  name: SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, IEnumerable<Task<TWrite>>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_SourceAsync__2_System_Threading_Channels_Channel___0___1__System_Int32_System_Collections_Generic_IEnumerable_System_Threading_Tasks_Task___0___System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)
+  name.vb: SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, IEnumerable(Of Task(Of TWrite)), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.SourceAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<TWrite>>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.SourceAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.Task(Of TWrite)), System.Threading.CancellationToken)
+  nameWithType: Extensions.SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, IEnumerable<Task<TWrite>>, CancellationToken)
+  nameWithType.vb: Extensions.SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, IEnumerable(Of Task(Of TWrite)), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Threading.CancellationToken)
+  name: SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, IEnumerable<ValueTask<TWrite>>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_SourceAsync__2_System_Threading_Channels_Channel___0___1__System_Int32_System_Collections_Generic_IEnumerable_System_Threading_Tasks_ValueTask___0___System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.SourceAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Threading.CancellationToken)
+  name.vb: SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, IEnumerable(Of ValueTask(Of TWrite)), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.SourceAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Collections.Generic.IEnumerable<System.Threading.Tasks.ValueTask<TWrite>>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.SourceAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.ValueTask(Of TWrite)), System.Threading.CancellationToken)
+  nameWithType: Extensions.SourceAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, IEnumerable<ValueTask<TWrite>>, CancellationToken)
+  nameWithType.vb: Extensions.SourceAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, IEnumerable(Of ValueTask(Of TWrite)), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.TaskPipeAsync*
+  name: TaskPipeAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskPipeAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.TaskPipeAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.TaskPipeAsync
+  nameWithType: Extensions.TaskPipeAsync
+- uid: Open.ChannelExtensions.Extensions.TaskPipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.Task{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: TaskPipeAsync<TIn, TOut>(ChannelReader<TIn>, Func<TIn, Task<TOut>>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskPipeAsync__2_System_Threading_Channels_ChannelReader___0__System_Func___0_System_Threading_Tasks_Task___1___System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskPipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.Task{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: TaskPipeAsync(Of TIn, TOut)(ChannelReader(Of TIn), Func(Of TIn, Task(Of TOut)), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.TaskPipeAsync<TIn, TOut>(System.Threading.Channels.ChannelReader<TIn>, System.Func<TIn, System.Threading.Tasks.Task<TOut>>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskPipeAsync(Of TIn, TOut)(System.Threading.Channels.ChannelReader(Of TIn), System.Func(Of TIn, System.Threading.Tasks.Task(Of TOut)), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.TaskPipeAsync<TIn, TOut>(ChannelReader<TIn>, Func<TIn, Task<TOut>>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.TaskPipeAsync(Of TIn, TOut)(ChannelReader(Of TIn), Func(Of TIn, Task(Of TOut)), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.TaskPipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.Task{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: TaskPipeAsync<TIn, TOut>(ChannelReader<TIn>, Int32, Func<TIn, Task<TOut>>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskPipeAsync__2_System_Threading_Channels_ChannelReader___0__System_Int32_System_Func___0_System_Threading_Tasks_Task___1___System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskPipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.Task{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: TaskPipeAsync(Of TIn, TOut)(ChannelReader(Of TIn), Int32, Func(Of TIn, Task(Of TOut)), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.TaskPipeAsync<TIn, TOut>(System.Threading.Channels.ChannelReader<TIn>, System.Int32, System.Func<TIn, System.Threading.Tasks.Task<TOut>>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskPipeAsync(Of TIn, TOut)(System.Threading.Channels.ChannelReader(Of TIn), System.Int32, System.Func(Of TIn, System.Threading.Tasks.Task(Of TOut)), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.TaskPipeAsync<TIn, TOut>(ChannelReader<TIn>, Int32, Func<TIn, Task<TOut>>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.TaskPipeAsync(Of TIn, TOut)(ChannelReader(Of TIn), Int32, Func(Of TIn, Task(Of TOut)), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.TaskPipeAsync``3(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.Task{``2}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: TaskPipeAsync<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Func<TRead, Task<TOut>>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskPipeAsync__3_System_Threading_Channels_Channel___0___1__System_Func___1_System_Threading_Tasks_Task___2___System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskPipeAsync``3(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.Task{``2}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: TaskPipeAsync(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Func(Of TRead, Task(Of TOut)), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.TaskPipeAsync<TWrite, TRead, TOut>(System.Threading.Channels.Channel<TWrite, TRead>, System.Func<TRead, System.Threading.Tasks.Task<TOut>>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskPipeAsync(Of TWrite, TRead, TOut)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Func(Of TRead, System.Threading.Tasks.Task(Of TOut)), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.TaskPipeAsync<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Func<TRead, Task<TOut>>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.TaskPipeAsync(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Func(Of TRead, Task(Of TOut)), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.TaskPipeAsync``3(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,System.Threading.Tasks.Task{``2}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name: TaskPipeAsync<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Int32, Func<TRead, Task<TOut>>, Int32, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskPipeAsync__3_System_Threading_Channels_Channel___0___1__System_Int32_System_Func___1_System_Threading_Tasks_Task___2___System_Int32_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskPipeAsync``3(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,System.Threading.Tasks.Task{``2}},System.Int32,System.Boolean,System.Threading.CancellationToken)
+  name.vb: TaskPipeAsync(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, Task(Of TOut)), Int32, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.TaskPipeAsync<TWrite, TRead, TOut>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Func<TRead, System.Threading.Tasks.Task<TOut>>, System.Int32, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskPipeAsync(Of TWrite, TRead, TOut)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Func(Of TRead, System.Threading.Tasks.Task(Of TOut)), System.Int32, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.TaskPipeAsync<TWrite, TRead, TOut>(Channel<TWrite, TRead>, Int32, Func<TRead, Task<TOut>>, Int32, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.TaskPipeAsync(Of TWrite, TRead, TOut)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, Task(Of TOut)), Int32, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.TaskReadAllAsync*
+  name: TaskReadAllAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskReadAllAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.TaskReadAllAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.TaskReadAllAsync
+  nameWithType: Extensions.TaskReadAllAsync
+- uid: Open.ChannelExtensions.Extensions.TaskReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)
+  name: TaskReadAllAsync<T>(ChannelReader<T>, Func<T, Task>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskReadAllAsync__1_System_Threading_Channels_ChannelReader___0__System_Func___0_System_Threading_Tasks_Task__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)
+  name.vb: TaskReadAllAsync(Of T)(ChannelReader(Of T), Func(Of T, Task), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.TaskReadAllAsync<T>(System.Threading.Channels.ChannelReader<T>, System.Func<T, System.Threading.Tasks.Task>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskReadAllAsync(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Func(Of T, System.Threading.Tasks.Task), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.TaskReadAllAsync<T>(ChannelReader<T>, Func<T, Task>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.TaskReadAllAsync(Of T)(ChannelReader(Of T), Func(Of T, Task), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Int64,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)
+  name: TaskReadAllAsync<TWrite, TRead>(Channel<TWrite, TRead>, Func<TRead, Int64, Task>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskReadAllAsync__2_System_Threading_Channels_Channel___0___1__System_Func___1_System_Int64_System_Threading_Tasks_Task__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Int64,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)
+  name.vb: TaskReadAllAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Func(Of TRead, Int64, Task), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.TaskReadAllAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Func<TRead, System.Int64, System.Threading.Tasks.Task>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskReadAllAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Func(Of TRead, System.Int64, System.Threading.Tasks.Task), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.TaskReadAllAsync<TWrite, TRead>(Channel<TWrite, TRead>, Func<TRead, Int64, Task>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.TaskReadAllAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Func(Of TRead, Int64, Task), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)
+  name: TaskReadAllAsync<TWrite, TRead>(Channel<TWrite, TRead>, Func<TRead, Task>, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskReadAllAsync__2_System_Threading_Channels_Channel___0___1__System_Func___1_System_Threading_Tasks_Task__System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)
+  name.vb: TaskReadAllAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Func(Of TRead, Task), CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.TaskReadAllAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Func<TRead, System.Threading.Tasks.Task>, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskReadAllAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Func(Of TRead, System.Threading.Tasks.Task), System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.TaskReadAllAsync<TWrite, TRead>(Channel<TWrite, TRead>, Func<TRead, Task>, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.TaskReadAllAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Func(Of TRead, Task), CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync*
+  name: TaskReadAllConcurrentlyAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskReadAllConcurrentlyAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync
+  nameWithType: Extensions.TaskReadAllConcurrentlyAsync
+- uid: Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.Task},System.Threading.CancellationToken)
+  name: TaskReadAllConcurrentlyAsync<T>(ChannelReader<T>, Int32, Func<T, Task>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskReadAllConcurrentlyAsync__1_System_Threading_Channels_ChannelReader___0__System_Int32_System_Func___0_System_Threading_Tasks_Task__System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync``1(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.Task},System.Threading.CancellationToken)
+  name.vb: TaskReadAllConcurrentlyAsync(Of T)(ChannelReader(Of T), Int32, Func(Of T, Task), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync<T>(System.Threading.Channels.ChannelReader<T>, System.Int32, System.Func<T, System.Threading.Tasks.Task>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync(Of T)(System.Threading.Channels.ChannelReader(Of T), System.Int32, System.Func(Of T, System.Threading.Tasks.Task), System.Threading.CancellationToken)
+  nameWithType: Extensions.TaskReadAllConcurrentlyAsync<T>(ChannelReader<T>, Int32, Func<T, Task>, CancellationToken)
+  nameWithType.vb: Extensions.TaskReadAllConcurrentlyAsync(Of T)(ChannelReader(Of T), Int32, Func(Of T, Task), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,System.Threading.Tasks.Task},System.Threading.CancellationToken)
+  name: TaskReadAllConcurrentlyAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, Func<TRead, Task>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_TaskReadAllConcurrentlyAsync__2_System_Threading_Channels_Channel___0___1__System_Int32_System_Func___1_System_Threading_Tasks_Task__System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync``2(System.Threading.Channels.Channel{``0,``1},System.Int32,System.Func{``1,System.Threading.Tasks.Task},System.Threading.CancellationToken)
+  name.vb: TaskReadAllConcurrentlyAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, Task), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync<TWrite, TRead>(System.Threading.Channels.Channel<TWrite, TRead>, System.Int32, System.Func<TRead, System.Threading.Tasks.Task>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.TaskReadAllConcurrentlyAsync(Of TWrite, TRead)(System.Threading.Channels.Channel(Of TWrite, TRead), System.Int32, System.Func(Of TRead, System.Threading.Tasks.Task), System.Threading.CancellationToken)
+  nameWithType: Extensions.TaskReadAllConcurrentlyAsync<TWrite, TRead>(Channel<TWrite, TRead>, Int32, Func<TRead, Task>, CancellationToken)
+  nameWithType.vb: Extensions.TaskReadAllConcurrentlyAsync(Of TWrite, TRead)(Channel(Of TWrite, TRead), Int32, Func(Of TRead, Task), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ToChannel(System.IO.TextReader,System.Int32,System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name: ToChannel(TextReader, Int32, Boolean, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ToChannel_System_IO_TextReader_System_Int32_System_Boolean_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ToChannel(System.IO.TextReader,System.Int32,System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ToChannel(System.IO.TextReader, System.Int32, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ToChannel(TextReader, Int32, Boolean, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ToChannel*
+  name: ToChannel
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ToChannel_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ToChannel
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ToChannel
+  nameWithType: Extensions.ToChannel
+- uid: Open.ChannelExtensions.Extensions.ToChannel``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name: ToChannel<T>(IEnumerable<T>, Int32, Boolean, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ToChannel__1_System_Collections_Generic_IEnumerable___0__System_Int32_System_Boolean_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.ToChannel``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name.vb: ToChannel(Of T)(IEnumerable(Of T), Int32, Boolean, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.ToChannel<T>(System.Collections.Generic.IEnumerable<T>, System.Int32, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.ToChannel(Of T)(System.Collections.Generic.IEnumerable(Of T), System.Int32, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.ToChannel<T>(IEnumerable<T>, Int32, Boolean, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.ToChannel(Of T)(IEnumerable(Of T), Int32, Boolean, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.ToChannelAsync*
+  name: ToChannelAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ToChannelAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.ToChannelAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.ToChannelAsync
+  nameWithType: Extensions.ToChannelAsync
+- uid: Open.ChannelExtensions.Extensions.ToChannelAsync``1(System.Collections.Generic.IEnumerable{System.Func{``0}},System.Int32,System.Boolean,System.Int32,System.Threading.CancellationToken)
+  name: ToChannelAsync<T>(IEnumerable<Func<T>>, Int32, Boolean, Int32, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ToChannelAsync__1_System_Collections_Generic_IEnumerable_System_Func___0___System_Int32_System_Boolean_System_Int32_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.ToChannelAsync``1(System.Collections.Generic.IEnumerable{System.Func{``0}},System.Int32,System.Boolean,System.Int32,System.Threading.CancellationToken)
+  name.vb: ToChannelAsync(Of T)(IEnumerable(Of Func(Of T)), Int32, Boolean, Int32, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.ToChannelAsync<T>(System.Collections.Generic.IEnumerable<System.Func<T>>, System.Int32, System.Boolean, System.Int32, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.ToChannelAsync(Of T)(System.Collections.Generic.IEnumerable(Of System.Func(Of T)), System.Int32, System.Boolean, System.Int32, System.Threading.CancellationToken)
+  nameWithType: Extensions.ToChannelAsync<T>(IEnumerable<Func<T>>, Int32, Boolean, Int32, CancellationToken)
+  nameWithType.vb: Extensions.ToChannelAsync(Of T)(IEnumerable(Of Func(Of T)), Int32, Boolean, Int32, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ToChannelAsync``1(System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Int32,System.Boolean,System.Int32,System.Threading.CancellationToken)
+  name: ToChannelAsync<T>(IEnumerable<Task<T>>, Int32, Boolean, Int32, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ToChannelAsync__1_System_Collections_Generic_IEnumerable_System_Threading_Tasks_Task___0___System_Int32_System_Boolean_System_Int32_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.ToChannelAsync``1(System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Int32,System.Boolean,System.Int32,System.Threading.CancellationToken)
+  name.vb: ToChannelAsync(Of T)(IEnumerable(Of Task(Of T)), Int32, Boolean, Int32, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.ToChannelAsync<T>(System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<T>>, System.Int32, System.Boolean, System.Int32, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.ToChannelAsync(Of T)(System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.Task(Of T)), System.Int32, System.Boolean, System.Int32, System.Threading.CancellationToken)
+  nameWithType: Extensions.ToChannelAsync<T>(IEnumerable<Task<T>>, Int32, Boolean, Int32, CancellationToken)
+  nameWithType.vb: Extensions.ToChannelAsync(Of T)(IEnumerable(Of Task(Of T)), Int32, Boolean, Int32, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.ToChannelAsync``1(System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Int32,System.Boolean,System.Int32,System.Threading.CancellationToken)
+  name: ToChannelAsync<T>(IEnumerable<ValueTask<T>>, Int32, Boolean, Int32, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_ToChannelAsync__1_System_Collections_Generic_IEnumerable_System_Threading_Tasks_ValueTask___0___System_Int32_System_Boolean_System_Int32_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.ToChannelAsync``1(System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Int32,System.Boolean,System.Int32,System.Threading.CancellationToken)
+  name.vb: ToChannelAsync(Of T)(IEnumerable(Of ValueTask(Of T)), Int32, Boolean, Int32, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.ToChannelAsync<T>(System.Collections.Generic.IEnumerable<System.Threading.Tasks.ValueTask<T>>, System.Int32, System.Boolean, System.Int32, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.ToChannelAsync(Of T)(System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.ValueTask(Of T)), System.Int32, System.Boolean, System.Int32, System.Threading.CancellationToken)
+  nameWithType: Extensions.ToChannelAsync<T>(IEnumerable<ValueTask<T>>, Int32, Boolean, Int32, CancellationToken)
+  nameWithType.vb: Extensions.ToChannelAsync(Of T)(IEnumerable(Of ValueTask(Of T)), Int32, Boolean, Int32, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.Transform*
+  name: Transform
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Transform_
+  commentId: Overload:Open.ChannelExtensions.Extensions.Transform
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.Transform
+  nameWithType: Extensions.Transform
+- uid: Open.ChannelExtensions.Extensions.Transform``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,``1})
+  name: Transform<TIn, TOut>(ChannelReader<TIn>, Func<TIn, TOut>)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_Transform__2_System_Threading_Channels_ChannelReader___0__System_Func___0___1__
+  commentId: M:Open.ChannelExtensions.Extensions.Transform``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,``1})
+  name.vb: Transform(Of TIn, TOut)(ChannelReader(Of TIn), Func(Of TIn, TOut))
+  fullName: Open.ChannelExtensions.Extensions.Transform<TIn, TOut>(System.Threading.Channels.ChannelReader<TIn>, System.Func<TIn, TOut>)
+  fullName.vb: Open.ChannelExtensions.Extensions.Transform(Of TIn, TOut)(System.Threading.Channels.ChannelReader(Of TIn), System.Func(Of TIn, TOut))
+  nameWithType: Extensions.Transform<TIn, TOut>(ChannelReader<TIn>, Func<TIn, TOut>)
+  nameWithType.vb: Extensions.Transform(Of TIn, TOut)(ChannelReader(Of TIn), Func(Of TIn, TOut))
+- uid: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync*
+  name: WaitToWriteAndThrowIfClosedAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WaitToWriteAndThrowIfClosedAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync
+  nameWithType: Extensions.WaitToWriteAndThrowIfClosedAsync
+- uid: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Boolean,System.Threading.CancellationToken)
+  name: WaitToWriteAndThrowIfClosedAsync<T>(ChannelWriter<T>, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WaitToWriteAndThrowIfClosedAsync__1_System_Threading_Channels_ChannelWriter___0__System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Boolean,System.Threading.CancellationToken)
+  name.vb: WaitToWriteAndThrowIfClosedAsync(Of T)(ChannelWriter(Of T), Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.WaitToWriteAndThrowIfClosedAsync<T>(ChannelWriter<T>, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.WaitToWriteAndThrowIfClosedAsync(Of T)(ChannelWriter(Of T), Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.String,System.Boolean,System.Threading.CancellationToken)
+  name: WaitToWriteAndThrowIfClosedAsync<T>(ChannelWriter<T>, String, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WaitToWriteAndThrowIfClosedAsync__1_System_Threading_Channels_ChannelWriter___0__System_String_System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.String,System.Boolean,System.Threading.CancellationToken)
+  name.vb: WaitToWriteAndThrowIfClosedAsync(Of T)(ChannelWriter(Of T), String, Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.String, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.String, System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.WaitToWriteAndThrowIfClosedAsync<T>(ChannelWriter<T>, String, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.WaitToWriteAndThrowIfClosedAsync(Of T)(ChannelWriter(Of T), String, Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.String,System.Threading.CancellationToken)
+  name: WaitToWriteAndThrowIfClosedAsync<T>(ChannelWriter<T>, String, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WaitToWriteAndThrowIfClosedAsync__1_System_Threading_Channels_ChannelWriter___0__System_String_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.String,System.Threading.CancellationToken)
+  name.vb: WaitToWriteAndThrowIfClosedAsync(Of T)(ChannelWriter(Of T), String, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.String, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.String, System.Threading.CancellationToken)
+  nameWithType: Extensions.WaitToWriteAndThrowIfClosedAsync<T>(ChannelWriter<T>, String, CancellationToken)
+  nameWithType.vb: Extensions.WaitToWriteAndThrowIfClosedAsync(Of T)(ChannelWriter(Of T), String, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Threading.CancellationToken)
+  name: WaitToWriteAndThrowIfClosedAsync<T>(ChannelWriter<T>, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WaitToWriteAndThrowIfClosedAsync__1_System_Threading_Channels_ChannelWriter___0__System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Threading.CancellationToken)
+  name.vb: WaitToWriteAndThrowIfClosedAsync(Of T)(ChannelWriter(Of T), CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Threading.CancellationToken)
+  nameWithType: Extensions.WaitToWriteAndThrowIfClosedAsync<T>(ChannelWriter<T>, CancellationToken)
+  nameWithType.vb: Extensions.WaitToWriteAndThrowIfClosedAsync(Of T)(ChannelWriter(Of T), CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.WriteAll*
+  name: WriteAll
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAll_
+  commentId: Overload:Open.ChannelExtensions.Extensions.WriteAll
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.WriteAll
+  nameWithType: Extensions.WriteAll
+- uid: Open.ChannelExtensions.Extensions.WriteAll``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{``0},System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name: WriteAll<T>(ChannelWriter<T>, IEnumerable<T>, Boolean, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAll__1_System_Threading_Channels_ChannelWriter___0__System_Collections_Generic_IEnumerable___0__System_Boolean_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.WriteAll``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{``0},System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name.vb: WriteAll(Of T)(ChannelWriter(Of T), IEnumerable(Of T), Boolean, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.WriteAll<T>(System.Threading.Channels.ChannelWriter<T>, System.Collections.Generic.IEnumerable<T>, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.WriteAll(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Collections.Generic.IEnumerable(Of T), System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.WriteAll<T>(ChannelWriter<T>, IEnumerable<T>, Boolean, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.WriteAll(Of T)(ChannelWriter(Of T), IEnumerable(Of T), Boolean, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.WriteAllAsync*
+  name: WriteAllAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.WriteAllAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.WriteAllAsync
+  nameWithType: Extensions.WriteAllAsync
+- uid: Open.ChannelExtensions.Extensions.WriteAllAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{System.Func{``0}},System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name: WriteAllAsync<T>(ChannelWriter<T>, IEnumerable<Func<T>>, Boolean, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllAsync__1_System_Threading_Channels_ChannelWriter___0__System_Collections_Generic_IEnumerable_System_Func___0___System_Boolean_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.WriteAllAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{System.Func{``0}},System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name.vb: WriteAllAsync(Of T)(ChannelWriter(Of T), IEnumerable(Of Func(Of T)), Boolean, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.WriteAllAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.Collections.Generic.IEnumerable<System.Func<T>>, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.WriteAllAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Collections.Generic.IEnumerable(Of System.Func(Of T)), System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.WriteAllAsync<T>(ChannelWriter<T>, IEnumerable<Func<T>>, Boolean, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.WriteAllAsync(Of T)(ChannelWriter(Of T), IEnumerable(Of Func(Of T)), Boolean, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.WriteAllAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name: WriteAllAsync<T>(ChannelWriter<T>, IEnumerable<Task<T>>, Boolean, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllAsync__1_System_Threading_Channels_ChannelWriter___0__System_Collections_Generic_IEnumerable_System_Threading_Tasks_Task___0___System_Boolean_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.WriteAllAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name.vb: WriteAllAsync(Of T)(ChannelWriter(Of T), IEnumerable(Of Task(Of T)), Boolean, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.WriteAllAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<T>>, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.WriteAllAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.Task(Of T)), System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.WriteAllAsync<T>(ChannelWriter<T>, IEnumerable<Task<T>>, Boolean, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.WriteAllAsync(Of T)(ChannelWriter(Of T), IEnumerable(Of Task(Of T)), Boolean, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.WriteAllAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name: WriteAllAsync<T>(ChannelWriter<T>, IEnumerable<ValueTask<T>>, Boolean, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllAsync__1_System_Threading_Channels_ChannelWriter___0__System_Collections_Generic_IEnumerable_System_Threading_Tasks_ValueTask___0___System_Boolean_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.WriteAllAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name.vb: WriteAllAsync(Of T)(ChannelWriter(Of T), IEnumerable(Of ValueTask(Of T)), Boolean, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.WriteAllAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.Collections.Generic.IEnumerable<System.Threading.Tasks.ValueTask<T>>, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.WriteAllAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.ValueTask(Of T)), System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.WriteAllAsync<T>(ChannelWriter<T>, IEnumerable<ValueTask<T>>, Boolean, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.WriteAllAsync(Of T)(ChannelWriter(Of T), IEnumerable(Of ValueTask(Of T)), Boolean, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync*
+  name: WriteAllConcurrentlyAsync
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllConcurrentlyAsync_
+  commentId: Overload:Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync
+  nameWithType: Extensions.WriteAllConcurrentlyAsync
+- uid: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Int32,System.Collections.Generic.IEnumerable{System.Func{``0}},System.Boolean,System.Threading.CancellationToken)
+  name: WriteAllConcurrentlyAsync<T>(ChannelWriter<T>, Int32, IEnumerable<Func<T>>, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllConcurrentlyAsync__1_System_Threading_Channels_ChannelWriter___0__System_Int32_System_Collections_Generic_IEnumerable_System_Func___0___System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Int32,System.Collections.Generic.IEnumerable{System.Func{``0}},System.Boolean,System.Threading.CancellationToken)
+  name.vb: WriteAllConcurrentlyAsync(Of T)(ChannelWriter(Of T), Int32, IEnumerable(Of Func(Of T)), Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.Int32, System.Collections.Generic.IEnumerable<System.Func<T>>, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Int32, System.Collections.Generic.IEnumerable(Of System.Func(Of T)), System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.WriteAllConcurrentlyAsync<T>(ChannelWriter<T>, Int32, IEnumerable<Func<T>>, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.WriteAllConcurrentlyAsync(Of T)(ChannelWriter(Of T), Int32, IEnumerable(Of Func(Of T)), Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Int32,System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Boolean,System.Threading.CancellationToken)
+  name: WriteAllConcurrentlyAsync<T>(ChannelWriter<T>, Int32, IEnumerable<Task<T>>, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllConcurrentlyAsync__1_System_Threading_Channels_ChannelWriter___0__System_Int32_System_Collections_Generic_IEnumerable_System_Threading_Tasks_Task___0___System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Int32,System.Collections.Generic.IEnumerable{System.Threading.Tasks.Task{``0}},System.Boolean,System.Threading.CancellationToken)
+  name.vb: WriteAllConcurrentlyAsync(Of T)(ChannelWriter(Of T), Int32, IEnumerable(Of Task(Of T)), Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.Int32, System.Collections.Generic.IEnumerable<System.Threading.Tasks.Task<T>>, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Int32, System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.Task(Of T)), System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.WriteAllConcurrentlyAsync<T>(ChannelWriter<T>, Int32, IEnumerable<Task<T>>, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.WriteAllConcurrentlyAsync(Of T)(ChannelWriter(Of T), Int32, IEnumerable(Of Task(Of T)), Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Int32,System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Boolean,System.Threading.CancellationToken)
+  name: WriteAllConcurrentlyAsync<T>(ChannelWriter<T>, Int32, IEnumerable<ValueTask<T>>, Boolean, CancellationToken)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllConcurrentlyAsync__1_System_Threading_Channels_ChannelWriter___0__System_Int32_System_Collections_Generic_IEnumerable_System_Threading_Tasks_ValueTask___0___System_Boolean_System_Threading_CancellationToken_
+  commentId: M:Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Int32,System.Collections.Generic.IEnumerable{System.Threading.Tasks.ValueTask{``0}},System.Boolean,System.Threading.CancellationToken)
+  name.vb: WriteAllConcurrentlyAsync(Of T)(ChannelWriter(Of T), Int32, IEnumerable(Of ValueTask(Of T)), Boolean, CancellationToken)
+  fullName: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync<T>(System.Threading.Channels.ChannelWriter<T>, System.Int32, System.Collections.Generic.IEnumerable<System.Threading.Tasks.ValueTask<T>>, System.Boolean, System.Threading.CancellationToken)
+  fullName.vb: Open.ChannelExtensions.Extensions.WriteAllConcurrentlyAsync(Of T)(System.Threading.Channels.ChannelWriter(Of T), System.Int32, System.Collections.Generic.IEnumerable(Of System.Threading.Tasks.ValueTask(Of T)), System.Boolean, System.Threading.CancellationToken)
+  nameWithType: Extensions.WriteAllConcurrentlyAsync<T>(ChannelWriter<T>, Int32, IEnumerable<ValueTask<T>>, Boolean, CancellationToken)
+  nameWithType.vb: Extensions.WriteAllConcurrentlyAsync(Of T)(ChannelWriter(Of T), Int32, IEnumerable(Of ValueTask(Of T)), Boolean, CancellationToken)
+- uid: Open.ChannelExtensions.Extensions.WriteAllLines(System.Threading.Channels.ChannelWriter{System.String},System.IO.TextReader,System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name: WriteAllLines(ChannelWriter<String>, TextReader, Boolean, CancellationToken, Boolean)
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllLines_System_Threading_Channels_ChannelWriter_System_String__System_IO_TextReader_System_Boolean_System_Threading_CancellationToken_System_Boolean_
+  commentId: M:Open.ChannelExtensions.Extensions.WriteAllLines(System.Threading.Channels.ChannelWriter{System.String},System.IO.TextReader,System.Boolean,System.Threading.CancellationToken,System.Boolean)
+  name.vb: WriteAllLines(ChannelWriter(Of String), TextReader, Boolean, CancellationToken, Boolean)
+  fullName: Open.ChannelExtensions.Extensions.WriteAllLines(System.Threading.Channels.ChannelWriter<System.String>, System.IO.TextReader, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  fullName.vb: Open.ChannelExtensions.Extensions.WriteAllLines(System.Threading.Channels.ChannelWriter(Of System.String), System.IO.TextReader, System.Boolean, System.Threading.CancellationToken, System.Boolean)
+  nameWithType: Extensions.WriteAllLines(ChannelWriter<String>, TextReader, Boolean, CancellationToken, Boolean)
+  nameWithType.vb: Extensions.WriteAllLines(ChannelWriter(Of String), TextReader, Boolean, CancellationToken, Boolean)
+- uid: Open.ChannelExtensions.Extensions.WriteAllLines*
+  name: WriteAllLines
+  href: api/Open.ChannelExtensions.Extensions.html#Open_ChannelExtensions_Extensions_WriteAllLines_
+  commentId: Overload:Open.ChannelExtensions.Extensions.WriteAllLines
+  isSpec: "True"
+  fullName: Open.ChannelExtensions.Extensions.WriteAllLines
+  nameWithType: Extensions.WriteAllLines

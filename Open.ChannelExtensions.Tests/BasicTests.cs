@@ -22,7 +22,7 @@ namespace Open.ChannelExtensions.Tests
 
 			var sw = Stopwatch.StartNew();
 			var total = await range
-				.ToChannel()
+				.ToChannel(singleReader: true)
 				.ReadAll(i => result.Add(i));
 			sw.Stop();
 
@@ -44,7 +44,7 @@ namespace Open.ChannelExtensions.Tests
 
 			var sw = Stopwatch.StartNew();
 			var total = await range
-				.ToChannel()
+				.ToChannel(singleReader: true)
 				.ReadAllAsync(i =>
 				{
 					result.Add(i);
@@ -73,8 +73,8 @@ namespace Open.ChannelExtensions.Tests
 			{
 				var sw = Stopwatch.StartNew();
 				var total = await range
-					.ToChannel()
-					.Batch(batchSize)
+					.ToChannel(singleReader: true)
+					.Batch(batchSize, singleReader: true)
 					.ReadAll(i => result1.Add(i));
 				sw.Stop();
 
@@ -90,8 +90,8 @@ namespace Open.ChannelExtensions.Tests
 				var result2 = new List<int>(testSize);
 				var sw = Stopwatch.StartNew();
 				var total = await result1
-					.ToChannel()
-					.Join()
+					.ToChannel(singleReader: true)
+					.Join(singleReader: true)
 					.ReadAll(i => result2.Add(i));
 				sw.Stop();
 
@@ -120,7 +120,7 @@ namespace Open.ChannelExtensions.Tests
 
 			var sw = Stopwatch.StartNew();
 			var total = await range
-				.ToChannel()
+				.ToChannel(singleReader: true)
 				.Batch(batchSize)
 				.Join()
 				.ReadAll(i => result.Add(i));
@@ -132,5 +132,29 @@ namespace Open.ChannelExtensions.Tests
 			Assert.Equal(testSize, result.Count);
 			Assert.True(result.SequenceEqual(range));
 		}
+
+		[Theory]
+		[InlineData(testSize1)]
+		[InlineData(testSize2)]
+		public static async Task Filter(int testSize)
+		{
+			var range = Enumerable.Range(0, testSize);
+			var count = testSize / 2;
+			var result = new List<int>(count);
+
+			var sw = Stopwatch.StartNew();
+			var total = await range
+				.ToChannel(singleReader: true)
+				.Filter(i => i % 2 == 1)
+				.ReadAll(i => result.Add(i));
+			sw.Stop();
+
+			Console.WriteLine("Channel.Filter(): {0}", sw.Elapsed);
+			Console.WriteLine();
+
+			Assert.Equal(count, result.Count);
+			Assert.True(result.SequenceEqual(range.Where(i => i % 2 == 1)));
+		}
+
 	}
 }

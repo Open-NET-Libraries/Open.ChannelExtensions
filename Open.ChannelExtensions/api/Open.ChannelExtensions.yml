@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Open.ChannelExtensions
+  commentId: N:Open.ChannelExtensions
+  id: Open.ChannelExtensions
+  children:
+  - Open.ChannelExtensions.Extensions
+  langs:
+  - csharp
+  - vb
+  name: Open.ChannelExtensions
+  nameWithType: Open.ChannelExtensions
+  fullName: Open.ChannelExtensions
+  type: Namespace
+  assemblies:
+  - Open.ChannelExtensions
+references:
+- uid: Open.ChannelExtensions.Extensions
+  commentId: T:Open.ChannelExtensions.Extensions
+  name: Extensions
+  nameWithType: Extensions
+  fullName: Open.ChannelExtensions.Extensions

@@ -34,6 +34,15 @@ Part of the "Open" set of libraries.
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="api\**" />
+	  <Compile Remove="docs\**" />
+	  <EmbeddedResource Remove="api\**" />
+	  <EmbeddedResource Remove="docs\**" />
+	  <None Remove="api\**" />
+	  <None Remove="docs\**" />
+	</ItemGroup>
+
+	<ItemGroup>
     <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
   </ItemGroup>
 
