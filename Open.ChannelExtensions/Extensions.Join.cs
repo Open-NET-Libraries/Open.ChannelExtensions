@@ -16,7 +16,7 @@ namespace Open.ChannelExtensions
 			protected override bool TryPipeItems()
 			{
 				var source = Source;
-				if (source==null || source.Completion.IsCompleted)
+				if (source == null || source.Completion.IsCompleted || Buffer == null)
 					return false;
 
 				lock (Buffer)
@@ -91,20 +91,20 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The result type.</typeparam>
 		/// <param name="source">The source reader.</param>
-		/// <param name="bufferSize">The capacity of the resultant channel.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 		/// <returns>A channel reader containing the joined results.</returns>
-		public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, int bufferSize = 100, bool singleReader = false)
+		public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, bool singleReader = false)
 		{
-			var buffer = CreateChannel<T>(bufferSize, singleReader);
+			var buffer = CreateChannel<T>(1, singleReader);
 
-			Task.Run(async () =>
-				await source.ReadAllAsync(
+			source
+				.ReadAllAsync(
 					async (batch, i) =>
 					{
 						await foreach (var e in batch)
 							await buffer.Writer.WriteAsync(e).ConfigureAwait(false);
-					}))
+					})
+				.AsTask()
 				.ContinueWith(
 					t => buffer.CompleteAsync(t.Exception), TaskContinuationOptions.ExecuteSynchronously);
 

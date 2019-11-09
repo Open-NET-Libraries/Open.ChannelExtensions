@@ -21,10 +21,9 @@ namespace Open.ChannelExtensions
 				_current = source.Completion.IsCompleted ? null : new List<T>(batchSize);
 			}
 
-
 			protected override bool TryPipeItems()
 			{
-				if (_current == null)
+				if (_current == null || Buffer == null)
 					return false;
 
 				if (Buffer.Reader.Completion.IsCompleted)

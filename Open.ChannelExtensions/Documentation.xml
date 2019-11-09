@@ -73,13 +73,12 @@
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
             <returns>A channel reader containing the joined results.</returns>
         </member>
-        <member name="M:Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.IAsyncEnumerable{``0}},System.Int32,System.Boolean)">
+        <member name="M:Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.IAsyncEnumerable{``0}},System.Boolean)">
             <summary>
             Joins collections of the same type into a single channel reader in the order provided.
             </summary>
             <typeparam name="T">The result type.</typeparam>
             <param name="source">The source reader.</param>
-            <param name="bufferSize">The capacity of the resultant channel.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
             <returns>A channel reader containing the joined results.</returns>
         </member>
@@ -921,6 +920,27 @@
             <param name="cancellationToken">An optional cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
             <returns>The channel reader containing the results.</returns>
+        </member>
+        <member name="M:Open.ChannelExtensions.Extensions.AsAsyncEnumerable``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken)">
+            <summary>
+            Iterates over the results in a ChannelReader.
+            Provided as an alternative to .ReadAllAsync() which at the time of publishing this, only exists in .NET Core 3.0 and not .NET Standard 2.1
+            </summary>
+            <typeparam name="T">The output type of the channel.</typeparam>
+            <param name="reader">The reader to read from.</param>
+            <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>
+            <returns>An IAsyncEnumerable for iterating the channel.</returns>
+        </member>
+        <member name="M:Open.ChannelExtensions.Extensions.AsAsyncEnumerable``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken)">
+            <summary>
+            Iterates over the results in a Channel.
+            Provided as an alternative to .ReadAllAsync() which at the time of publishing this, only exists in .NET Core 3.0 and not .NET Standard 2.1
+            </summary>
+            <typeparam name="TIn">The type recieved by the source channel.</typeparam>
+            <typeparam name="TOut">The outgoing type from the source channel.</typeparam>
+            <param name="channel">The reader to read from.</param>
+            <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>
+            <returns>An IAsyncEnumerable for iterating the channel.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ToChannelAsync``1(System.Collections.Generic.IEnumerable{System.Func{``0}},System.Int32,System.Boolean,System.Int32,System.Threading.CancellationToken)">
             <summary>

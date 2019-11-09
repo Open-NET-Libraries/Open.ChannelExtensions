@@ -121,8 +121,8 @@ namespace Open.ChannelExtensions.Tests
 			var sw = Stopwatch.StartNew();
 			var total = await range
 				.ToChannel(singleReader: true)
-				.Batch(batchSize)
-				.Join()
+				.Batch(batchSize, singleReader: true)
+				.Join(singleReader: true)
 				.ReadAll(i => result.Add(i));
 			sw.Stop();
 
@@ -131,6 +131,40 @@ namespace Open.ChannelExtensions.Tests
 
 			Assert.Equal(testSize, result.Count);
 			Assert.True(result.SequenceEqual(range));
+		}
+
+		[Theory]
+		[InlineData(11)]
+		[InlineData(51)]
+		[InlineData(101)]
+		[InlineData(1001)]
+		public static async Task JoinAsync(int repeat)
+		{
+			var testSize = repeat * repeat;
+			var range = Enumerable.Repeat(Samples(), repeat);
+			var result = new List<int>(testSize);
+
+			var sw = Stopwatch.StartNew();
+			var total = await range
+				.ToChannel(singleReader: true)
+				.Join(singleReader: true)
+				.ReadAll(i => result.Add(i));
+			sw.Stop();
+
+			Console.WriteLine("Channel<IAsyncEnumerable>.Join(): {0}", sw.Elapsed);
+			Console.WriteLine();
+
+			Assert.Equal(testSize, result.Count);
+			Assert.True(result.SequenceEqual(Enumerable.Repeat(Enumerable.Range(0, repeat), repeat).SelectMany(i => i)));
+
+			async IAsyncEnumerable<int> Samples()
+			{
+				for (var i = 0; i < repeat; i++)
+				{
+					var x = new ValueTask<int>(i);
+					yield return await x;
+				}
+			}
 		}
 
 		[Theory]

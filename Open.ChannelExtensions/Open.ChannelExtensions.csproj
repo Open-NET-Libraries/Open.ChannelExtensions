@@ -29,19 +29,6 @@ Part of the "Open" set of libraries.
 		<DocumentationFile>Documentation.xml</DocumentationFile>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DocumentationFile>docs\Documentation.xml</DocumentationFile>
-	</PropertyGroup>
-
-	<ItemGroup>
-	  <Compile Remove="api\**" />
-	  <Compile Remove="docs\**" />
-	  <EmbeddedResource Remove="api\**" />
-	  <EmbeddedResource Remove="docs\**" />
-	  <None Remove="api\**" />
-	  <None Remove="docs\**" />
-	</ItemGroup>
-
 	<ItemGroup>
     <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
   </ItemGroup>

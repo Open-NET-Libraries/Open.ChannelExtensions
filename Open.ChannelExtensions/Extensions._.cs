@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -190,6 +191,48 @@ namespace Open.ChannelExtensions
 			bool deferredExecution = false)
 			=> CreateChannel<T>(capacity, singleReader)
 				.Source(source, cancellationToken, deferredExecution);
+
+		/// <summary>
+		/// Iterates over the results in a ChannelReader.
+		/// Provided as an alternative to .ReadAllAsync() which at the time of publishing this, only exists in .NET Core 3.0 and not .NET Standard 2.1
+		/// </summary>
+		/// <typeparam name="T">The output type of the channel.</typeparam>
+		/// <param name="reader">The reader to read from.</param>
+		/// <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>
+		/// <returns>An IAsyncEnumerable for iterating the channel.</returns>
+		public static async IAsyncEnumerable<T> AsAsyncEnumerable<T>(this ChannelReader<T> reader, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+		{
+			do
+			{
+				while (!cancellationToken.IsCancellationRequested && reader.TryRead(out var item))
+					yield return item;
+			}
+			while (
+				!cancellationToken.IsCancellationRequested
+				&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
+		}
+
+		/// <summary>
+		/// Iterates over the results in a Channel.
+		/// Provided as an alternative to .ReadAllAsync() which at the time of publishing this, only exists in .NET Core 3.0 and not .NET Standard 2.1
+		/// </summary>
+		/// <typeparam name="TIn">The type recieved by the source channel.</typeparam>
+		/// <typeparam name="TOut">The outgoing type from the source channel.</typeparam>
+		/// <param name="channel">The reader to read from.</param>
+		/// <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>
+		/// <returns>An IAsyncEnumerable for iterating the channel.</returns>
+		public static async IAsyncEnumerable<TOut> AsAsyncEnumerable<TIn, TOut>(this Channel<TIn, TOut> channel, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+		{
+			var reader = channel.Reader;
+			do
+			{
+				while (!cancellationToken.IsCancellationRequested && reader.TryRead(out var item))
+					yield return item;
+			}
+			while (
+				!cancellationToken.IsCancellationRequested
+				&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
+		}
 #endif
 
 		/// <summary>
