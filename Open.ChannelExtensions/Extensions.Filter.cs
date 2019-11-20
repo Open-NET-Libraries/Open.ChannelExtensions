@@ -45,6 +45,6 @@ namespace Open.ChannelExtensions
 		/// <param name="predicate">The predicate function.</param>
 		/// <returns>A channel reader representing the filtered results.</returns>
 		public static ChannelReader<T> Filter<T>(this ChannelReader<T> source, Func<T, bool> predicate)
-			=> new FilteringChannelReader<T>(source, predicate);
+			=> new FilteringChannelReader<T>(source ?? throw new ArgumentNullException(nameof(source)), predicate);
 	}
 }

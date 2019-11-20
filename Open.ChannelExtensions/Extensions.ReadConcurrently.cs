@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -41,10 +41,28 @@ namespace Open.ChannelExtensions
 				.WhenAll(readers)
 				.ContinueWith(
 					t => t.Result.Sum(),
-					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
+					cancellationToken,
+					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously,
+					TaskScheduler.Current);
 
 			ValueTask ParallelReceiver(T item, long i) => receiver(item);
 		}
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the receiver.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="reader">The channel reader to read from.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <param name="receiver">The async receiver function.</param>
+		/// <returns>A task that completes when no more reading is to be done.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+		public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
+			int maxConcurrency,
+			CancellationToken cancellationToken,
+			Func<T, ValueTask> receiver)
+			=> ReadAllConcurrentlyAsync(reader, maxConcurrency, receiver, cancellationToken);
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
@@ -59,7 +77,7 @@ namespace Open.ChannelExtensions
 			int maxConcurrency,
 			Func<T, Task> receiver,
 			CancellationToken cancellationToken = default)
-			=> reader.ReadAllConcurrentlyAsync(maxConcurrency, item => new ValueTask(receiver(item)), cancellationToken);
+			=> ReadAllConcurrentlyAsync(reader, maxConcurrency, item => new ValueTask(receiver(item)), cancellationToken);
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
@@ -75,7 +93,29 @@ namespace Open.ChannelExtensions
 			int maxConcurrency,
 			Func<TRead, ValueTask> receiver,
 			CancellationToken cancellationToken = default)
-			=> channel.Reader.ReadAllConcurrentlyAsync(maxConcurrency, receiver, cancellationToken);
+		{
+			if (channel is null) throw new ArgumentNullException(nameof(channel));
+			Contract.EndContractBlock();
+
+			return ReadAllConcurrentlyAsync(channel.Reader, maxConcurrency, receiver, cancellationToken);
+		}
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the receiver.
+		/// </summary>
+		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
+		/// <typeparam name="TRead">The item type of the reader.</typeparam>
+		/// <param name="channel">The channel to read from.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <param name="receiver">The async receiver function.</param>
+		/// <returns>A task that completes when no more reading is to be done.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+		public static Task<long> ReadAllConcurrentlyAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+			int maxConcurrency,
+			CancellationToken cancellationToken,
+			Func<TRead, ValueTask> receiver)
+			=> ReadAllConcurrentlyAsync(channel, maxConcurrency, receiver, cancellationToken);
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
@@ -91,7 +131,12 @@ namespace Open.ChannelExtensions
 			int maxConcurrency,
 			Func<TRead, Task> receiver,
 			CancellationToken cancellationToken = default)
-			=> channel.Reader.ReadAllConcurrentlyAsync(maxConcurrency, item => new ValueTask(receiver(item)), cancellationToken);
+		{
+			if (channel is null) throw new ArgumentNullException(nameof(channel));
+			Contract.EndContractBlock();
+
+			return ReadAllConcurrentlyAsync(channel.Reader, maxConcurrency, item => new ValueTask(receiver(item)), cancellationToken);
+		}
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
@@ -106,13 +151,29 @@ namespace Open.ChannelExtensions
 			int maxConcurrency,
 			Action<T> receiver,
 			CancellationToken cancellationToken = default)
-			=> reader.ReadAllConcurrentlyAsync(maxConcurrency,
+			=> ReadAllConcurrentlyAsync(reader, maxConcurrency,
 				e =>
 				{
 					receiver(e);
 					return new ValueTask();
 				},
 				cancellationToken);
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the receiver.
+		/// </summary>
+		/// <typeparam name="T">The item type.</typeparam>
+		/// <param name="reader">The channel reader to read from.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <param name="receiver">The receiver function.</param>
+		/// <returns>A task that completes when no more reading is to be done.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+		public static Task<long> ReadAllConcurrently<T>(this ChannelReader<T> reader,
+			int maxConcurrency,
+			CancellationToken cancellationToken,
+			Action<T> receiver)
+			=> ReadAllConcurrently(reader, maxConcurrency, receiver, cancellationToken);
 
 		/// <summary>
 		/// Reads items from the channel and passes them to the receiver.
@@ -128,6 +189,28 @@ namespace Open.ChannelExtensions
 			int maxConcurrency,
 			Action<TRead> receiver,
 			CancellationToken cancellationToken = default)
-			=> channel.Reader.ReadAllConcurrently(maxConcurrency, receiver, cancellationToken);
+		{
+			if (channel is null) throw new ArgumentNullException(nameof(channel));
+			Contract.EndContractBlock();
+
+			return channel.Reader.ReadAllConcurrently(maxConcurrency, receiver, cancellationToken);
+		}
+
+		/// <summary>
+		/// Reads items from the channel and passes them to the receiver.
+		/// </summary>
+		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
+		/// <typeparam name="TRead">The item type of the reader.</typeparam>
+		/// <param name="channel">The channel to read from.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <param name="receiver">The receiver function.</param>
+		/// <returns>A task that completes when no more reading is to be done.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+		public static Task<long> ReadAllConcurrently<TWrite, TRead>(this Channel<TWrite, TRead> channel,
+			int maxConcurrency,
+			CancellationToken cancellationToken,
+			Action<TRead> receiver)
+			=> ReadAllConcurrently(channel, maxConcurrency, receiver, cancellationToken);
 	}
 }

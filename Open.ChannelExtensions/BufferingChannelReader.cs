@@ -33,7 +33,7 @@ namespace Open.ChannelExtensions
 					}
 
 					Source = null;
-				});
+				}, TaskScheduler.Current);
 			}
 		}
 
@@ -44,11 +44,11 @@ namespace Open.ChannelExtensions
 		public override bool TryRead(out TOut item)
 		{
 			if (Buffer != null) do
-			{
-				if (Buffer.Reader.TryRead(out item))
-					return true;
-			}
-			while (TryPipeItems());
+				{
+					if (Buffer.Reader.TryRead(out item))
+						return true;
+				}
+				while (TryPipeItems());
 
 			item = default!;
 			return false;

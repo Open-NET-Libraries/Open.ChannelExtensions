@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
@@ -106,7 +107,10 @@ namespace Open.ChannelExtensions
 					})
 				.AsTask()
 				.ContinueWith(
-					t => buffer.CompleteAsync(t.Exception), TaskContinuationOptions.ExecuteSynchronously);
+					t => buffer.CompleteAsync(t.Exception),
+					CancellationToken.None,
+					TaskContinuationOptions.ExecuteSynchronously,
+					TaskScheduler.Current);
 
 			return buffer.Reader;
 		}

@@ -23,7 +23,7 @@ namespace Open.ChannelExtensions
 			{
 				while (_source.TryRead(out TSource s))
 				{
-					if(s is T i)
+					if (s is T i)
 					{
 						item = i;
 						return true;

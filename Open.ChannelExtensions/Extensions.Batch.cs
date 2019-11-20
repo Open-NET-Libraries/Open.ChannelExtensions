@@ -76,6 +76,6 @@ namespace Open.ChannelExtensions
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 		/// <returns>A channel reader containing the batches.</returns>
 		public static ChannelReader<List<T>> Batch<T>(this ChannelReader<T> source, int batchSize, bool singleReader = false)
-			=> new BatchingChannelReader<T>(source, batchSize, singleReader);
+			=> new BatchingChannelReader<T>(source ?? throw new ArgumentNullException(nameof(source)), batchSize, singleReader);
 	}
 }

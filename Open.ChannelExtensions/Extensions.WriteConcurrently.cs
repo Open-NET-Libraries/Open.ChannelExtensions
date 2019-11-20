@@ -24,6 +24,8 @@ namespace Open.ChannelExtensions
 		public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
 			int maxConcurrency, IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 		{
+			if (target is null) throw new ArgumentNullException(nameof(target));
+			if (source is null) throw new ArgumentNullException(nameof(source));
 			if (maxConcurrency < 1) throw new ArgumentOutOfRangeException(nameof(maxConcurrency), maxConcurrency, "Must be at least 1.");
 			Contract.EndContractBlock();
 
@@ -31,7 +33,7 @@ namespace Open.ChannelExtensions
 				return Task.FromCanceled<long>(cancellationToken);
 
 			if (maxConcurrency == 1)
-				return target.WriteAllAsync(source, complete, cancellationToken, true).AsTask();
+				return target.WriteAllAsync(source, complete, true, cancellationToken).AsTask();
 
 			var shouldWait = target
 				.WaitToWriteAndThrowIfClosedAsync("The target channel was closed before writing could begin.", cancellationToken)
@@ -45,22 +47,27 @@ namespace Open.ChannelExtensions
 			return Task
 				.WhenAll(writers)
 				.ContinueWith(t =>
-				{
-					if (complete)
-						target.Complete(t.Exception);
+					{
+						if (complete)
+							target.Complete(t.Exception);
 
-					return t;
-				}, TaskContinuationOptions.ExecuteSynchronously)
+						return t;
+					},
+					cancellationToken,
+					TaskContinuationOptions.ExecuteSynchronously,
+					TaskScheduler.Current)
 				.Unwrap()
 				.ContinueWith(
 					t => t.Result.Sum(),
-					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
+					cancellationToken,
+					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously,
+					TaskScheduler.Current);
 
 			// returns false if there's no more (wasn't cancelled).
 			async Task<long> WriteAllAsyncCore()
 			{
 				await Task.Yield();
-				await shouldWait;
+				await shouldWait.ConfigureAwait(false);
 				long count = 0;
 				var next = new ValueTask();
 				var potentiallyCancelled = true; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.

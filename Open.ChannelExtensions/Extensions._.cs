@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -29,16 +30,13 @@ namespace Open.ChannelExtensions
 					AllowSynchronousContinuations = true
 				});
 
-		static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write)
+		static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write, string? message = null)
 		{
 			if (!await write.ConfigureAwait(false))
-				throw new ChannelClosedException();
-		}
-
-		static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write, string message)
-		{
-			if (!await write.ConfigureAwait(false))
+			{
+				if (string.IsNullOrWhiteSpace(message)) throw new ChannelClosedException();
 				throw new ChannelClosedException(message);
+			}
 		}
 
 		/// <summary>
@@ -48,8 +46,11 @@ namespace Open.ChannelExtensions
 		/// <param name="writer">The channel writer.</param>
 		/// <param name="ifClosedMessage">The message to include with the ChannelClosedException if thrown.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		public static ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, string ifClosedMessage, CancellationToken cancellationToken = default)
+		public static ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, string? ifClosedMessage = null, CancellationToken cancellationToken = default)
 		{
+			if (writer is null) throw new ArgumentNullException(nameof(writer));
+			Contract.EndContractBlock();
+
 			if (cancellationToken.IsCancellationRequested)
 				return new ValueTask(Task.FromCanceled(cancellationToken));
 
@@ -60,6 +61,7 @@ namespace Open.ChannelExtensions
 			if (waitForWrite.Result)
 				return new ValueTask();
 
+			if (string.IsNullOrWhiteSpace(ifClosedMessage)) throw new ChannelClosedException();
 			throw new ChannelClosedException(ifClosedMessage);
 		}
 
@@ -91,20 +93,8 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="T">The type being written to the channel</typeparam>
 		/// <param name="writer">The channel writer.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		public static ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, CancellationToken cancellationToken = default)
-		{
-			if (cancellationToken.IsCancellationRequested)
-				return new ValueTask(Task.FromCanceled(cancellationToken));
-
-			var waitForWrite = writer.WaitToWriteAsync(cancellationToken);
-			if (!waitForWrite.IsCompletedSuccessfully)
-				return ThrowChannelClosedExceptionIfFalse(waitForWrite);
-
-			if (waitForWrite.Result)
-				return new ValueTask();
-
-			throw new ChannelClosedException();
-		}
+		public static ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, CancellationToken cancellationToken)
+			=> WaitToWriteAndThrowIfClosedAsync(writer, null, cancellationToken);
 
 		/// <summary>
 		/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
@@ -115,13 +105,13 @@ namespace Open.ChannelExtensions
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before continuing.</param>
 		public static async ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, bool deferredExecution, CancellationToken cancellationToken = default)
 		{
-			var wait = writer.WaitToWriteAndThrowIfClosedAsync(cancellationToken);
+			var wait = writer.WaitToWriteAndThrowIfClosedAsync(null, cancellationToken);
 
 			if (deferredExecution)
 			{
 				await Task.Yield();
 				if (wait.IsCompletedSuccessfully)
-					wait = writer.WaitToWriteAndThrowIfClosedAsync(cancellationToken);
+					wait = writer.WaitToWriteAndThrowIfClosedAsync(null, cancellationToken);
 			}
 
 			await wait.ConfigureAwait(false);
@@ -137,6 +127,9 @@ namespace Open.ChannelExtensions
 		/// <returns>The reader's completion task.</returns>
 		public static Task CompleteAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel, Exception? exception = null)
 		{
+			if (channel is null) throw new ArgumentNullException(nameof(channel));
+			Contract.EndContractBlock();
+
 			channel.Writer.Complete(exception);
 			return channel.Reader.Completion;
 		}
@@ -147,15 +140,31 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The source data to use.</param>
 		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>The channel reader containing the results.</returns>
 		public static ChannelReader<string> ToChannel(this TextReader source,
 			int capacity = -1, bool singleReader = false,
-			CancellationToken cancellationToken = default,
+			bool deferredExecution = false,
+			CancellationToken cancellationToken = default)
+			=> CreateChannel<string>(capacity, singleReader)
+				.Source(source, deferredExecution, cancellationToken);
+
+		/// <summary>
+		/// Writes all lines from the source to a channel and calls complete when finished.
+		/// </summary>
+		/// <param name="source">The source data to use.</param>
+		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
+		/// <returns>The channel reader containing the results.</returns>
+		public static ChannelReader<string> ToChannel(this TextReader source,
+			int capacity, bool singleReader,
+			CancellationToken cancellationToken,
 			bool deferredExecution = false)
 			=> CreateChannel<string>(capacity, singleReader)
-				.Source(source, cancellationToken, deferredExecution);
+				.Source(source, deferredExecution, cancellationToken);
 
 		/// <summary>
 		/// Writes all entries from the source to a channel and calls complete when finished.
@@ -164,17 +173,51 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The source data to use.</param>
 		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>The channel reader containing the results.</returns>
 		public static ChannelReader<T> ToChannel<T>(this IEnumerable<T> source,
 			int capacity = -1, bool singleReader = false,
-			CancellationToken cancellationToken = default,
+			bool deferredExecution = false,
+			CancellationToken cancellationToken = default)
+			=> CreateChannel<T>(capacity, singleReader)
+				.Source(source, deferredExecution, cancellationToken);
+
+		/// <summary>
+		/// Writes all entries from the source to a channel and calls complete when finished.
+		/// </summary>
+		/// <typeparam name="T">The input type of the channel.</typeparam>
+		/// <param name="source">The source data to use.</param>
+		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <param name="cancellationToken">The cancellation token.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
+		/// <returns>The channel reader containing the results.</returns>
+		public static ChannelReader<T> ToChannel<T>(this IEnumerable<T> source,
+			int capacity, bool singleReader,
+			CancellationToken cancellationToken,
 			bool deferredExecution = false)
 			=> CreateChannel<T>(capacity, singleReader)
-				.Source(source, cancellationToken, deferredExecution);
+				.Source(source, deferredExecution, cancellationToken);
 
 #if NETSTANDARD2_1
+		/// <summary>
+		/// Writes all entries from the source to a channel and calls complete when finished.
+		/// </summary>
+		/// <typeparam name="T">The input type of the channel.</typeparam>
+		/// <param name="source">The source data to use.</param>
+		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
+		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>The channel reader containing the results.</returns>
+		public static ChannelReader<T> ToChannel<T>(this IAsyncEnumerable<T> source,
+			int capacity = -1, bool singleReader = false,
+			bool deferredExecution = false,
+			CancellationToken cancellationToken = default)
+			=> CreateChannel<T>(capacity, singleReader)
+				.Source(source, deferredExecution, cancellationToken);
+
 		/// <summary>
 		/// Writes all entries from the source to a channel and calls complete when finished.
 		/// </summary>
@@ -186,11 +229,11 @@ namespace Open.ChannelExtensions
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 		/// <returns>The channel reader containing the results.</returns>
 		public static ChannelReader<T> ToChannel<T>(this IAsyncEnumerable<T> source,
-			int capacity = -1, bool singleReader = false,
-			CancellationToken cancellationToken = default,
+			int capacity, bool singleReader,
+			CancellationToken cancellationToken,
 			bool deferredExecution = false)
 			=> CreateChannel<T>(capacity, singleReader)
-				.Source(source, cancellationToken, deferredExecution);
+				.Source(source, deferredExecution, cancellationToken);
 
 		/// <summary>
 		/// Iterates over the results in a ChannelReader.
@@ -202,6 +245,9 @@ namespace Open.ChannelExtensions
 		/// <returns>An IAsyncEnumerable for iterating the channel.</returns>
 		public static async IAsyncEnumerable<T> AsAsyncEnumerable<T>(this ChannelReader<T> reader, [EnumeratorCancellation] CancellationToken cancellationToken = default)
 		{
+			if (reader is null) throw new ArgumentNullException(nameof(reader));
+			Contract.EndContractBlock();
+
 			do
 			{
 				while (!cancellationToken.IsCancellationRequested && reader.TryRead(out var item))
@@ -223,6 +269,9 @@ namespace Open.ChannelExtensions
 		/// <returns>An IAsyncEnumerable for iterating the channel.</returns>
 		public static async IAsyncEnumerable<TOut> AsAsyncEnumerable<TIn, TOut>(this Channel<TIn, TOut> channel, [EnumeratorCancellation] CancellationToken cancellationToken = default)
 		{
+			if (channel is null) throw new ArgumentNullException(nameof(channel));
+			Contract.EndContractBlock();
+
 			var reader = channel.Reader;
 			do
 			{

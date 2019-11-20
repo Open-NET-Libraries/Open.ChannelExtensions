@@ -19,9 +19,9 @@ Part of the "Open" set of libraries.
     <RepositoryType>git</RepositoryType>
     <PackageTags>channels dotnet threading tasks extensions</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>Improved overloads and method standards.  FxCop inspection pass.  Added ChannelReader.ToListAsync().</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/electricessence/Open.ChannelExtensions</RepositoryUrl>
   </PropertyGroup>
 
@@ -30,7 +30,14 @@ Part of the "Open" set of libraries.
 	</PropertyGroup>
 
 	<ItemGroup>
-    <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
+    <PackageReference Include="System.Threading.Channels" Version="4.6.0" />
   </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.7">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
 </Project>

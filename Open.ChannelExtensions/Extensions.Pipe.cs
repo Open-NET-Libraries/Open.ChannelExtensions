@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -38,7 +39,9 @@ namespace Open.ChannelExtensions
 				}, cancellationToken)
 				.ContinueWith(
 					t => writer.Complete(t.Exception),
-					TaskContinuationOptions.ExecuteSynchronously);
+					cancellationToken,
+					TaskContinuationOptions.ExecuteSynchronously,
+					TaskScheduler.Current);
 
 			return channel.Reader;
 
@@ -62,7 +65,12 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> PipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
 			int maxConcurrency, Func<TRead, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.Reader.PipeAsync(maxConcurrency, transform, capacity, singleReader, cancellationToken);
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			Contract.EndContractBlock();
+
+			return PipeAsync(source.Reader, maxConcurrency, transform, capacity, singleReader, cancellationToken);
+		}
 
 		/// <summary>
 		/// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -79,7 +87,7 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> TaskPipeAsync<TIn, TOut>(this ChannelReader<TIn> source,
 			int maxConcurrency, Func<TIn, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.PipeAsync(maxConcurrency, e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
+			=> PipeAsync(source, maxConcurrency, e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
 
 		/// <summary>
 		/// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -97,7 +105,12 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> TaskPipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
 			int maxConcurrency, Func<TRead, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.Reader.TaskPipeAsync(maxConcurrency, transform, capacity, singleReader, cancellationToken);
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			Contract.EndContractBlock();
+
+			return TaskPipeAsync(source.Reader, maxConcurrency, transform, capacity, singleReader, cancellationToken);
+		}
 
 		/// <summary>
 		/// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -114,7 +127,7 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> Pipe<TIn, TOut>(this ChannelReader<TIn> source,
 			int maxConcurrency, Func<TIn, TOut> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.PipeAsync(maxConcurrency, e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
+			=> PipeAsync(source, maxConcurrency, e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
 
 		/// <summary>
 		/// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -132,7 +145,12 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> Pipe<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
 			int maxConcurrency, Func<TRead, TOut> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.Reader.Pipe(maxConcurrency, transform, capacity, singleReader, cancellationToken);
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			Contract.EndContractBlock();
+
+			return source.Reader.Pipe(maxConcurrency, transform, capacity, singleReader, cancellationToken);
+		}
 
 		/// <summary>
 		/// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -165,7 +183,12 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> PipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
 			Func<TRead, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.Reader.PipeAsync(transform, capacity, singleReader, cancellationToken);
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			Contract.EndContractBlock();
+
+			return PipeAsync(source.Reader, transform, capacity, singleReader, cancellationToken);
+		}
 
 		/// <summary>
 		/// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -198,7 +221,12 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> TaskPipeAsync<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
 			Func<TRead, Task<TOut>> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.Reader.TaskPipeAsync(transform, capacity, singleReader, cancellationToken);
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			Contract.EndContractBlock();
+
+			return TaskPipeAsync(source.Reader, transform, capacity, singleReader, cancellationToken);
+		}
 
 		/// <summary>
 		/// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -214,7 +242,7 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> Pipe<TIn, TOut>(this ChannelReader<TIn> source,
 			Func<TIn, TOut> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.PipeAsync(e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
+			=> PipeAsync(source, e => new ValueTask<TOut>(transform(e)), capacity, singleReader, cancellationToken);
 
 		/// <summary>
 		/// Reads all entries and applies the values to the provided transform function before buffering the results into another channel for consumption.
@@ -231,6 +259,11 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<TOut> Pipe<TWrite, TRead, TOut>(this Channel<TWrite, TRead> source,
 			Func<TRead, TOut> transform, int capacity = -1, bool singleReader = false,
 			CancellationToken cancellationToken = default)
-			=> source.Reader.Pipe(transform, capacity, singleReader, cancellationToken);
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			Contract.EndContractBlock();
+
+			return Pipe(source.Reader, transform, capacity, singleReader, cancellationToken);
+		}
 	}
 }
