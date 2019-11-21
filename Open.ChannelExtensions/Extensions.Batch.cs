@@ -23,24 +23,19 @@ namespace Open.ChannelExtensions
 
 			protected override bool TryPipeItems()
 			{
-				if (_current == null || Buffer == null)
-					return false;
-
-				if (Buffer.Reader.Completion.IsCompleted)
+				if (_current == null || Buffer == null || Buffer.Reader.Completion.IsCompleted)
 					return false;
 
 				lock (Buffer)
 				{
 					var c = _current;
-					if (c == null)
-						return false;
-
-					if (Buffer.Reader.Completion.IsCompleted)
+					if (c == null || Buffer.Reader.Completion.IsCompleted)
 						return false;
 
 					var source = Source;
 					if (source == null || source.Completion.IsCompleted)
 					{
+						// All finished, release the last batch to the buffer.
 						c.TrimExcess();
 						_current = null;
 						if (c.Count == 0)

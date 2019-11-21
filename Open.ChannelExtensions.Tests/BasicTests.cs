@@ -61,10 +61,35 @@ namespace Open.ChannelExtensions.Tests
 		}
 
 		[Theory]
+		[InlineData(1000, 51)]
+		[InlineData(50, 1000)]
+		[InlineData(1001, 51)]
+		[InlineData(51, 5001)]
+		[InlineData(75, 50)]
+		public static async Task Batch(int testSize, int batchSize)
+		{
+			var range = Enumerable.Range(0, testSize);
+			var expectedBatchCount = (testSize / batchSize) + (testSize % batchSize == 0 ? 0 : 1);
+			var result1 = new List<List<int>>(expectedBatchCount);
+
+			var total = await range
+				.ToChannel(singleReader: true)
+				.Batch(batchSize, singleReader: true)
+				.ReadAll(result1.Add);
+
+			Assert.Equal(expectedBatchCount, result1.Count);
+
+			var r = result1.SelectMany(e => e).ToList();
+			Assert.Equal(testSize, r.Count);
+			Assert.True(r.SequenceEqual(range));
+		}
+
+		[Theory]
 		[InlineData(testSize1, 51)]
 		[InlineData(testSize1, 5001)]
 		[InlineData(testSize2, 51)]
 		[InlineData(testSize2, 5001)]
+		[InlineData(100, 100)]
 		public static async Task BatchThenJoin(int testSize, int batchSize)
 		{
 			var range = Enumerable.Range(0, testSize);
@@ -106,6 +131,22 @@ namespace Open.ChannelExtensions.Tests
 
 			result1.Clear();
 			result1.TrimExcess();
+		}
+
+		[Fact]
+		public static async Task BatchThenJoinChaosTest()
+		{
+			var random = new Random();
+
+			for (var i = 0; i < 1000; i++)
+			{
+				await BatchThenJoin(random.Next(1000) + 1, random.Next(1000) + 1);
+			}
+
+			for (var i = 0; i < 10000; i++)
+			{
+				await BatchThenJoin(random.Next(500) + 1, random.Next(5000) + 1);
+			}
 		}
 
 		[Theory]
