@@ -20,8 +20,8 @@ namespace Open.ChannelExtensions
 		/// <param name="target">The channel to write to.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static async ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
