@@ -15,6 +15,31 @@ namespace Open.ChannelExtensions.Tests
 		[Theory]
 		[InlineData(testSize1)]
 		[InlineData(testSize2)]
+		public static async Task DeferedWriteRead(int testSize)
+		{
+			var range = Enumerable.Range(0, testSize);
+			var result = new List<int>(testSize);
+
+			var sw = Stopwatch.StartNew();
+			var reader = range
+				.ToChannel(singleReader: true, deferredExecution: true);
+
+			_ = reader.ReadAll(i => result.Add(i), true);
+
+			await reader.Completion;
+			sw.Stop();
+
+			Console.WriteLine("ReadAll(): {0}", sw.Elapsed);
+			Console.WriteLine();
+
+			Assert.Equal(testSize, result.Count);
+			Assert.True(result.SequenceEqual(range));
+			result.Clear();
+		}
+
+		[Theory]
+		[InlineData(testSize1)]
+		[InlineData(testSize2)]
 		public static async Task ReadAll(int testSize)
 		{
 			var range = Enumerable.Range(0, testSize);
