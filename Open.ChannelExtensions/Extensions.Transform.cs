@@ -8,20 +8,20 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
-		class TransformingChannelReader<TIn, TOut> : ChannelReader<TOut>
+		class TransformingChannelReader<T, TResult> : ChannelReader<TResult>
 		{
-			public TransformingChannelReader(ChannelReader<TIn> source, Func<TIn, TOut> transform)
+			public TransformingChannelReader(ChannelReader<T> source, Func<T, TResult> transform)
 			{
 				_source = source ?? throw new ArgumentNullException(nameof(source));
 				_transform = transform ?? throw new ArgumentNullException(nameof(transform));
 				Contract.EndContractBlock();
 			}
 
-			private readonly ChannelReader<TIn> _source;
-			private readonly Func<TIn, TOut> _transform;
+			private readonly ChannelReader<T> _source;
+			private readonly Func<T, TResult> _transform;
 			public override Task Completion => _source.Completion;
 
-			public override bool TryRead(out TOut item)
+			public override bool TryRead(out TResult item)
 			{
 				if (_source.TryRead(out var e))
 				{
@@ -33,7 +33,7 @@ namespace Open.ChannelExtensions
 				return false;
 			}
 
-			public override async ValueTask<TOut> ReadAsync(CancellationToken cancellationToken = default)
+			public override async ValueTask<TResult> ReadAsync(CancellationToken cancellationToken = default)
 				=> _transform(await _source.ReadAsync(cancellationToken));
 
 			public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
@@ -43,12 +43,12 @@ namespace Open.ChannelExtensions
 		/// <summary>
 		/// Transforms the 
 		/// </summary>
-		/// <typeparam name="TIn">The output type of the provided source reader and input type of the transform.</typeparam>
-		/// <typeparam name="TOut">The output type of the transform.</typeparam>
+		/// <typeparam name="T">The output type of the provided source reader and input type of the transform.</typeparam>
+		/// <typeparam name="TResult">The output type of the transform.</typeparam>
 		/// <param name="source">The source channel reader.</param>
 		/// <param name="transform">The transform function.</param>
 		/// <returns>A channel reader representing the tranformed results.</returns>
-		public static ChannelReader<TOut> Transform<TIn, TOut>(this ChannelReader<TIn> source, Func<TIn, TOut> transform)
-			=> new TransformingChannelReader<TIn, TOut>(source, transform);
+		public static ChannelReader<TResult> Transform<T, TResult>(this ChannelReader<T> source, Func<T, TResult> transform)
+			=> new TransformingChannelReader<T, TResult>(source, transform);
 	}
 }
