@@ -50,5 +50,28 @@ namespace Open.ChannelExtensions
 		/// <returns>A channel reader representing the tranformed results.</returns>
 		public static ChannelReader<TResult> Transform<T, TResult>(this ChannelReader<T> source, Func<T, TResult> transform)
 			=> new TransformingChannelReader<T, TResult>(source, transform);
+
+		/// <summary>
+		/// Transforms the 
+		/// </summary>
+		/// <typeparam name="TWrite">Specifies the type of data that may be written to the channel.</typeparam>
+		/// <typeparam name="TRead">Specifies the type of data read from the source channel.</typeparam>
+		/// <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
+		/// <param name="source">The source channel reader.</param>
+		/// <param name="transform">The transform function.</param>
+		/// <returns>A channel reader representing the tranformed results.</returns>
+		public static TransformChannel<TWrite, TRead, TResult> Transform<TWrite, TRead, TResult>(this Channel<TWrite, TRead> source, Func<TRead, TResult> transform)
+			=> new TransformChannel<TWrite, TRead, TResult>(source, transform);
+
+		/// <summary>
+		/// Transforms the 
+		/// </summary>
+		/// <typeparam name="T">Specifies the type of data that may be written to the channel.</typeparam>
+		/// <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
+		/// <param name="source">The source channel reader.</param>
+		/// <param name="transform">The transform function.</param>
+		/// <returns>A channel reader representing the tranformed results.</returns>
+		public static TransformChannel<T, TResult> Transform<T, TResult>(this Channel<T> source, Func<T, TResult> transform)
+			=> new TransformChannel<T, TResult>(source, transform);
 	}
 }
