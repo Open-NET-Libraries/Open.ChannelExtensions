@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -70,6 +71,74 @@ namespace Open.ChannelExtensions.Tests
 			var sw = Stopwatch.StartNew();
 			var total = await range
 				.ToChannel(singleReader: true)
+				.ReadAllAsync(i =>
+				{
+					result.Add(i);
+					return new ValueTask();
+				});
+			sw.Stop();
+
+			Console.WriteLine("Channel.ReadAllAsync(): {0}", sw.Elapsed);
+			Console.WriteLine();
+
+			Assert.Equal(testSize, result.Count);
+			Assert.True(result.SequenceEqual(range));
+			result.Clear();
+		}
+
+		[Theory]
+		[InlineData(testSize1)]
+		[InlineData(testSize2)]
+		public static async Task PipeToBounded(int testSize)
+		{
+			var range = Enumerable.Range(0, testSize);
+			var result = new List<int>(testSize);
+
+			var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(100)
+			{
+				SingleReader = true,
+				SingleWriter = true,
+				AllowSynchronousContinuations = true
+			});
+
+			var sw = Stopwatch.StartNew();
+			var total = await range
+				.ToChannel(singleReader: true)
+				.PipeTo(channel, true)
+				.ReadAllAsync(i =>
+				{
+					result.Add(i);
+					return new ValueTask();
+				});
+			sw.Stop();
+
+			Console.WriteLine("Channel.ReadAllAsync(): {0}", sw.Elapsed);
+			Console.WriteLine();
+
+			Assert.Equal(testSize, result.Count);
+			Assert.True(result.SequenceEqual(range));
+			result.Clear();
+		}
+
+		[Theory]
+		[InlineData(testSize1)]
+		[InlineData(testSize2)]
+		public static async Task PipeToUnbound(int testSize)
+		{
+			var range = Enumerable.Range(0, testSize);
+			var result = new List<int>(testSize);
+
+			var channel = Channel.CreateUnbounded<int>(new UnboundedChannelOptions()
+			{
+				SingleReader = true,
+				SingleWriter = true,
+				AllowSynchronousContinuations = true
+			});
+
+			var sw = Stopwatch.StartNew();
+			var total = await range
+				.ToChannel(singleReader: true)
+				.PipeTo(channel, true)
 				.ReadAllAsync(i =>
 				{
 					result.Add(i);

@@ -73,14 +73,27 @@
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
             <returns>A channel reader containing the joined results.</returns>
         </member>
-        <member name="M:Open.ChannelExtensions.Extensions.Join``1(System.Threading.Channels.ChannelReader{System.Collections.Generic.IAsyncEnumerable{``0}},System.Boolean)">
+        <member name="M:Open.ChannelExtensions.Extensions.PipeTo``1(System.Threading.Channels.ChannelReader{``0},System.Threading.Channels.ChannelWriter{``0},System.Threading.CancellationToken)">
             <summary>
-            Joins collections of the same type into a single channel reader in the order provided.
+            Reads all entries from the source channel and writes them to the target.
+            This is useful for managing different buffers sizes, especially if the source reader comes from a .Transform function.
             </summary>
-            <typeparam name="T">The result type.</typeparam>
-            <param name="source">The source reader.</param>
-            <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <returns>A channel reader containing the joined results.</returns>
+            <typeparam name="T">The type contained by the source channel and written to the target..</typeparam>
+            <param name="source">The source channel.</param>
+            <param name="target">The target channel.</param>
+            <param name="cancellationToken">An optional cancellation token.</param>
+        </member>
+        <member name="M:Open.ChannelExtensions.Extensions.PipeTo``1(System.Threading.Channels.ChannelReader{``0},System.Threading.Channels.Channel{``0},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Reads all entries from the source channel and writes them to the target.
+            This is useful for managing different buffers sizes, especially if the source reader comes from a .Transform function.
+            </summary>
+            <typeparam name="T">The type contained by the source channel and written to the target..</typeparam>
+            <param name="source">The source channel.</param>
+            <param name="target">The target channel.</param>
+            <param name="complete">Indicates to call complete on the target when the source is complete.</param>
+            <param name="cancellationToken">An optional cancellation token.</param>
+            <returns>The channel reader of the target.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.PipeAsync``2(System.Threading.Channels.ChannelReader{``0},System.Int32,System.Func{``0,System.Threading.Tasks.ValueTask{``1}},System.Int32,System.Boolean,System.Threading.CancellationToken)">
             <summary>
@@ -1101,35 +1114,33 @@
             <param name="cancellationToken">The cancellation token.</param>
             <returns>The channel reader.</returns>
         </member>
-        <member name="M:Open.ChannelExtensions.Extensions.Source``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IAsyncEnumerable{``0},System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Executes all entries from the source and passes their result to the channel.  Calls complete when finished.
-            </summary>
-            <typeparam name="TWrite">The input type of the channel.</typeparam>
-            <typeparam name="TRead">The output type of the channel.</typeparam>
-            <param name="target">The channel to write to.</param>
-            <param name="source">The asynchronous source data to use.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-            <returns>The channel reader.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.Source``2(System.Threading.Channels.Channel{``0,``1},System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken)">
-            <summary>
-            Executes all entries from the source and passes their result to the channel.  Calls complete when finished.
-            </summary>
-            <typeparam name="TWrite">The input type of the channel.</typeparam>
-            <typeparam name="TRead">The output type of the channel.</typeparam>
-            <param name="target">The channel to write to.</param>
-            <param name="source">The asynchronous source data to use.</param>
-            <param name="cancellationToken">The cancellation token.</param>
-            <returns>The channel reader.</returns>
-        </member>
         <member name="M:Open.ChannelExtensions.Extensions.Transform``2(System.Threading.Channels.ChannelReader{``0},System.Func{``0,``1})">
             <summary>
             Transforms the 
             </summary>
             <typeparam name="T">The output type of the provided source reader and input type of the transform.</typeparam>
             <typeparam name="TResult">The output type of the transform.</typeparam>
+            <param name="source">The source channel reader.</param>
+            <param name="transform">The transform function.</param>
+            <returns>A channel reader representing the tranformed results.</returns>
+        </member>
+        <member name="M:Open.ChannelExtensions.Extensions.Transform``3(System.Threading.Channels.Channel{``0,``1},System.Func{``1,``2})">
+            <summary>
+            Transforms the 
+            </summary>
+            <typeparam name="TWrite">Specifies the type of data that may be written to the channel.</typeparam>
+            <typeparam name="TRead">Specifies the type of data read from the source channel.</typeparam>
+            <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
+            <param name="source">The source channel reader.</param>
+            <param name="transform">The transform function.</param>
+            <returns>A channel reader representing the tranformed results.</returns>
+        </member>
+        <member name="M:Open.ChannelExtensions.Extensions.Transform``2(System.Threading.Channels.Channel{``0},System.Func{``0,``1})">
+            <summary>
+            Transforms the 
+            </summary>
+            <typeparam name="T">Specifies the type of data that may be written to the channel.</typeparam>
+            <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
             <param name="source">The source channel reader.</param>
             <param name="transform">The transform function.</param>
             <returns>A channel reader representing the tranformed results.</returns>
@@ -1198,7 +1209,34 @@
             Asynchronously executes all entries and writes their results to the channel.
             </summary>
             <typeparam name="T">The input type of the channel.</typeparam>
-            <param name="target">The channel to write to.</param>ram>
+            <param name="target">The channel to write to.</param>
+            <param name="source">The asynchronous source data to use.</param>
+            <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+            <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
+            <param name="cancellationToken">An optional cancellation token.</param>
+            <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+            The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+        </member>
+        <member name="M:Open.ChannelExtensions.Extensions.WriteAllAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{System.Func{``0}},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously executes all entries and writes their results to the channel.
+            </summary>
+            <typeparam name="T">The input type of the channel.</typeparam>
+            <param name="target">The channel to write to.</param>
+            <param name="source">The asynchronous source data to use.</param>
+            <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
+            The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+        </member>
+        <member name="M:Open.ChannelExtensions.Extensions.WriteAll``1(System.Threading.Channels.ChannelWriter{``0},System.Collections.Generic.IEnumerable{``0},System.Boolean,System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously writes all entries from the source to the channel.
+            </summary>
+            <typeparam name="T">The input type of the channel.</typeparam>
+            <param name="target">The channel to write to.</param>
+            <param name="source">The source data to use.</param>
+            <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
@@ -1406,12 +1444,27 @@
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader containing the results.</returns>
         </member>
-        <member name="T:Open.ChannelExtensions.TransformChannel`2">
+        <member name="T:Open.ChannelExtensions.TransformChannel`3">
             <summary>
             A channel wrapper that takes the provided channel and transforms them on demand when being read.
             </summary>
             <typeparam name="TWrite">Specifies the type of data that may be written to the channel.</typeparam>
-            <typeparam name="TRead">Specifies the type of data that may be read from the channel.</typeparam>
+            <typeparam name="TRead">Specifies the type of data read from the source channel.</typeparam>
+            <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
+        </member>
+        <member name="M:Open.ChannelExtensions.TransformChannel`3.#ctor(System.Threading.Channels.Channel{`0,`1},System.Func{`1,`2})">
+            <summary>
+            Creates a channel wrapper that takes the provided channel and transforms them on demand when being read.
+            </summary>
+            <param name="source">The channel containing the source data.</param>
+            <param name="transform">The transform function to be applied to the results when being read.</param>
+        </member>
+        <member name="T:Open.ChannelExtensions.TransformChannel`2">
+            <summary>
+            A channel wrapper that takes the provided channel and transforms them on demand when being read.
+            </summary>
+            <typeparam name="T">Specifies the type of data that may be written to the channel.</typeparam>
+            <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
         </member>
         <member name="M:Open.ChannelExtensions.TransformChannel`2.#ctor(System.Threading.Channels.Channel{`0,`0},System.Func{`0,`1})">
             <summary>
@@ -1422,20 +1475,7 @@
         </member>
     </members>
 </doc>
-
-            <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
-            <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <param name="cancellationToken">The cancellation token.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-            <returns>The channel reader containing the results.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.ToChannel``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Writes all entries from the source to a channel and calls complete when finished.
-            </summary>
-            <typeparam name="T">The input type of the channel.</typeparam>
-            <param name="source">The source data to use.</param>
-            <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
+ptional bounded capacity of the channel. Default is unbound.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
@@ -1510,12 +1550,27 @@
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader containing the results.</returns>
         </member>
-        <member name="T:Open.ChannelExtensions.TransformChannel`2">
+        <member name="T:Open.ChannelExtensions.TransformChannel`3">
             <summary>
             A channel wrapper that takes the provided channel and transforms them on demand when being read.
             </summary>
             <typeparam name="TWrite">Specifies the type of data that may be written to the channel.</typeparam>
-            <typeparam name="TRead">Specifies the type of data that may be read from the channel.</typeparam>
+            <typeparam name="TRead">Specifies the type of data read from the source channel.</typeparam>
+            <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
+        </member>
+        <member name="M:Open.ChannelExtensions.TransformChannel`3.#ctor(System.Threading.Channels.Channel{`0,`1},System.Func{`1,`2})">
+            <summary>
+            Creates a channel wrapper that takes the provided channel and transforms them on demand when being read.
+            </summary>
+            <param name="source">The channel containing the source data.</param>
+            <param name="transform">The transform function to be applied to the results when being read.</param>
+        </member>
+        <member name="T:Open.ChannelExtensions.TransformChannel`2">
+            <summary>
+            A channel wrapper that takes the provided channel and transforms them on demand when being read.
+            </summary>
+            <typeparam name="T">Specifies the type of data that may be written to the channel.</typeparam>
+            <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
         </member>
         <member name="M:Open.ChannelExtensions.TransformChannel`2.#ctor(System.Threading.Channels.Channel{`0,`0},System.Func{`0,`1})">
             <summary>

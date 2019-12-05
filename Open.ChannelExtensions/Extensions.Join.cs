@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -97,22 +98,31 @@ namespace Open.ChannelExtensions
 		public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, bool singleReader = false)
 		{
 			var buffer = CreateChannel<T>(1, singleReader);
+			var writer = buffer.Writer;
 
-			source
-				.ReadAllAsync(
-					async (batch, i) =>
-					{
-						await foreach (var e in batch)
-							await buffer.Writer.WriteAsync(e).ConfigureAwait(false);
-					})
-				.AsTask()
-				.ContinueWith(
-					t => buffer.CompleteAsync(t.Exception),
-					CancellationToken.None,
-					TaskContinuationOptions.ExecuteSynchronously,
-					TaskScheduler.Current);
+			_ = JoinCore();
 
 			return buffer.Reader;
+
+			async ValueTask JoinCore()
+			{
+				try
+				{
+					await source
+						.ReadAllAsync(
+							async (batch, i) =>
+							{
+								await foreach (var e in batch)
+									await writer.WriteAsync(e).ConfigureAwait(false);
+							});
+					writer.Complete();
+				}
+				catch (Exception ex)
+				{
+					writer.Complete(ex);
+				}
+
+			}
 		}
 #endif
 	}

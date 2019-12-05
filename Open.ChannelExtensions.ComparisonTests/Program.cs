@@ -15,7 +15,6 @@ namespace Open.ChannelExtensions.ComparisonTests
 			const int concurrency = 4;
 			const int testSize = 30000001;
 
-
 			{
 				Console.WriteLine("Standard DataFlow operation test...");
 				var block = new ActionBlock<int>(async i => await Delay(i));

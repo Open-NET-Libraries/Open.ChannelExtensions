@@ -23,6 +23,7 @@ namespace Open.ChannelExtensions
 			Func<T, ValueTask> receiver,
 			CancellationToken cancellationToken = default)
 		{
+			if (reader is null) throw new ArgumentNullException(nameof(reader));
 			if (maxConcurrency < 1) throw new ArgumentOutOfRangeException(nameof(maxConcurrency), maxConcurrency, "Must be at least 1.");
 			Contract.EndContractBlock();
 
