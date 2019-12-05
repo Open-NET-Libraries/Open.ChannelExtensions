@@ -21,7 +21,7 @@ Part of the "Open" set of libraries.
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>3.2.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>Added TransformChannel class which facilitates providing a channel with different .</PackageReleaseNotes>
+    <PackageReleaseNotes>Added PipeTo extensions.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/electricessence/Open.ChannelExtensions</RepositoryUrl>
   </PropertyGroup>
 
