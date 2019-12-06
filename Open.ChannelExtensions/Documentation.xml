@@ -111,7 +111,7 @@
             <typeparam name="TIn">The type contained by the source channel.</typeparam>
             <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
             <param name="source">The source channel.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
             <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -126,7 +126,7 @@
             <typeparam name="TRead">The type contained by the source channel.</typeparam>
             <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
             <param name="source">The source channel.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
             <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -140,7 +140,7 @@
             <typeparam name="TIn">The type contained by the source channel.</typeparam>
             <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
             <param name="source">The source channel.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
             <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -155,7 +155,7 @@
             <typeparam name="TRead">The type contained by the source channel.</typeparam>
             <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
             <param name="source">The source channel.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
             <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -169,7 +169,7 @@
             <typeparam name="TIn">The type contained by the source channel.</typeparam>
             <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
             <param name="source">The source channel.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
             <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -184,7 +184,7 @@
             <typeparam name="TRead">The type contained by the source channel.</typeparam>
             <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
             <param name="source">The source channel.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
             <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -865,7 +865,7 @@
             </summary>
             <typeparam name="T">The item type.</typeparam>
             <param name="reader">The channel reader to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -876,7 +876,7 @@
             </summary>
             <typeparam name="T">The item type.</typeparam>
             <param name="reader">The channel reader to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -887,7 +887,7 @@
             </summary>
             <typeparam name="T">The item type.</typeparam>
             <param name="reader">The channel reader to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -899,7 +899,7 @@
             <typeparam name="TWrite">The item type of the writer.</typeparam>
             <typeparam name="TRead">The item type of the reader.</typeparam>
             <param name="channel">The channel to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -911,7 +911,7 @@
             <typeparam name="TWrite">The item type of the writer.</typeparam>
             <typeparam name="TRead">The item type of the reader.</typeparam>
             <param name="channel">The channel to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -923,7 +923,7 @@
             <typeparam name="TWrite">The item type of the writer.</typeparam>
             <typeparam name="TRead">The item type of the reader.</typeparam>
             <param name="channel">The channel to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -934,7 +934,7 @@
             </summary>
             <typeparam name="T">The item type.</typeparam>
             <param name="reader">The channel reader to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -945,7 +945,7 @@
             </summary>
             <typeparam name="T">The item type.</typeparam>
             <param name="reader">The channel reader to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The receiver function.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -957,7 +957,7 @@
             <typeparam name="TWrite">The item type of the writer.</typeparam>
             <typeparam name="TRead">The item type of the reader.</typeparam>
             <param name="channel">The channel to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -969,7 +969,7 @@
             <typeparam name="TWrite">The item type of the writer.</typeparam>
             <typeparam name="TRead">The item type of the reader.</typeparam>
             <param name="channel">The channel to read from.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The receiver function.</param>
             <returns>A task that completes when no more reading is to be done.</returns>
@@ -1073,7 +1073,7 @@
             <typeparam name="TWrite">The input type of the channel.</typeparam>
             <typeparam name="TRead">The output type of the channel.</typeparam>
             <param name="target">The channel to write to.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="source">The asynchronous source data to use.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader.</returns>
@@ -1085,7 +1085,7 @@
             <typeparam name="TWrite">The input type of the channel.</typeparam>
             <typeparam name="TRead">The output type of the channel.</typeparam>
             <param name="target">The channel to write to.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="source">The asynchronous source data to use.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader.</returns>
@@ -1097,7 +1097,7 @@
             <typeparam name="TWrite">The input type of the channel.</typeparam>
             <typeparam name="TRead">The output type of the channel.</typeparam>
             <param name="target">The channel to write to.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="source">The asynchronous source data to use.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader.</returns>
@@ -1340,7 +1340,7 @@
             </summary>
             <typeparam name="T">The input type of the channel.</typeparam>
             <param name="target">The channel to write to.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="source">The asynchronous source data to use.</param>
             <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
             <param name="cancellationToken">An optional cancellation token.</param>
@@ -1353,7 +1353,7 @@
             </summary>
             <typeparam name="T">The input type of the channel.</typeparam>
             <param name="target">The channel to write to.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="source">The asynchronous source data to use.</param>
             <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
             <param name="cancellationToken">An optional cancellation token.</param>
@@ -1366,7 +1366,7 @@
             </summary>
             <typeparam name="T">The input type of the channel.</typeparam>
             <param name="target">The channel to write to.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="source">The asynchronous source data to use.</param>
             <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
             <param name="cancellationToken">An optional cancellation token.</param>
@@ -1518,7 +1518,7 @@
             <param name="source">The asynchronous source data to use.</param>
             <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader containing the results.</returns>
         </member>
@@ -1530,7 +1530,7 @@
             <param name="source">The asynchronous source data to use.</param>
             <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader containing the results.</returns>
         </member>
@@ -1542,7 +1542,7 @@
             <param name="source">The asynchronous source data to use.</param>
             <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+            <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader containing the results.</returns>
         </member>

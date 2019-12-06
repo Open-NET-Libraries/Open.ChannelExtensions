@@ -12,7 +12,7 @@ namespace Open.ChannelExtensions
 			private readonly int _batchSize;
 			private List<T>? _current;
 
-			public BatchingChannelReader(ChannelReader<T> source, int batchSize, bool singleReader) : base(source, singleReader)
+			public BatchingChannelReader(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false) : base(source, singleReader, syncCont)
 			{
 				if (batchSize < 1) throw new ArgumentOutOfRangeException(nameof(batchSize), batchSize, "Must be at least 1.");
 				Contract.EndContractBlock();
@@ -69,8 +69,9 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The channel to read from.</param>
 		/// <param name="batchSize">The maximum size of each batch.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <param name="allowSynchronousContinuations">True can reduce the amount of scheduling and markedly improve performance, but may produce unexpected or even undesirable behavior.</param>
 		/// <returns>A channel reader containing the batches.</returns>
-		public static ChannelReader<List<T>> Batch<T>(this ChannelReader<T> source, int batchSize, bool singleReader = false)
-			=> new BatchingChannelReader<T>(source ?? throw new ArgumentNullException(nameof(source)), batchSize, singleReader);
+		public static ChannelReader<List<T>> Batch<T>(this ChannelReader<T> source, int batchSize, bool singleReader = false, bool allowSynchronousContinuations = false)
+			=> new BatchingChannelReader<T>(source ?? throw new ArgumentNullException(nameof(source)), batchSize, singleReader, allowSynchronousContinuations);
 	}
 }

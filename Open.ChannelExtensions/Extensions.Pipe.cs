@@ -66,7 +66,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TIn">The type contained by the source channel.</typeparam>
 		/// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
 		/// <param name="source">The source channel.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
 		/// <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -108,7 +108,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TRead">The type contained by the source channel.</typeparam>
 		/// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
 		/// <param name="source">The source channel.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
 		/// <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -130,7 +130,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TIn">The type contained by the source channel.</typeparam>
 		/// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
 		/// <param name="source">The source channel.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
 		/// <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -148,7 +148,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TRead">The type contained by the source channel.</typeparam>
 		/// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
 		/// <param name="source">The source channel.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
 		/// <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -170,7 +170,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TIn">The type contained by the source channel.</typeparam>
 		/// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
 		/// <param name="source">The source channel.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
 		/// <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
@@ -188,7 +188,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TRead">The type contained by the source channel.</typeparam>
 		/// <typeparam name="TOut">The outgoing type from the resultant channel.</typeparam>
 		/// <param name="source">The source channel.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="transform">The transform function to apply the source entries before passing on to the output.</param>
 		/// <param name="capacity">The width of the pipe: how many entries to buffer while waiting to be read from.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>

@@ -15,7 +15,7 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The input type of the channel.</typeparam>
 		/// <param name="target">The channel to write to.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
@@ -107,7 +107,7 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The input type of the channel.</typeparam>
 		/// <param name="target">The channel to write to.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
@@ -122,7 +122,7 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The input type of the channel.</typeparam>
 		/// <param name="target">The channel to write to.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>

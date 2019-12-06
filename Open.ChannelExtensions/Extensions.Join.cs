@@ -94,10 +94,11 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="T">The result type.</typeparam>
 		/// <param name="source">The source reader.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
+		/// <param name="allowSynchronousContinuations">True can reduce the amount of scheduling and markedly improve performance, but may produce unexpected or even undesirable behavior.</param>
 		/// <returns>A channel reader containing the joined results.</returns>
-		public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, bool singleReader = false)
+		public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, bool singleReader = false, bool allowSynchronousContinuations = false)
 		{
-			var buffer = CreateChannel<T>(1, singleReader);
+			var buffer = CreateChannel<T>(1, singleReader, allowSynchronousContinuations);
 			var writer = buffer.Writer;
 
 			_ = JoinCore();

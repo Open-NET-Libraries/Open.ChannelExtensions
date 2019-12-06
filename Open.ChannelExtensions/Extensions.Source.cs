@@ -152,7 +152,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TWrite">The input type of the channel.</typeparam>
 		/// <typeparam name="TRead">The output type of the channel.</typeparam>
 		/// <param name="target">The channel to write to.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>The channel reader.</returns>
@@ -175,7 +175,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TWrite">The input type of the channel.</typeparam>
 		/// <typeparam name="TRead">The output type of the channel.</typeparam>
 		/// <param name="target">The channel to write to.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>The channel reader.</returns>
@@ -201,7 +201,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TWrite">The input type of the channel.</typeparam>
 		/// <typeparam name="TRead">The output type of the channel.</typeparam>
 		/// <param name="target">The channel to write to.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>The channel reader.</returns>

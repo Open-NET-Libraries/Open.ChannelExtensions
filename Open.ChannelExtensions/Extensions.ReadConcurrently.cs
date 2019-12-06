@@ -14,7 +14,7 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The item type.</typeparam>
 		/// <param name="reader">The channel reader to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -54,7 +54,7 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The item type.</typeparam>
 		/// <param name="reader">The channel reader to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -70,7 +70,7 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The item type.</typeparam>
 		/// <param name="reader">The channel reader to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -86,7 +86,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
 		/// <typeparam name="TRead">The item type of the reader.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -107,7 +107,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
 		/// <typeparam name="TRead">The item type of the reader.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -124,7 +124,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
 		/// <typeparam name="TRead">The item type of the reader.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -144,7 +144,7 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The item type.</typeparam>
 		/// <param name="reader">The channel reader to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -165,7 +165,7 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The item type.</typeparam>
 		/// <param name="reader">The channel reader to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -182,7 +182,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
 		/// <typeparam name="TRead">The item type of the reader.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -203,7 +203,7 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="TWrite">The item type of the writer.</typeparam>
 		/// <typeparam name="TRead">The item type of the reader.</typeparam>
 		/// <param name="channel">The channel to read from.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>

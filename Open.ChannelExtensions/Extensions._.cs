@@ -14,20 +14,27 @@ namespace Open.ChannelExtensions
 	/// </summary>
 	public static partial class Extensions
 	{
-		internal static Channel<T> CreateChannel<T>(int capacity = -1, bool singleReader = false, bool singleWriter = true)
+		internal static Channel<T> CreateChannel<T>(ChannelOptions channelOptions)
+			=> channelOptions is BoundedChannelOptions bco
+			? Channel.CreateBounded<T>(bco)
+			: channelOptions is UnboundedChannelOptions ubco
+				? Channel.CreateUnbounded<T>(ubco)
+				: throw new ArgumentException("Unsupported channel option type.", nameof(channelOptions));
+
+		internal static Channel<T> CreateChannel<T>(int capacity = -1, bool singleReader = false, bool syncCont = false, bool singleWriter = true)
 			=> capacity > 0
 				? Channel.CreateBounded<T>(new BoundedChannelOptions(capacity)
 				{
 					SingleWriter = singleWriter,
 					SingleReader = singleReader,
-					AllowSynchronousContinuations = true,
+					AllowSynchronousContinuations = syncCont,
 					FullMode = BoundedChannelFullMode.Wait
 				})
 				: Channel.CreateUnbounded<T>(new UnboundedChannelOptions
 				{
 					SingleWriter = singleWriter,
 					SingleReader = singleReader,
-					AllowSynchronousContinuations = true
+					AllowSynchronousContinuations = syncCont
 				});
 
 		static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write, string? message = null)
@@ -171,6 +178,22 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The input type of the channel.</typeparam>
 		/// <param name="source">The source data to use.</param>
+		/// <param name="channelOptions">The options for configuring the new channel.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>The channel reader containing the results.</returns>
+		public static ChannelReader<T> ToChannel<T>(this IEnumerable<T> source,
+			ChannelOptions channelOptions,
+			bool deferredExecution = false,
+			CancellationToken cancellationToken = default)
+			=> CreateChannel<T>(channelOptions)
+				.Source(source, deferredExecution, cancellationToken);
+
+		/// <summary>
+		/// Writes all entries from the source to a channel and calls complete when finished.
+		/// </summary>
+		/// <typeparam name="T">The input type of the channel.</typeparam>
+		/// <param name="source">The source data to use.</param>
 		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
@@ -216,6 +239,22 @@ namespace Open.ChannelExtensions
 			bool deferredExecution = false,
 			CancellationToken cancellationToken = default)
 			=> CreateChannel<T>(capacity, singleReader)
+				.Source(source, deferredExecution, cancellationToken);
+
+		/// <summary>
+		/// Writes all entries from the source to a channel and calls complete when finished.
+		/// </summary>
+		/// <typeparam name="T">The input type of the channel.</typeparam>
+		/// <param name="source">The source data to use.</param>
+		/// <param name="channelOptions">The options for configuring the new channel.</param>
+		/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>The channel reader containing the results.</returns>
+		public static ChannelReader<T> ToChannel<T>(this IAsyncEnumerable<T> source,
+			ChannelOptions channelOptions,
+			bool deferredExecution = false,
+			CancellationToken cancellationToken = default)
+			=> CreateChannel<T>(channelOptions)
 				.Source(source, deferredExecution, cancellationToken);
 
 		/// <summary>
@@ -289,9 +328,24 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The input type of the channel.</typeparam>
 		/// <param name="source">The asynchronous source data to use.</param>
+		/// <param name="channelOptions">The options for configuring the new channel.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>The channel reader containing the results.</returns>
+		public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Func<T>> source,
+			ChannelOptions channelOptions, int maxConcurrency = 1,
+			CancellationToken cancellationToken = default)
+			=> CreateChannel<T>(channelOptions)
+				.SourceAsync(maxConcurrency, source, cancellationToken);
+
+		/// <summary>
+		/// Asynchronously executes all entries and writes their results to a channel.
+		/// </summary>
+		/// <typeparam name="T">The input type of the channel.</typeparam>
+		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>The channel reader containing the results.</returns>
 		public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Func<T>> source,
@@ -305,9 +359,24 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The input type of the channel.</typeparam>
 		/// <param name="source">The asynchronous source data to use.</param>
+		/// <param name="channelOptions">The options for configuring the new channel.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>The channel reader containing the results.</returns>
+		public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<ValueTask<T>> source,
+			ChannelOptions channelOptions, int maxConcurrency = 1,
+			CancellationToken cancellationToken = default)
+			=> CreateChannel<T>(channelOptions)
+				.SourceAsync(maxConcurrency, source, cancellationToken);
+
+		/// <summary>
+		/// Writes all entries from the source to a channel and calls complete when finished.
+		/// </summary>
+		/// <typeparam name="T">The input type of the channel.</typeparam>
+		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>The channel reader containing the results.</returns>
 		public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<ValueTask<T>> source,
@@ -321,9 +390,24 @@ namespace Open.ChannelExtensions
 		/// </summary>
 		/// <typeparam name="T">The input type of the channel.</typeparam>
 		/// <param name="source">The asynchronous source data to use.</param>
+		/// <param name="channelOptions">The options for configuring the new channel.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>The channel reader containing the results.</returns>
+		public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Task<T>> source,
+			ChannelOptions channelOptions, int maxConcurrency = 1,
+			CancellationToken cancellationToken = default)
+			=> CreateChannel<T>(channelOptions)
+				.SourceAsync(maxConcurrency, source, cancellationToken);
+
+		/// <summary>
+		/// Writes all entries from the source to a channel and calls complete when finished.
+		/// </summary>
+		/// <typeparam name="T">The input type of the channel.</typeparam>
+		/// <param name="source">The asynchronous source data to use.</param>
 		/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
 		/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-		/// <param name="maxConcurrency">The maximum number of concurrent operations.</param>
+		/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>The channel reader containing the results.</returns>
 		public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Task<T>> source,

@@ -10,7 +10,7 @@ namespace Open.ChannelExtensions
 	{
 		protected ChannelReader<TIn>? Source;
 		protected readonly Channel<TOut>? Buffer;
-		public BufferingChannelReader(ChannelReader<TIn> source, bool singleReader)
+		public BufferingChannelReader(ChannelReader<TIn> source, bool singleReader, bool syncCont = false)
 		{
 			Source = source ?? throw new ArgumentNullException(nameof(source));
 			Contract.EndContractBlock();
@@ -21,7 +21,7 @@ namespace Open.ChannelExtensions
 			}
 			else
 			{
-				Buffer = Extensions.CreateChannel<TOut>(-1, singleReader);
+				Buffer = Extensions.CreateChannel<TOut>(-1, singleReader, syncCont);
 
 				source.Completion.ContinueWith(t =>
 				{
