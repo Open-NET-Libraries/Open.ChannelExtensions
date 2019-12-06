@@ -41,7 +41,7 @@ namespace Open.ChannelExtensions
 		/// <param name="source">The channel containing the source data.</param>
 		/// <param name="transform">The transform function to be applied to the results when being read.</param>
 		public TransformChannel(Channel<T, T> source, Func<T, TResult> transform)
-			:base(source, transform)
+			: base(source, transform)
 		{
 		}
 	}
