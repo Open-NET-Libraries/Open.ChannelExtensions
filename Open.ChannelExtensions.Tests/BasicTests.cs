@@ -104,7 +104,7 @@ namespace Open.ChannelExtensions.Tests
 			var sw = Stopwatch.StartNew();
 			var total = await range
 				.ToChannel(singleReader: true)
-				.PipeTo(channel, true)
+				.PipeTo(channel)
 				.ReadAllAsync(i =>
 				{
 					result.Add(i);
@@ -138,7 +138,7 @@ namespace Open.ChannelExtensions.Tests
 			var sw = Stopwatch.StartNew();
 			var total = await range
 				.ToChannel(singleReader: true)
-				.PipeTo(channel, true)
+				.PipeTo(channel)
 				.ReadAllAsync(i =>
 				{
 					result.Add(i);
