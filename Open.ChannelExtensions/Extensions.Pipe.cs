@@ -15,24 +15,12 @@ namespace Open.ChannelExtensions
 		/// <typeparam name="T">The type contained by the source channel and written to the target..</typeparam>
 		/// <param name="source">The source channel.</param>
 		/// <param name="target">The target channel.</param>
-		/// <param name="cancellationToken">An optional cancellation token.</param>
-		public static async ValueTask PipeTo<T>(this ChannelReader<T> source,
-			ChannelWriter<T> target,
-			CancellationToken cancellationToken = default)
-			=> await source.ReadAllAsync(e => target.WriteAsync(e, cancellationToken), cancellationToken);
-
-		/// <summary>
-		/// Reads all entries from the source channel and writes them to the target.
-		/// This is useful for managing different buffers sizes, especially if the source reader comes from a .Transform function.
-		/// </summary>
-		/// <typeparam name="T">The type contained by the source channel and written to the target..</typeparam>
-		/// <param name="source">The source channel.</param>
-		/// <param name="target">The target channel.</param>
 		/// <param name="complete">Indicates to call complete on the target when the source is complete.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>The channel reader of the target.</returns>
-		public static ChannelReader<T> PipeTo<T>(this ChannelReader<T> source,
-			Channel<T> target,
+		/// <returns>The count of items read after the reader has completed.
+		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+		public static async ValueTask<long> PipeTo<T>(this ChannelReader<T> source,
+			ChannelWriter<T> target,
 			bool complete,
 			CancellationToken cancellationToken = default)
 		{
@@ -40,24 +28,46 @@ namespace Open.ChannelExtensions
 			if (target is null) throw new ArgumentNullException(nameof(target));
 			Contract.EndContractBlock();
 
-			_ = PipeToCore();
+			try
+			{
+				return await source.ReadAllAsync(e => target.WriteAsync(e, cancellationToken), cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				if (complete)
+				{
+					target.Complete(ex);
+					complete = false;
+				}
+				throw;
+			}
+			finally
+			{
+				if (complete)
+					target.Complete();
+			}
+		}
+
+		/// <summary>
+		/// Reads all entries from the source channel and writes them to the target.  Will call complete when finished and propagates any errors to the channel.
+		/// This is useful for managing different buffers sizes, especially if the source reader comes from a .Transform function.
+		/// </summary>
+		/// <typeparam name="T">The type contained by the source channel and written to the target..</typeparam>
+		/// <param name="source">The source channel.</param>
+		/// <param name="target">The target channel.</param>
+		/// <param name="cancellationToken">An optional cancellation token.</param>
+		/// <returns>The channel reader of the target.</returns>
+		public static ChannelReader<T> PipeTo<T>(this ChannelReader<T> source,
+			Channel<T> target,
+			CancellationToken cancellationToken = default)
+		{
+			if (source is null) throw new ArgumentNullException(nameof(source));
+			if (target is null) throw new ArgumentNullException(nameof(target));
+			Contract.EndContractBlock();
+
+			_ = PipeTo(source, target.Writer, true, cancellationToken);
 
 			return target.Reader;
-
-			async ValueTask PipeToCore()
-			{
-				try
-				{
-					await PipeTo(source, target.Writer, cancellationToken);
-					if (complete)
-						target.Writer.Complete();
-				}
-				catch (Exception ex)
-				{
-					if (complete)
-						target.Writer.Complete(ex);
-				}
-			}
 		}
 
 		/// <summary>

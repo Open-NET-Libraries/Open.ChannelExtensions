@@ -72,7 +72,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "This method is designed around a cancellation token.")]
 		public static async ValueTask<long> ReadUntilCancelledAsync<T>(this ChannelReader<T> reader,
@@ -116,7 +116,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "This method is designed around a cancellation token.")]
 		public static ValueTask<long> ReadUntilCancelledAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -138,7 +138,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "This method is designed around a cancellation token.")]
 		public static ValueTask<long> ReadUntilCancelledAsync<T>(this ChannelReader<T> reader,
@@ -156,7 +156,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "This method is designed around a cancellation token.")]
 		public static ValueTask<long> ReadUntilCancelledAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -178,7 +178,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "This method is designed around a cancellation token.")]
 		public static ValueTask<long> ReadUntilCancelled<T>(this ChannelReader<T> reader,
@@ -204,7 +204,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "This method is designed around a cancellation token.")]
 		public static ValueTask<long> ReadUntilCancelled<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -226,7 +226,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "This method is designed around a cancellation token.")]
 		public static ValueTask<long> ReadUntilCancelled<T>(this ChannelReader<T> reader,
@@ -251,7 +251,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadUntilCancelled<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Action<TRead> receiver,
@@ -272,7 +272,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static async ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
 			Func<T, long, ValueTask> receiver,
@@ -292,7 +292,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
 			Func<T, long, ValueTask> receiver,
@@ -308,7 +308,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
@@ -326,7 +326,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, long, ValueTask> receiver,
@@ -348,7 +348,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, long, ValueTask> receiver,
@@ -365,7 +365,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -383,7 +383,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, long, Task> receiver,
@@ -400,7 +400,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, long, Task> receiver,
@@ -417,7 +417,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -434,7 +434,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
 			Func<T, ValueTask> receiver,
@@ -450,7 +450,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
 			Func<T, ValueTask> receiver,
@@ -466,7 +466,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
@@ -483,7 +483,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> TaskReadAllAsync<T>(this ChannelReader<T> reader,
 			Func<T, Task> receiver,
@@ -499,7 +499,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> TaskReadAllAsync<T>(this ChannelReader<T> reader,
 			Func<T, Task> receiver,
@@ -515,7 +515,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> TaskReadAllAsync<T>(this ChannelReader<T> reader,
@@ -533,7 +533,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, Task> receiver,
@@ -550,7 +550,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, Task> receiver,
@@ -567,7 +567,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -585,7 +585,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, ValueTask> receiver,
@@ -608,7 +608,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Func<TRead, ValueTask> receiver,
@@ -625,7 +625,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -642,7 +642,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
 			Action<T, long> receiver,
@@ -671,7 +671,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
 			Action<T, long> receiver,
@@ -687,7 +687,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
@@ -705,7 +705,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Action<TRead, long> receiver,
@@ -728,7 +728,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">The optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Action<TRead, long> receiver,
@@ -745,7 +745,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The optional cancellation token.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -762,7 +762,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
 			Action<T> receiver,
@@ -790,7 +790,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
 			Action<T> receiver,
@@ -806,7 +806,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
@@ -824,7 +824,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Action<TRead> receiver,
@@ -846,7 +846,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">The optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 			Action<TRead> receiver,
@@ -863,7 +863,7 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">The optional cancellation token.</param>
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
 		public static ValueTask<long> ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
@@ -879,7 +879,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsLines(this ChannelReader<string> reader,
 			TextWriter receiver,
@@ -894,7 +894,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsLines(this ChannelReader<string> reader,
 			TextWriter receiver,
@@ -910,7 +910,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The TextWriter to recieve the lines.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsLines<T>(this Channel<T, string> channel,
 			TextWriter receiver,
@@ -931,7 +931,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The TextWriter to recieve the lines.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-		/// <returns>A task containing the count of items read that completes when no more reading is to be done.
+		/// <returns>The count of items read after the reader has completed.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 		public static ValueTask<long> ReadAllAsLines<T>(this Channel<T, string> channel,
 			TextWriter receiver,

@@ -33,21 +33,34 @@ namespace Open.ChannelExtensions
 
 			await target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken).ConfigureAwait(false);
 
-			long count = 0;
-			var next = new ValueTask();
-			foreach (var e in source)
+			try
 			{
-				var value = await e.ConfigureAwait(false);
+				long count = 0;
+				var next = new ValueTask();
+				foreach (var e in source)
+				{
+					var value = await e.ConfigureAwait(false);
+					await next.ConfigureAwait(false);
+					count++;
+					next = target.WriteAsync(value, cancellationToken);
+				}
 				await next.ConfigureAwait(false);
-				count++;
-				next = target.WriteAsync(value, cancellationToken);
+				return count;
 			}
-			await next.ConfigureAwait(false);
-
-			if (complete)
-				target.Complete();
-
-			return count;
+			catch (Exception ex)
+			{
+				if (complete)
+				{
+					target.Complete(ex);
+					complete = false;
+				}
+				throw;
+			}
+			finally
+			{
+				if (complete)
+					target.Complete();
+			}
 		}
 
 		/// <summary>
@@ -189,34 +202,45 @@ namespace Open.ChannelExtensions
 			var next = target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken);
 			await next.ConfigureAwait(false);
 
-			long count = 0;
-			var more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
-			while (!cancellationToken.IsCancellationRequested)
+			try
 			{
-				var line = await source.ReadLineAsync().ConfigureAwait(false);
-				if (line == null)
+				long count = 0;
+				var more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
+				while (!cancellationToken.IsCancellationRequested)
 				{
-					more = false;
-					break;
-				}
-				else
-				{
-					more = true;
-				}
+					var line = await source.ReadLineAsync().ConfigureAwait(false);
+					if (line == null)
+					{
+						more = false;
+						break;
+					}
+					else
+					{
+						more = true;
+					}
 
+					await next.ConfigureAwait(false);
+					count++;
+					next = target.WriteAsync(line, cancellationToken);
+				}
 				await next.ConfigureAwait(false);
-				count++;
-				next = target.WriteAsync(line, cancellationToken);
+				if (more) cancellationToken.ThrowIfCancellationRequested();
+				return count;
 			}
-			await next.ConfigureAwait(false);
-
-			if (more)
-				cancellationToken.ThrowIfCancellationRequested();
-
-			if (complete)
-				target.Complete();
-
-			return count;
+			catch (Exception ex)
+			{
+				if (complete)
+				{
+					target.Complete(ex);
+					complete = false;
+				}
+				throw;
+			}
+			finally
+			{
+				if (complete)
+					target.Complete();
+			}
 		}
 
 		/// <summary>
@@ -255,20 +279,33 @@ namespace Open.ChannelExtensions
 				.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken)
 				.ConfigureAwait(false);
 
-			long count = 0;
-			var next = new ValueTask();
-			await foreach (var value in source)
+			try
 			{
+				long count = 0;
+				var next = new ValueTask();
+				await foreach (var value in source)
+				{
+					await next.ConfigureAwait(false);
+					count++;
+					next = target.WriteAsync(value, cancellationToken);
+				}
 				await next.ConfigureAwait(false);
-				count++;
-				next = target.WriteAsync(value, cancellationToken);
+				return count;
 			}
-			await next.ConfigureAwait(false);
-
-			if (complete)
-				target.Complete();
-
-			return count;
+			catch (Exception ex)
+			{
+				if (complete)
+				{
+					target.Complete(ex);
+					complete = false;
+				}
+				throw;
+			}
+			finally
+			{
+				if (complete)
+					target.Complete();
+			}
 		}
 
 		/// <summary>

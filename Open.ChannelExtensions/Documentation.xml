@@ -292,7 +292,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean)">
@@ -305,7 +305,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Func{``0,System.Threading.Tasks.ValueTask},System.Boolean)">
@@ -317,7 +317,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadUntilCancelledAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Threading.Tasks.ValueTask},System.Boolean)">
@@ -330,7 +330,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadUntilCancelled``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Action{``0,System.Int64},System.Boolean)">
@@ -342,7 +342,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadUntilCancelled``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Action{``1,System.Int64},System.Boolean)">
@@ -355,7 +355,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadUntilCancelled``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Action{``0},System.Boolean)">
@@ -367,7 +367,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadUntilCancelled``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1},System.Threading.CancellationToken,System.Boolean)">
@@ -380,7 +380,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean,System.Threading.CancellationToken)">
@@ -392,7 +392,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Int64,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)">
@@ -404,7 +404,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Func{``0,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean)">
@@ -416,7 +416,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean,System.Threading.CancellationToken)">
@@ -429,7 +429,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Int64,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)">
@@ -442,7 +442,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Int64,System.Threading.Tasks.ValueTask},System.Boolean)">
@@ -455,7 +455,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Int64,System.Threading.Tasks.Task},System.Boolean,System.Threading.CancellationToken)">
@@ -468,7 +468,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Int64,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)">
@@ -481,7 +481,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Int64,System.Threading.Tasks.Task},System.Boolean)">
@@ -494,7 +494,7 @@
             <param name="cancellationToken">An optional cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.ValueTask},System.Boolean,System.Threading.CancellationToken)">
@@ -506,7 +506,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)">
@@ -518,7 +518,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Func{``0,System.Threading.Tasks.ValueTask},System.Boolean)">
@@ -530,7 +530,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.Task},System.Boolean,System.Threading.CancellationToken)">
@@ -542,7 +542,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Func{``0,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)">
@@ -554,7 +554,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Func{``0,System.Threading.Tasks.Task},System.Boolean)">
@@ -566,7 +566,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.Task},System.Boolean,System.Threading.CancellationToken)">
@@ -579,7 +579,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)">
@@ -592,7 +592,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.TaskReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Threading.Tasks.Task},System.Boolean)">
@@ -605,7 +605,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.ValueTask},System.Boolean,System.Threading.CancellationToken)">
@@ -618,7 +618,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Func{``1,System.Threading.Tasks.ValueTask},System.Threading.CancellationToken,System.Boolean)">
@@ -631,7 +631,7 @@
             <param name="receiver">The async receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsync``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Func{``1,System.Threading.Tasks.ValueTask},System.Boolean)">
@@ -644,7 +644,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The async receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Action{``0,System.Int64},System.Boolean,System.Threading.CancellationToken)">
@@ -656,7 +656,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Action{``0,System.Int64},System.Threading.CancellationToken,System.Boolean)">
@@ -668,7 +668,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Action{``0,System.Int64},System.Boolean)">
@@ -680,7 +680,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1,System.Int64},System.Boolean,System.Threading.CancellationToken)">
@@ -693,7 +693,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1,System.Int64},System.Threading.CancellationToken,System.Boolean)">
@@ -706,7 +706,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">The optional cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Action{``1,System.Int64},System.Boolean)">
@@ -719,7 +719,7 @@
             <param name="cancellationToken">The optional cancellation token.</param>
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Action{``0},System.Boolean,System.Threading.CancellationToken)">
@@ -731,7 +731,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Action{``0},System.Threading.CancellationToken,System.Boolean)">
@@ -743,7 +743,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken,System.Action{``0},System.Boolean)">
@@ -755,7 +755,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1},System.Boolean,System.Threading.CancellationToken)">
@@ -768,7 +768,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Action{``1},System.Threading.CancellationToken,System.Boolean)">
@@ -781,7 +781,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">The optional cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAll``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken,System.Action{``1},System.Boolean)">
@@ -794,7 +794,7 @@
             <param name="cancellationToken">The optional cancellation token.</param>
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsLines(System.Threading.Channels.ChannelReader{System.String},System.IO.TextWriter,System.Boolean,System.Threading.CancellationToken)">
@@ -805,7 +805,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsLines(System.Threading.Channels.ChannelReader{System.String},System.IO.TextWriter,System.Threading.CancellationToken,System.Boolean)">
@@ -816,7 +816,7 @@
             <param name="receiver">The receiver function.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsLines``1(System.Threading.Channels.Channel{``0,System.String},System.IO.TextWriter,System.Boolean,System.Threading.CancellationToken)">
@@ -828,7 +828,7 @@
             <param name="receiver">The TextWriter to recieve the lines.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ReadAllAsLines``1(System.Threading.Channels.Channel{``0,System.String},System.IO.TextWriter,System.Threading.CancellationToken,System.Boolean)">
@@ -840,7 +840,7 @@
             <param name="receiver">The TextWriter to recieve the lines.</param>
             <param name="cancellationToken">An optional cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
-            <returns>A task containing the count of items read that completes when no more reading is to be done.
+            <returns>The count of items read after the reader has completed.
             The count should be ignored if the number of iterations could exceed the max value of long.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ToListAsync``1(System.Threading.Channels.ChannelReader{``0})">
