@@ -79,7 +79,7 @@ namespace Open.ChannelExtensions
 
 				if (b.IsCompleted) return await b;
 
-				var s = source.WaitToReadAsync(cancellationToken);
+				var s = source!.WaitToReadAsync(cancellationToken);
 				if (s.IsCompleted && !b.IsCompleted)
 					TryPipeItems();
 
