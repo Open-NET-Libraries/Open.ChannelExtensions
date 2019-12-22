@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0; netstandard2.1</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
-		<Nullable>enable</Nullable>
 		<Authors>electricessence</Authors>
 		<Description>
 			A set of extensions for optimizing/simplifying System.Threading.Channels usage.
