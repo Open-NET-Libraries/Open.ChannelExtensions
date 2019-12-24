@@ -2,6 +2,8 @@
 
 A set of extensions for optimizing/simplifying System.Threading.Channels usage.
 
+[https://electricessence.github.io/Open.ChannelExtensions/api/Open.ChannelExtensions.Extensions.html#methods](Click here for detailed documentation.)
+
 ## Highlights
 
 Being able to define an asynchronous pipeline with best practice usage using simple expressive syntax:
