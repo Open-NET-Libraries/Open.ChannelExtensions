@@ -35,7 +35,6 @@ items:
       description: Specifies the type of data that may be read from the channel.
     content.vb: >-
       Public Class TransformChannel(Of T, TResult)
-
           Inherits TransformChannel(Of T, T, TResult)
   inheritance:
   - System.Object

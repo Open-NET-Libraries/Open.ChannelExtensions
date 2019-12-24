@@ -1,12 +1,3 @@
-### YamlMime:TableOfContent
-- uid: Open.ChannelExtensions
-  name: Open.ChannelExtensions
-  items:
-  - uid: Open.ChannelExtensions.Extensions
-    name: Extensions
-  - uid: Open.ChannelExtensions.TransformChannel`2
-    name: TransformChannel<T, TResult>
-    name.vb: TransformChannel(Of T, TResult)
-  - uid: Open.ChannelExtensions.TransformChannel`3
-    name: TransformChannel<TWrite, TRead, TResult>
-    name.vb: TransformChannel(Of TWrite, TRead, TResult)
+- name: Open.ChannelExtensions
+  href: api/Open.ChannelExtensions.Extensions.html
+  homepage: api/Open.ChannelExtensions.html

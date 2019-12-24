@@ -9,11 +9,11 @@
           ]
         }
       ],
-      "dest": ".",
+      "dest": "api",
       "disableGitFeatures": false,
       "disableDefaultFilter": false,
-      "properties": {
-        "TargetFramework": "netstandard2.1"
+      "properties":{
+        "TargetFramework":"netstandard2.1"
       }
     }
   ],
@@ -21,8 +21,14 @@
     "content": [
       {
         "files": [
-          "**.yml",
-          "index.md"
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "toc.yml",
+          "*.md"
         ]
       }
     ],
@@ -35,8 +41,10 @@
     ],
     "overwrite": [
       {
+        "files": [
+          "apidoc/**.md"
+        ],
         "exclude": [
-          ".editorconfig",
           "obj/**",
           "docs/**"
         ]
