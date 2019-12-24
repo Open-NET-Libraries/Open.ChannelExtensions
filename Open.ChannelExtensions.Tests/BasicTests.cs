@@ -16,7 +16,7 @@ namespace Open.ChannelExtensions.Tests
 		[Theory]
 		[InlineData(testSize1)]
 		[InlineData(testSize2)]
-		public static async Task DeferedWriteRead(int testSize)
+		public static async Task DeferredWriteRead(int testSize)
 		{
 			var range = Enumerable.Range(0, testSize);
 			var result = new List<int>(testSize);

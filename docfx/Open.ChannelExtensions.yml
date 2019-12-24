@@ -1,0 +1,138 @@
+### YamlMime:ManagedReference
+items:
+- uid: Open.ChannelExtensions
+  commentId: N:Open.ChannelExtensions
+  id: Open.ChannelExtensions
+  children:
+  - Open.ChannelExtensions.Extensions
+  - Open.ChannelExtensions.TransformChannel`2
+  - Open.ChannelExtensions.TransformChannel`3
+  langs:
+  - csharp
+  - vb
+  name: Open.ChannelExtensions
+  nameWithType: Open.ChannelExtensions
+  fullName: Open.ChannelExtensions
+  type: Namespace
+  assemblies:
+  - Open.ChannelExtensions
+references:
+- uid: Open.ChannelExtensions.Extensions
+  commentId: T:Open.ChannelExtensions.Extensions
+  parent: Open.ChannelExtensions
+  name: Extensions
+  nameWithType: Extensions
+  fullName: Open.ChannelExtensions.Extensions
+- uid: Open.ChannelExtensions.TransformChannel`3
+  commentId: T:Open.ChannelExtensions.TransformChannel`3
+  name: TransformChannel<TWrite, TRead, TResult>
+  nameWithType: TransformChannel<TWrite, TRead, TResult>
+  fullName: Open.ChannelExtensions.TransformChannel<TWrite, TRead, TResult>
+  nameWithType.vb: TransformChannel(Of TWrite, TRead, TResult)
+  fullName.vb: Open.ChannelExtensions.TransformChannel(Of TWrite, TRead, TResult)
+  name.vb: TransformChannel(Of TWrite, TRead, TResult)
+  spec.csharp:
+  - uid: Open.ChannelExtensions.TransformChannel`3
+    name: TransformChannel
+    nameWithType: TransformChannel
+    fullName: Open.ChannelExtensions.TransformChannel
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TWrite
+    nameWithType: TWrite
+    fullName: TWrite
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TRead
+    nameWithType: TRead
+    fullName: TRead
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Open.ChannelExtensions.TransformChannel`3
+    name: TransformChannel
+    nameWithType: TransformChannel
+    fullName: Open.ChannelExtensions.TransformChannel
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TWrite
+    nameWithType: TWrite
+    fullName: TWrite
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TRead
+    nameWithType: TRead
+    fullName: TRead
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Open.ChannelExtensions.TransformChannel`2
+  commentId: T:Open.ChannelExtensions.TransformChannel`2
+  name: TransformChannel<T, TResult>
+  nameWithType: TransformChannel<T, TResult>
+  fullName: Open.ChannelExtensions.TransformChannel<T, TResult>
+  nameWithType.vb: TransformChannel(Of T, TResult)
+  fullName.vb: Open.ChannelExtensions.TransformChannel(Of T, TResult)
+  name.vb: TransformChannel(Of T, TResult)
+  spec.csharp:
+  - uid: Open.ChannelExtensions.TransformChannel`2
+    name: TransformChannel
+    nameWithType: TransformChannel
+    fullName: Open.ChannelExtensions.TransformChannel
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Open.ChannelExtensions.TransformChannel`2
+    name: TransformChannel
+    nameWithType: TransformChannel
+    fullName: Open.ChannelExtensions.TransformChannel
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Open.ChannelExtensions
+  commentId: N:Open.ChannelExtensions
+  name: Open.ChannelExtensions
+  nameWithType: Open.ChannelExtensions
+  fullName: Open.ChannelExtensions
