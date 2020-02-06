@@ -101,7 +101,7 @@ namespace Open.ChannelExtensions
 				}, cancellationToken)
 				.ContinueWith(
 					t => writer.Complete(t.Exception),
-					cancellationToken,
+					CancellationToken.None,
 					TaskContinuationOptions.ExecuteSynchronously,
 					TaskScheduler.Current);
 

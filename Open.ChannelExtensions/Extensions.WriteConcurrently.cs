@@ -53,13 +53,13 @@ namespace Open.ChannelExtensions
 
 						return t;
 					},
-					cancellationToken,
+					CancellationToken.None,
 					TaskContinuationOptions.ExecuteSynchronously,
 					TaskScheduler.Current)
 				.Unwrap()
 				.ContinueWith(
 					t => t.Result.Sum(),
-					cancellationToken,
+					CancellationToken.None,
 					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously,
 					TaskScheduler.Current);
 

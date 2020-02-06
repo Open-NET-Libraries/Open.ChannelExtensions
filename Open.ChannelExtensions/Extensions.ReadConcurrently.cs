@@ -42,7 +42,7 @@ namespace Open.ChannelExtensions
 				.WhenAll(readers)
 				.ContinueWith(
 					t => t.Result.Sum(),
-					cancellationToken,
+					CancellationToken.None,
 					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously,
 					TaskScheduler.Current);
 
