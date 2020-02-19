@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Open.ChannelExtensions.Tests
 {
-	public static partial class BasicTests
+	public static class BasicTests
 	{
 		const int testSize1 = 10000001;
 		const int testSize2 = 30000001;
@@ -324,6 +324,7 @@ namespace Open.ChannelExtensions.Tests
 			Assert.Equal(count, result.Count);
 			Assert.True(result.SequenceEqual(range.Where(i => i % 2 == 1)));
 		}
+
 
 	}
 }

@@ -18,6 +18,7 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Async scope.")]
 		public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
 			int maxConcurrency,
 			Func<T, ValueTask> receiver,
@@ -33,20 +34,39 @@ namespace Open.ChannelExtensions
 			if (maxConcurrency == 1)
 				return reader.ReadAllAsync(receiver, cancellationToken, true).AsTask();
 
+			var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 			var readers = new Task<long>[maxConcurrency];
 			for (var r = 0; r < maxConcurrency; ++r)
-				readers[r] = reader
-					.ReadUntilCancelledAsync(cancellationToken, ParallelReceiver, true).AsTask();
+				readers[r] = Read();
 
 			return Task
 				.WhenAll(readers)
-				.ContinueWith(
-					t => t.Result.Sum(),
+				.ContinueWith(t =>
+					{
+						tokenSource.Dispose();
+						if (t.IsFaulted) return Task.FromException<long>(t.Exception);
+						return Task.FromResult(t.Result.Sum());
+					},
 					CancellationToken.None,
-					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously,
-					TaskScheduler.Current);
+					TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.ExecuteSynchronously,
+					TaskScheduler.Current)
+				.Unwrap();
+
+			async Task<long> Read()
+			{
+				try
+				{
+					return await reader.ReadUntilCancelledAsync(tokenSource.Token, ParallelReceiver, true);
+				}
+				catch
+				{
+					tokenSource.Cancel();
+					throw;
+				}
+			}
 
 			ValueTask ParallelReceiver(T item, long i) => receiver(item);
+
 		}
 
 		/// <summary>

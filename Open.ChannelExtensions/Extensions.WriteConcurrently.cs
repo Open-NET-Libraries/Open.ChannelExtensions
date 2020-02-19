@@ -21,6 +21,8 @@ namespace Open.ChannelExtensions
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Async scope.")]
 		public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
 			int maxConcurrency, IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 		{
@@ -39,6 +41,8 @@ namespace Open.ChannelExtensions
 				.WaitToWriteAndThrowIfClosedAsync("The target channel was closed before writing could begin.", cancellationToken)
 				.AsTask(); // ValueTasks can only have a single await.
 
+			var errorTokenSource = new CancellationTokenSource();
+			var errorToken = errorTokenSource.Token;
 			var enumerator = source.GetEnumerator();
 			var writers = new Task<long>[maxConcurrency];
 			for (var w = 0; w < maxConcurrency; w++)
@@ -48,42 +52,51 @@ namespace Open.ChannelExtensions
 				.WhenAll(writers)
 				.ContinueWith(t =>
 					{
+						errorTokenSource.Dispose();
 						if (complete)
 							target.Complete(t.Exception);
 
-						return t;
+						if (t.IsFaulted) return Task.FromException<long>(t.Exception);
+						if (t.IsCanceled) return Task.FromCanceled<long>(cancellationToken);
+						return Task.FromResult(t.Result.Sum());
 					},
 					CancellationToken.None,
 					TaskContinuationOptions.ExecuteSynchronously,
 					TaskScheduler.Current)
-				.Unwrap()
-				.ContinueWith(
-					t => t.Result.Sum(),
-					CancellationToken.None,
-					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously,
-					TaskScheduler.Current);
+				.Unwrap();
 
 			// returns false if there's no more (wasn't cancelled).
 			async Task<long> WriteAllAsyncCore()
 			{
 				await Task.Yield();
-				await shouldWait.ConfigureAwait(false);
-				long count = 0;
-				var next = new ValueTask();
-				var potentiallyCancelled = true; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
-				while (!cancellationToken.IsCancellationRequested
-					&& (potentiallyCancelled = TryMoveNextSynchronized(enumerator, out var e)))
+
+				try
 				{
-					var value = await e.ConfigureAwait(false);
+					await shouldWait.ConfigureAwait(false);
+					long count = 0;
+					var next = new ValueTask();
+					var potentiallyCancelled = true; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
+					while (!errorToken.IsCancellationRequested
+						&& !cancellationToken.IsCancellationRequested
+						&& (potentiallyCancelled = TryMoveNextSynchronized(enumerator, out var e)))
+					{
+						var value = await e.ConfigureAwait(false);
+						await next.ConfigureAwait(false);
+						count++;
+						next = target.TryWrite(value) // do this to avoid unneccesary early cancel.
+							? new ValueTask()
+							: target.WriteAsync(value, cancellationToken);
+					}
 					await next.ConfigureAwait(false);
-					count++;
-					next = target.TryWrite(value) // do this to avoid unneccesary early cancel.
-						? new ValueTask()
-						: target.WriteAsync(value, cancellationToken);
+					if (potentiallyCancelled) cancellationToken.ThrowIfCancellationRequested();
+					return count;
 				}
-				await next.ConfigureAwait(false);
-				if (potentiallyCancelled) cancellationToken.ThrowIfCancellationRequested();
-				return count;
+				catch
+				{
+					errorTokenSource.Cancel();
+					throw;
+				}
+
 			}
 		}
 
