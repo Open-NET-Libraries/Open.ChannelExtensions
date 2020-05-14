@@ -1,5 +1,7 @@
 # Open.ChannelExtensions
 
+[![NuGet](https://img.shields.io/nuget/v/Open.ChannelExtensions.svg?style=flat)](https://www.nuget.org/packages/Open.ChannelExtensions/)
+
 A set of extensions for optimizing/simplifying System.Threading.Channels usage.
 
 [Click here for detailed documentation.](https://electricessence.github.io/Open.ChannelExtensions/api/Open.ChannelExtensions.Extensions.html#methods)

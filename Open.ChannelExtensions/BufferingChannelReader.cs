@@ -6,11 +6,28 @@ using System.Threading.Tasks;
 
 namespace Open.ChannelExtensions
 {
-	abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
+	/// <summary>
+	/// Base class for buffering results of a source ChannelReader.
+	/// </summary>
+	/// <typeparam name="TIn">The input type of the buffer.</typeparam>
+	/// <typeparam name="TOut">The output type of the buffer.</typeparam>
+	public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	{
-		protected ChannelReader<TIn>? Source;
-		protected readonly Channel<TOut>? Buffer;
-		public BufferingChannelReader(ChannelReader<TIn> source, bool singleReader, bool syncCont = false)
+		/// <summary>
+		/// The source of the buffer.
+		/// </summary>
+		protected ChannelReader<TIn>? Source { get; set; }
+
+		/// <summary>
+		/// The internal channel used for buffering.
+		/// </summary>
+		protected Channel<TOut>? Buffer { get; }
+
+
+		/// <summary>
+		/// Base constructor for a BufferingChannelReader.
+		/// </summary>
+		protected BufferingChannelReader(ChannelReader<TIn> source, bool singleReader, bool syncCont = false)
 		{
 			Source = source ?? throw new ArgumentNullException(nameof(source));
 			Contract.EndContractBlock();
@@ -37,10 +54,16 @@ namespace Open.ChannelExtensions
 			}
 		}
 
+		/// <inheritdoc />
 		public override Task Completion => Buffer?.Reader.Completion ?? Task.CompletedTask;
 
+		/// <summary>
+		/// The method that triggers adding entries to the buffer.
+		/// </summary>
+		/// <returns></returns>
 		protected abstract bool TryPipeItems();
 
+		/// <inheritdoc />
 		public override bool TryRead(out TOut item)
 		{
 			if (Buffer != null) do
@@ -54,6 +77,7 @@ namespace Open.ChannelExtensions
 			return false;
 		}
 
+		/// <inheritdoc />
 		public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
 		{
 			if (Buffer == null || Buffer.Reader.Completion.IsCompleted)
