@@ -78,14 +78,14 @@ namespace Open.ChannelExtensions
 
 				while (source.TryRead(out T item))
 				{
+					c.Add(item);
+
 					if (c.Count == _batchSize)
 					{
-						_current = new List<T>(_batchSize) { item };
+						_current = new List<T>(_batchSize);
 						Buffer.Writer.TryWrite(c);
 						return true;
 					}
-
-					c.Add(item);
 				}
 
 				return false;

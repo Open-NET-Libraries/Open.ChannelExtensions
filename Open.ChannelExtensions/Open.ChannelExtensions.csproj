@@ -18,7 +18,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>channels dotnet threading tasks extensions</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>3.3.1</Version>
+		<Version>3.3.2</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/electricessence/Open.ChannelExtensions</RepositoryUrl>
