@@ -87,22 +87,30 @@ namespace Open.ChannelExtensions
 			if (deferredExecution)
 				await Task.Yield();
 
+
 			long index = 0;
-			do
+			try
 			{
-				var next = new ValueTask();
+				do
+				{
+					var next = new ValueTask();
+					while (
+						!cancellationToken.IsCancellationRequested
+						&& reader.TryRead(out var item))
+					{
+						await next.ConfigureAwait(false);
+						next = receiver(item, index++);
+					}
+					await next.ConfigureAwait(false);
+				}
 				while (
 					!cancellationToken.IsCancellationRequested
-					&& reader.TryRead(out var item))
-				{
-					await next.ConfigureAwait(false);
-					next = receiver(item, index++);
-				}
-				await next.ConfigureAwait(false);
+					&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 			}
-			while (
-				!cancellationToken.IsCancellationRequested
-				&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
+			catch (TaskCanceledException)
+			{
+				// In case WaitToReadAsync is cancelled.
+			}
 
 			return index;
 		}

@@ -40,29 +40,35 @@ namespace Open.ChannelExtensions.Tests
 		[Fact]
 		public static async Task ExceptionPropagationConcurrent()
 		{
-			const int testSize = 1000000;
+			const int testSize = 100000000;
 			int total = 0;
 			int count = 0;
 			var range = Enumerable.Range(0, testSize);
-			try
+			await Assert.ThrowsAsync<AggregateException>(async () =>
 			{
-				await range
-					.ToChannel()
-					.ReadAllConcurrently(8, i =>
-					{
-						Interlocked.Increment(ref total);
-						if (i == 500)
+				try
+				{
+
+					await range
+						.ToChannel()
+						.ReadAllConcurrently(8, i =>
 						{
-							Interlocked.Increment(ref count);
-							throw new TestException();
-						}
-					});
-			}
-			catch (Exception ex)
-			{
-				Assert.IsType<AggregateException>(ex);
-				Assert.IsType<TestException>(((AggregateException)ex).InnerException);
-			}
+							Interlocked.Increment(ref total);
+							if (i == 500)
+							{
+								Interlocked.Increment(ref count);
+								throw new TestException();
+							}
+						});
+
+				}
+				catch (Exception ex)
+				{
+					Assert.IsType<AggregateException>(ex);
+					Assert.IsType<TestException>(((AggregateException)ex).InnerException);
+					throw;
+				}
+			});
 
 			Assert.Equal(1, count);
 			Assert.NotEqual(testSize, total);

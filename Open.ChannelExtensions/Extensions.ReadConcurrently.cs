@@ -35,6 +35,7 @@ namespace Open.ChannelExtensions
 				return reader.ReadAllAsync(receiver, cancellationToken, true).AsTask();
 
 			var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			var token = tokenSource.Token;
 			var readers = new Task<long>[maxConcurrency];
 			for (var r = 0; r < maxConcurrency; ++r)
 				readers[r] = Read();
@@ -45,10 +46,11 @@ namespace Open.ChannelExtensions
 					{
 						tokenSource.Dispose();
 						if (t.IsFaulted) return Task.FromException<long>(t.Exception);
+						if (t.IsCanceled) return Task.FromCanceled<long>(token);
 						return Task.FromResult(t.Result.Sum());
 					},
 					CancellationToken.None,
-					TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.ExecuteSynchronously,
+					TaskContinuationOptions.ExecuteSynchronously,
 					TaskScheduler.Current)
 				.Unwrap();
 
@@ -56,7 +58,7 @@ namespace Open.ChannelExtensions
 			{
 				try
 				{
-					return await reader.ReadUntilCancelledAsync(tokenSource.Token, ParallelReceiver, true);
+					return await reader.ReadUntilCancelledAsync(token, ParallelReceiver, true);
 				}
 				catch
 				{
