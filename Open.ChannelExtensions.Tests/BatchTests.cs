@@ -106,5 +106,50 @@ namespace Open.ChannelExtensions.Tests
                 });
 
         }
+
+
+        [Fact]
+        public static async Task ForceBatchTest()
+        {
+            var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                c.Writer.TryWrite(1);
+                c.Writer.TryWrite(2);
+                c.Writer.TryWrite(3);
+                c.Writer.TryWrite(4);
+                c.Writer.TryWrite(5);
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            using var tokenSource = new CancellationTokenSource();
+            var token = tokenSource.Token;
+            var reader = c.Reader.Batch(3);
+            Assert.Equal(2, await reader.ReadAllAsync(async (batch, i) =>
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            Assert.Equal(1, batch[0]);
+                            Assert.Equal(2, batch[1]);
+                            Assert.Equal(3, batch[2]);
+                            await Task.Delay(500);
+                            reader.ForceBatch();
+                            break;
+                        case 1:
+                            Assert.Equal(2, batch.Count);
+                            Assert.Equal(4, batch[0]);
+                            Assert.Equal(5, batch[1]);
+                            c.Writer.Complete();
+                            break;
+                        default:
+                            throw new Exception("Shouldn't arrive here.");
+                    }
+                    await Task.Delay(500);
+                }));
+
+        }
     }
 }
