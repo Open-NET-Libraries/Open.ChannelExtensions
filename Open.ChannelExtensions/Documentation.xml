@@ -25,6 +25,9 @@
         <member name="M:Open.ChannelExtensions.BatchingChannelReader`1.TryPipeItems">
             <inheritdoc />
         </member>
+        <member name="M:Open.ChannelExtensions.BatchingChannelReader`1.WaitToReadAsyncCore(System.Threading.Tasks.ValueTask{System.Boolean},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
         <member name="T:Open.ChannelExtensions.BufferingChannelReader`2">
             <summary>
             Base class for buffering results of a source ChannelReader.
@@ -61,6 +64,12 @@
         </member>
         <member name="M:Open.ChannelExtensions.BufferingChannelReader`2.WaitToReadAsync(System.Threading.CancellationToken)">
             <inheritdoc />
+        </member>
+        <member name="M:Open.ChannelExtensions.BufferingChannelReader`2.WaitToReadAsyncCore(System.Threading.Tasks.ValueTask{System.Boolean},System.Threading.CancellationToken)">
+            <summary>
+            Implementation for waiting.
+            Can be overridden.
+            </summary>
         </member>
         <member name="T:Open.ChannelExtensions.Extensions">
             <summary>

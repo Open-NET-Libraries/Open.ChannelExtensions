@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Threading;
 using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace Open.ChannelExtensions
 {
@@ -12,7 +14,7 @@ namespace Open.ChannelExtensions
 	public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 	{
 		private readonly int _batchSize;
-		private List<T>? _current;
+		private List<T>? _batch;
 
 		/// <summary>
 		/// Constructs a BatchingChannelReader.
@@ -24,7 +26,6 @@ namespace Open.ChannelExtensions
 			Contract.EndContractBlock();
 
 			_batchSize = batchSize;
-			_current = source.Completion.IsCompleted ? null : new List<T>(batchSize);
 		}
 
 		/// <summary>
@@ -35,42 +36,40 @@ namespace Open.ChannelExtensions
 		{
 			if (Buffer == null || Buffer.Reader.Completion.IsCompleted) return false;
 			if (TryPipeItems()) return true;
+			if (_batch == null) return false;
 
 			lock (Buffer)
 			{
 				if (Buffer.Reader.Completion.IsCompleted) return false;
 				if (TryPipeItems()) return true;
-				var c = _current;
-				if (c == null || c.Count == 0 || Buffer.Reader.Completion.IsCompleted)
+				var c = _batch;
+				if (c == null || Buffer.Reader.Completion.IsCompleted)
 					return false;
 				c.TrimExcess();
-				_current = new List<T>(_batchSize);
-				Buffer.Writer.TryWrite(c);
+				_batch = null;
+				return Buffer.Writer.TryWrite(c); // Should always be true at this point.
 			}
-
-			return true;
 		}
 
 		/// <inheritdoc />
 		protected override bool TryPipeItems()
 		{
-			if (_current == null || Buffer == null || Buffer.Reader.Completion.IsCompleted)
+			if (Buffer == null || Buffer.Reader.Completion.IsCompleted)
 				return false;
 
 			lock (Buffer)
 			{
-				var c = _current;
-				if (c == null || Buffer.Reader.Completion.IsCompleted)
-					return false;
+				if (Buffer.Reader.Completion.IsCompleted) return false;
 
+				var c = _batch;
 				var source = Source;
 				if (source == null || source.Completion.IsCompleted)
 				{
 					// All finished, release the last batch to the buffer.
+					if (c == null) return false;
+
 					c.TrimExcess();
-					_current = null;
-					if (c.Count == 0)
-						return false;
+					_batch = null;
 
 					Buffer.Writer.TryWrite(c);
 					return true;
@@ -78,11 +77,12 @@ namespace Open.ChannelExtensions
 
 				while (source.TryRead(out T item))
 				{
-					c.Add(item);
+					if (c == null) _batch = c = new List<T>(_batchSize) { item };
+					else c.Add(item);
 
 					if (c.Count == _batchSize)
 					{
-						_current = new List<T>(_batchSize);
+						_batch = null;
 						Buffer.Writer.TryWrite(c);
 						return true;
 					}
@@ -90,6 +90,40 @@ namespace Open.ChannelExtensions
 
 				return false;
 			}
+		}
+
+		/// <inheritdoc />
+		protected override async ValueTask<bool> WaitToReadAsyncCore(ValueTask<bool> bufferWait, CancellationToken cancellationToken)
+		{
+
+			var source = Source;
+			if (source == null) return await bufferWait;
+
+			var b = bufferWait.AsTask();
+			using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			var token = tokenSource.Token;
+
+		start:
+
+			if (b.IsCompleted) return await b.ConfigureAwait(false);
+
+			var s = source.WaitToReadAsync(token);
+			if (s.IsCompleted && !b.IsCompleted) TryPipeItems();
+
+			if (b.IsCompleted)
+			{
+				tokenSource.Cancel();
+				return await b.ConfigureAwait(false);
+			}
+			await Task.WhenAny(s.AsTask(), b).ConfigureAwait(false);
+			if (b.IsCompleted)
+			{
+				tokenSource.Cancel();
+				return await b.ConfigureAwait(false);
+			}
+
+			TryPipeItems();
+			goto start;
 		}
 	}
 }

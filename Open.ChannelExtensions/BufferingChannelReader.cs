@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Threading;
 using System.Threading.Channels;
@@ -35,10 +36,12 @@ namespace Open.ChannelExtensions
 			if (source.Completion.IsCompleted)
 			{
 				Buffer = null;
+				_completion = Task.CompletedTask;
 			}
 			else
 			{
 				Buffer = Extensions.CreateChannel<TOut>(-1, singleReader, syncCont);
+				_completion = Buffer.Reader.Completion;
 
 				source.Completion.ContinueWith(t =>
 				{
@@ -54,8 +57,9 @@ namespace Open.ChannelExtensions
 			}
 		}
 
+		private readonly Task _completion;
 		/// <inheritdoc />
-		public override Task Completion => Buffer?.Reader.Completion ?? Task.CompletedTask;
+		public override Task Completion => _completion;
 
 		/// <summary>
 		/// The method that triggers adding entries to the buffer.
@@ -87,33 +91,42 @@ namespace Open.ChannelExtensions
 				return new ValueTask<bool>(Task.FromCanceled<bool>(cancellationToken));
 
 			var b = Buffer.Reader.WaitToReadAsync(cancellationToken);
-			if (b.IsCompleted)
-				return b;
+			return b.IsCompleted ? b : WaitToReadAsyncCore(b, cancellationToken);
+		}
 
+		/// <summary>
+		/// Implementation for waiting.
+		/// Can be overridden.
+		/// </summary>
+		protected virtual async ValueTask<bool> WaitToReadAsyncCore(ValueTask<bool> bufferWait, CancellationToken cancellationToken)
+		{
 			var source = Source;
-			if (source == null)
-				return b;
+			if (source == null) return await bufferWait;
 
-			return WaitCore();
+			using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			var token = tokenSource.Token;
 
-			async ValueTask<bool> WaitCore()
+		start:
+
+			if (bufferWait.IsCompleted) return await bufferWait;
+
+			var s = source.WaitToReadAsync(token);
+			if (s.IsCompleted && !bufferWait.IsCompleted) TryPipeItems();
+
+			if (bufferWait.IsCompleted)
 			{
-
-			start:
-
-				if (b.IsCompleted) return await b;
-
-				var s = source!.WaitToReadAsync(cancellationToken);
-				if (s.IsCompleted && !b.IsCompleted)
-					TryPipeItems();
-
-				if (b.IsCompleted) return await b;
-				await s;
-				if (b.IsCompleted) return await b;
-				TryPipeItems();
-
-				goto start;
+				tokenSource.Cancel();
+				return await bufferWait.ConfigureAwait(false);
 			}
+			await s;
+			if (bufferWait.IsCompleted)
+			{
+				tokenSource.Cancel();
+				return await bufferWait.ConfigureAwait(false);
+			}
+			TryPipeItems();
+
+			goto start;
 		}
 	}
 }
