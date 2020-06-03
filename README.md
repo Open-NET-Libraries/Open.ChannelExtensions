@@ -8,6 +8,26 @@ A set of extensions for optimizing/simplifying System.Threading.Channels usage.
 
 ## Highlights
 
+### Read & Write
+
+*With optional concurrency levels.*
+
+* Reading all entries in a channel.
+* Writing all entries from a source to a channel.
+* Piping (consuming) all entries to a buffer (channel).
+* `.AsAsyncEnumerable()` (`IAsyncEnumerable`) support for .NET Standard 2.1+ and .NET Core 3+
+
+### Special `ChannelReader` Operations
+
+* `Filter`
+* `Transform`
+* `Batch`
+* `Join`
+
+---
+
+## Examples
+
 Being able to define an asynchronous pipeline with best practice usage using simple expressive syntax:
 
 ```cs
@@ -36,8 +56,6 @@ await source /* IEnumerable<T> */
         // Do something with each final value.
     });
 ```
-
-## Examples
 
 ### Reading (until the channel is closed)
 
@@ -99,6 +117,32 @@ await channel.WriteAllAsync(source, complete: true);
 // source can be any IEnumerable<Task<T>> or IEnumerable<ValueTask<T>>.
 await channel.WriteAllConcurrentlyAsync(
     maxConcurrency, source, complete: true);
+```
+
+### Filter & Transform
+
+```cs
+// Filter and transform when reading.
+channel.Reader
+    .Filter(predicate) // .Where()
+    .Transform(selector) // .Select()
+    .ReadAllAsync(async value => {/*...*/});
+```
+
+### Batching
+
+```cs
+values.Reader
+    .Batch(10 /*batch size*/)
+    .ReadAllAsync(async batch => {/*...*/});
+```
+
+### Joining
+
+```cs
+batches.Reader
+    .Join()
+    .ReadAllAsync(async value => {/*...*/});
 ```
 
 ### Pipelining / Transforming
