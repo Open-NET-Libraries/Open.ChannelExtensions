@@ -4,7 +4,7 @@
 
 A set of extensions for optimizing/simplifying System.Threading.Channels usage.
 
-[Click here for detailed documentation.](https://electricessence.github.io/Open.ChannelExtensions/api/Open.ChannelExtensions.Extensions.html#methods)
+[Click here for detailed documentation.](https://open-net-libraries.github.io/Open.ChannelExtensions/api/Open.ChannelExtensions.Extensions.html#methods)
 
 ## Highlights
 
