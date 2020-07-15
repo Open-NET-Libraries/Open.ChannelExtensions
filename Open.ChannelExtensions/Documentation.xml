@@ -1465,69 +1465,6 @@
             <param name="cancellationToken">An optional cancellation token.</param>
             <returns>The channel reader containing the results.</returns>
         </member>
-        <member name="M:Open.ChannelExtensions.Extensions.ToChanaram>
-            <param name="deferredExecution">If true, calls await Task.Yield() before continuing.</param>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Threading.CancellationToken)">
-            <summary>
-            Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
-            </summary>
-            <typeparam name="T">The type being written to the channel</typeparam>
-            <param name="writer">The channel writer.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.WaitToWriteAndThrowIfClosedAsync``1(System.Threading.Channels.ChannelWriter{``0},System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
-            </summary>
-            <typeparam name="T">The type being written to the channel</typeparam>
-            <param name="writer">The channel writer.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before continuing.</param>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.CompleteAsync``2(System.Threading.Channels.Channel{``0,``1},System.Exception)">
-            <summary>
-            Calls complete on the writer and returns the completion from the reader.
-            </summary>
-            <typeparam name="TWrite">The type being received by the writer.</typeparam>
-            <typeparam name="TRead">The type being read from the reader.</typeparam>
-            <param name="channel">The channel to complete asynchronously.</param>
-            <param name="exception">The optional exception to include with completion.</param>
-            <returns>The reader's completion task.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.ToChannel(System.IO.TextReader,System.Int32,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Writes all lines from the source to a channel and calls complete when finished.
-            </summary>
-            <param name="source">The source data to use.</param>
-            <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
-            <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>The channel reader containing the results.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.ToChannel(System.IO.TextReader,System.Int32,System.Boolean,System.Threading.CancellationToken,System.Boolean)">
-            <summary>
-            Writes all lines from the source to a channel and calls complete when finished.
-            </summary>
-            <param name="source">The source data to use.</param>
-            <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
-            <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <param name="cancellationToken">The cancellation token.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-            <returns>The channel reader containing the results.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.ToChannel``1(System.Collections.Generic.IEnumerable{``0},System.Threading.Channels.ChannelOptions,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Writes all entries from the source to a channel and calls complete when finished.
-            </summary>
-            <typeparam name="T">The input type of the channel.</typeparam>
-            <param name="source">The source data to use.</param>
-            <param name="channelOptions">The options for configuring the new channel.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>The channel reader containing the results.</returns>
-        </member>
         <member name="M:Open.ChannelExtensions.Extensions.ToChannel``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Writes all entries from the source to a channel and calls complete when finished.
@@ -1551,62 +1488,6 @@
             <param name="cancellationToken">The cancellation token.</param>
             <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
             <returns>The channel reader containing the results.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.ToChannel``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32,System.Boolean,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Writes all entries from the source to a channel and calls complete when finished.
-            </summary>
-            <typeparam name="T">The input type of the channel.</typeparam>
-            <param name="source">The source data to use.</param>
-            <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
-            <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>The channel reader containing the results.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.ToChannel``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.Channels.ChannelOptions,System.Boolean,System.Threading.CancellationToken)">
-            <summary>
-            Writes all entries from the source to a channel and calls complete when finished.
-            </summary>
-            <typeparam name="T">The input type of the channel.</typeparam>
-            <param name="source">The source data to use.</param>
-            <param name="channelOptions">The options for configuring the new channel.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
-            <returns>The channel reader containing the results.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.ToChannel``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32,System.Boolean,System.Threading.CancellationToken,System.Boolean)">
-            <summary>
-            Writes all entries from the source to a channel and calls complete when finished.
-            </summary>
-            <typeparam name="T">The input type of the channel.</typeparam>
-            <param name="source">The source data to use.</param>
-            <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
-            <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-            <param name="cancellationToken">An optional cancellation token.</param>
-            <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-            <returns>The channel reader containing the results.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.AsAsyncEnumerable``1(System.Threading.Channels.ChannelReader{``0},System.Threading.CancellationToken)">
-            <summary>
-            Iterates over the results in a ChannelReader.
-            Provided as an alternative to .ReadAllAsync() which at the time of publishing this, only exists in .NET Core 3.0 and not .NET Standard 2.1
-            </summary>
-            <typeparam name="T">The output type of the channel.</typeparam>
-            <param name="reader">The reader to read from.</param>
-            <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>
-            <returns>An IAsyncEnumerable for iterating the channel.</returns>
-        </member>
-        <member name="M:Open.ChannelExtensions.Extensions.AsAsyncEnumerable``2(System.Threading.Channels.Channel{``0,``1},System.Threading.CancellationToken)">
-            <summary>
-            Iterates over the results in a Channel.
-            Provided as an alternative to .ReadAllAsync() which at the time of publishing this, only exists in .NET Core 3.0 and not .NET Standard 2.1
-            </summary>
-            <typeparam name="TIn">The type recieved by the source channel.</typeparam>
-            <typeparam name="TOut">The outgoing type from the source channel.</typeparam>
-            <param name="channel">The reader to read from.</param>
-            <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>
-            <returns>An IAsyncEnumerable for iterating the channel.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.Extensions.ToChannelAsync``1(System.Collections.Generic.IEnumerable{System.Func{``0}},System.Threading.Channels.ChannelOptions,System.Int32,System.Threading.CancellationToken)">
             <summary>

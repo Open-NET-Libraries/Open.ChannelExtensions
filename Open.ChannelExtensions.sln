@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.ChannelExtensions", "O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.ChannelExtensions.Tests", "Open.ChannelExtensions.Tests\Open.ChannelExtensions.Tests.csproj", "{CEB5E3C7-E8A9-4F30-92AD-46838A152BD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Open.ChannelExtensions.ComparisonTests", "Open.ChannelExtensions.ComparisonTests\Open.ChannelExtensions.ComparisonTests.csproj", "{F13B7605-FB04-4769-B182-77482C900B28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.ChannelExtensions.ComparisonTests", "Open.ChannelExtensions.ComparisonTests\Open.ChannelExtensions.ComparisonTests.csproj", "{F13B7605-FB04-4769-B182-77482C900B28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
