@@ -34,7 +34,7 @@ namespace Open.ChannelExtensions
 			}
 
 			public override async ValueTask<TResult> ReadAsync(CancellationToken cancellationToken = default)
-				=> _transform(await _source.ReadAsync(cancellationToken));
+				=> _transform(await _source.ReadAsync(cancellationToken).ConfigureAwait(false));
 
 			public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
 				=> _source.WaitToReadAsync(cancellationToken);

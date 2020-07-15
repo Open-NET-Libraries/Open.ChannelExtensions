@@ -30,7 +30,7 @@ namespace Open.ChannelExtensions
 
 			try
 			{
-				return await source.ReadAllAsync(e => target.WriteAsync(e, cancellationToken), cancellationToken);
+				return await source.ReadAllAsync(e => target.WriteAsync(e, cancellationToken), cancellationToken).ConfigureAwait(false);
 			}
 			catch (Exception ex)
 			{
@@ -65,7 +65,9 @@ namespace Open.ChannelExtensions
 			if (target is null) throw new ArgumentNullException(nameof(target));
 			Contract.EndContractBlock();
 
+#pragma warning disable CA2012 // Not awaited because it's run by the scheduler and no need to incur the .AsTask() call.
 			_ = PipeTo(source, target.Writer, true, cancellationToken);
+#pragma warning restore CA2012
 
 			return target.Reader;
 		}
@@ -108,7 +110,7 @@ namespace Open.ChannelExtensions
 			return channel.Reader;
 
 			async ValueTask ValueNotReady(ValueTask<TOut> value, CancellationToken token)
-				=> await writer.WriteAsync(await value.ConfigureAwait(false), token).ConfigureAwait(false);
+				=> await writer!.WriteAsync(await value.ConfigureAwait(false), token).ConfigureAwait(false);
 		}
 
 		/// <summary>

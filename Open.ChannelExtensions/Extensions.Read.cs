@@ -960,7 +960,7 @@ namespace Open.ChannelExtensions
 			Contract.EndContractBlock();
 
 			var list = new List<T>();
-			await ReadAll(reader, list.Add);
+			await ReadAll(reader, list.Add).ConfigureAwait(false);
 			return list;
 		}
 
