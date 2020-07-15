@@ -7,4 +7,7 @@ dotnet_diagnostic.CA1303.severity = silent
 dotnet_diagnostic.CA1031.severity = silent
 
 # CA2012: Use ValueTasks correctly
-dotnet_diagnostic.CA2012.severity = suggestion
+dotnet_diagnostic.CA2012.severity = silent
+
+# AD0001: Analyzer Failure (2020/07/15 currently flawed. Might be useful to remove for later.)
+dotnet_diagnostic.AD0001.severity = silent
