@@ -12,12 +12,12 @@ ReadUntilCancelled, ReadAll, ReadAllConcurrently, WriteAll, WriteAllConcurrently
 
 Part of the "Open" set of libraries.</Description>
 		<PackageTags>channel;channels;channel reader;channel writer;threading;tasks;extensions;async</PackageTags>
-		<Copyright>https://github.com/Open-NET-Libraries/Open.ChannelExtensions/blob/master/LICENSE</Copyright>
+		<Copyright>© electricessence (Oren F.) All rights reserved.</Copyright>
 		<PackageProjectUrl>https://github.com/Open-NET-Libraries/Open.ChannelExtensions</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.ChannelExtensions</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>3.4.1</Version>
+		<Version>3.4.2</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
