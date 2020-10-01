@@ -415,6 +415,5 @@ namespace Open.ChannelExtensions
 			CancellationToken cancellationToken = default)
 			=> CreateChannel<T>(capacity, singleReader)
 				.SourceAsync(maxConcurrency, source, cancellationToken);
-
-	}
+    }
 }

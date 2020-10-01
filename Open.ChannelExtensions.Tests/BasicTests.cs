@@ -10,15 +10,15 @@ namespace Open.ChannelExtensions.Tests
 {
 	public static class BasicTests
 	{
-		const int testSize1 = 10000001;
-		const int testSize2 = 30000001;
+		const int TestSize1 = 10000001;
+		const int TestSize2 = 30000001;
 
 		[Theory]
-		[InlineData(testSize1)]
-		[InlineData(testSize2)]
+		[InlineData(TestSize1)]
+		[InlineData(TestSize2)]
 		public static async Task DeferredWriteRead(int testSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var result = new List<int>(testSize);
 
 			var sw = Stopwatch.StartNew();
@@ -39,11 +39,11 @@ namespace Open.ChannelExtensions.Tests
 		}
 
 		[Theory]
-		[InlineData(testSize1)]
-		[InlineData(testSize2)]
+		[InlineData(TestSize1)]
+		[InlineData(TestSize2)]
 		public static async Task ReadAll(int testSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var result = new List<int>(testSize);
 
 			var sw = Stopwatch.StartNew();
@@ -61,11 +61,11 @@ namespace Open.ChannelExtensions.Tests
 		}
 
 		[Theory]
-		[InlineData(testSize1)]
-		[InlineData(testSize2)]
+		[InlineData(TestSize1)]
+		[InlineData(TestSize2)]
 		public static async Task ReadAllAsync(int testSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var result = new List<int>(testSize);
 
 			var sw = Stopwatch.StartNew();
@@ -87,11 +87,11 @@ namespace Open.ChannelExtensions.Tests
 		}
 
 		[Theory]
-		[InlineData(testSize1)]
-		[InlineData(testSize2)]
+		[InlineData(TestSize1)]
+		[InlineData(TestSize2)]
 		public static async Task PipeToBounded(int testSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var result = new List<int>(testSize);
 
 			var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(100)
@@ -121,11 +121,11 @@ namespace Open.ChannelExtensions.Tests
 		}
 
 		[Theory]
-		[InlineData(testSize1)]
-		[InlineData(testSize2)]
+		[InlineData(TestSize1)]
+		[InlineData(TestSize2)]
 		public static async Task PipeToUnbound(int testSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var result = new List<int>(testSize);
 
 			var channel = Channel.CreateUnbounded<int>(new UnboundedChannelOptions()
@@ -162,7 +162,7 @@ namespace Open.ChannelExtensions.Tests
 		[InlineData(75, 50)]
 		public static async Task Batch(int testSize, int batchSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var expectedBatchCount = (testSize / batchSize) + (testSize % batchSize == 0 ? 0 : 1);
 			var result1 = new List<List<int>>(expectedBatchCount);
 
@@ -179,14 +179,14 @@ namespace Open.ChannelExtensions.Tests
 		}
 
 		[Theory]
-		[InlineData(testSize1, 51)]
-		[InlineData(testSize1, 5001)]
-		[InlineData(testSize2, 51)]
-		[InlineData(testSize2, 5001)]
+		[InlineData(TestSize1, 51)]
+		[InlineData(TestSize1, 5001)]
+		[InlineData(TestSize2, 51)]
+		[InlineData(TestSize2, 5001)]
 		[InlineData(100, 100)]
 		public static async Task BatchThenJoin(int testSize, int batchSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var result1 = new List<List<int>>(testSize / batchSize + 1);
 
 			{
@@ -244,13 +244,13 @@ namespace Open.ChannelExtensions.Tests
 		}
 
 		[Theory]
-		[InlineData(testSize1, 51)]
-		[InlineData(testSize1, 5001)]
-		[InlineData(testSize2, 51)]
-		[InlineData(testSize2, 5001)]
+		[InlineData(TestSize1, 51)]
+		[InlineData(TestSize1, 5001)]
+		[InlineData(TestSize2, 51)]
+		[InlineData(TestSize2, 5001)]
 		public static async Task BatchJoin(int testSize, int batchSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var result = new List<int>(testSize);
 
 			var sw = Stopwatch.StartNew();
@@ -303,11 +303,11 @@ namespace Open.ChannelExtensions.Tests
 		}
 
 		[Theory]
-		[InlineData(testSize1)]
-		[InlineData(testSize2)]
+		[InlineData(TestSize1)]
+		[InlineData(TestSize2)]
 		public static async Task Filter(int testSize)
 		{
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			var count = testSize / 2;
 			var result = new List<int>(count);
 

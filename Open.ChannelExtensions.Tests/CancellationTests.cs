@@ -44,7 +44,7 @@ namespace Open.ChannelExtensions.Tests
 			const int testSize = 1000000;
 			int total = 0;
 			int count = 0;
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			using var tokenSource = new CancellationTokenSource();
 			var token = tokenSource.Token;
 			try
@@ -78,7 +78,7 @@ namespace Open.ChannelExtensions.Tests
 			const int testSize = 1000000;
 			int total = 0;
 			int count = 0;
-			var range = Enumerable.Range(0, testSize);
+			var range = Enumerable.Range(0, testSize).ToList();
 			using var tokenSource = new CancellationTokenSource();
 			var token = tokenSource.Token;
 			try
