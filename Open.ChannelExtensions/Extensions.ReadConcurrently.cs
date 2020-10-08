@@ -58,7 +58,7 @@ namespace Open.ChannelExtensions
 			{
 				try
 				{
-					return await reader.ReadUntilCancelledAsync(token, ParallelReceiver, true);
+					return await reader.ReadUntilCancelledAsync(token, ParallelReceiver, true).ConfigureAwait(false);
 				}
 				catch
 				{

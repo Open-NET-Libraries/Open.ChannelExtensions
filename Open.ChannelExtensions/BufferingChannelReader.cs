@@ -101,14 +101,14 @@ namespace Open.ChannelExtensions
 		protected virtual async ValueTask<bool> WaitToReadAsyncCore(ValueTask<bool> bufferWait, CancellationToken cancellationToken)
 		{
 			var source = Source;
-			if (source == null) return await bufferWait;
+			if (source == null) return await bufferWait.ConfigureAwait(false);
 
 			using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 			var token = tokenSource.Token;
 
 		start:
 
-			if (bufferWait.IsCompleted) return await bufferWait;
+			if (bufferWait.IsCompleted) return await bufferWait.ConfigureAwait(false);
 
 			var s = source.WaitToReadAsync(token);
 			if (s.IsCompleted && !bufferWait.IsCompleted) TryPipeItems();
@@ -118,7 +118,7 @@ namespace Open.ChannelExtensions
 				tokenSource.Cancel();
 				return await bufferWait.ConfigureAwait(false);
 			}
-			await s;
+			await s.ConfigureAwait(false);
 			if (bufferWait.IsCompleted)
 			{
 				tokenSource.Cancel();

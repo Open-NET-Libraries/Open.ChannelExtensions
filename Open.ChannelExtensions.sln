@@ -7,7 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.ChannelExtensions", "O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.ChannelExtensions.Tests", "Open.ChannelExtensions.Tests\Open.ChannelExtensions.Tests.csproj", "{CEB5E3C7-E8A9-4F30-92AD-46838A152BD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Open.ChannelExtensions.ComparisonTests", "Open.ChannelExtensions.ComparisonTests\Open.ChannelExtensions.ComparisonTests.csproj", "{F13B7605-FB04-4769-B182-77482C900B28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.ChannelExtensions.ComparisonTests", "Open.ChannelExtensions.ComparisonTests\Open.ChannelExtensions.ComparisonTests.csproj", "{F13B7605-FB04-4769-B182-77482C900B28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D36CB8D2-D657-4001-8D50-5197D3CB686B}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

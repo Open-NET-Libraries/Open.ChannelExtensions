@@ -97,7 +97,7 @@ namespace Open.ChannelExtensions
 		{
 
 			var source = Source;
-			if (source == null) return await bufferWait;
+			if (source == null) return await bufferWait.ConfigureAwait(false);
 
 			var b = bufferWait.AsTask();
 			using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);

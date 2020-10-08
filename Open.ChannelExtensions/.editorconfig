@@ -5,3 +5,6 @@ dotnet_diagnostic.CA1303.severity = silent
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = silent
+
+# CA2012: Use ValueTasks correctly
+dotnet_diagnostic.CA2012.severity = silent

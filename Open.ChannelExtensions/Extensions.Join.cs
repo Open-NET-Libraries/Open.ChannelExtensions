@@ -114,7 +114,7 @@ namespace Open.ChannelExtensions
 							{
 								await foreach (var e in batch)
 									await writer.WriteAsync(e).ConfigureAwait(false);
-							});
+							}).ConfigureAwait(false);
 					writer.Complete();
 				}
 				catch (Exception ex)
