@@ -17,8 +17,8 @@ Part of the "Open" set of libraries.</Description>
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.ChannelExtensions</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>3.5.0</Version>
-		<PackageReleaseNotes></PackageReleaseNotes>
+		<Version>5.0.0</Version>
+		<PackageReleaseNotes>Updated to System.Threading.Channels and set verson to match.</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
@@ -27,6 +27,10 @@ Part of the "Open" set of libraries.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
@@ -42,14 +46,7 @@ Part of the "Open" set of libraries.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Threading.Channels" Version="4.7.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0-beta2.final">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="System.Threading.Channels" Version="5.0.0" />
 	</ItemGroup>
 
 </Project>
