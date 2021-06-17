@@ -75,7 +75,7 @@ namespace Open.ChannelExtensions
 					return true;
 				}
 
-				while (source.TryRead(out T item))
+				while (source.TryRead(out var item))
 				{
 					if (c == null) _batch = c = new List<T>(_batchSize) { item };
 					else c.Add(item);

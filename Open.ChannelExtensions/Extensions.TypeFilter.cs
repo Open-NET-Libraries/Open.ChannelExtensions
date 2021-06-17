@@ -21,7 +21,7 @@ namespace Open.ChannelExtensions
 
 			public override bool TryRead(out T item)
 			{
-				while (_source.TryRead(out TSource s))
+				while (_source.TryRead(out var s))
 				{
 					if (s is T i)
 					{

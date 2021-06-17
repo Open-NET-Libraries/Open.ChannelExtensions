@@ -22,7 +22,7 @@ namespace Open.ChannelExtensions
 
 				lock (Buffer)
 				{
-					if (!source.TryRead(out TList batch))
+					if (!source.TryRead(out var batch))
 						return false;
 
 					foreach (var i in batch)

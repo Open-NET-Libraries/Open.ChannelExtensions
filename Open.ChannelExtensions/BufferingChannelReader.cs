@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Threading;
 using System.Threading.Channels;
@@ -72,8 +71,11 @@ namespace Open.ChannelExtensions
 		{
 			if (Buffer != null) do
 				{
-					if (Buffer.Reader.TryRead(out item))
+					if (Buffer.Reader.TryRead(out var i))
+					{
+						item = i;
 						return true;
+					}
 				}
 				while (TryPipeItems());
 
