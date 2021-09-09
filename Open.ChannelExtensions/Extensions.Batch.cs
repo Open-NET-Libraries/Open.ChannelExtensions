@@ -5,7 +5,7 @@ namespace Open.ChannelExtensions
 {
 	public static partial class Extensions
 	{
-		
+
 
 		/// <summary>
 		/// Batches results into the batch size provided with a max capacity of batches.
@@ -17,6 +17,6 @@ namespace Open.ChannelExtensions
 		/// <param name="allowSynchronousContinuations">True can reduce the amount of scheduling and markedly improve performance, but may produce unexpected or even undesirable behavior.</param>
 		/// <returns>A channel reader containing the batches.</returns>
 		public static BatchingChannelReader<T> Batch<T>(this ChannelReader<T> source, int batchSize, bool singleReader = false, bool allowSynchronousContinuations = false)
-			=> new BatchingChannelReader<T>(source ?? throw new ArgumentNullException(nameof(source)), batchSize, singleReader, allowSynchronousContinuations);
+			=> new(source ?? throw new ArgumentNullException(nameof(source)), batchSize, singleReader, allowSynchronousContinuations);
 	}
 }

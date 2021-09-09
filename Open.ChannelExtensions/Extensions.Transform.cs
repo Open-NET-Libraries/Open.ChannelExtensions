@@ -61,7 +61,7 @@ namespace Open.ChannelExtensions
 		/// <param name="transform">The transform function.</param>
 		/// <returns>A channel reader representing the tranformed results.</returns>
 		public static TransformChannel<TWrite, TRead, TResult> Transform<TWrite, TRead, TResult>(this Channel<TWrite, TRead> source, Func<TRead, TResult> transform)
-			=> new TransformChannel<TWrite, TRead, TResult>(source, transform);
+			=> new(source, transform);
 
 		/// <summary>
 		/// Transforms the 
@@ -72,6 +72,6 @@ namespace Open.ChannelExtensions
 		/// <param name="transform">The transform function.</param>
 		/// <returns>A channel reader representing the tranformed results.</returns>
 		public static TransformChannel<T, TResult> Transform<T, TResult>(this Channel<T> source, Func<T, TResult> transform)
-			=> new TransformChannel<T, TResult>(source, transform);
+			=> new(source, transform);
 	}
 }
