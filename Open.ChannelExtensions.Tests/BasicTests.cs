@@ -16,7 +16,7 @@ namespace Open.ChannelExtensions.Tests
 		[Theory]
 		[InlineData(testSize1)]
 		[InlineData(testSize2)]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Testing onlly.")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Testing only.")]
 		public static async Task DeferredWriteRead(int testSize)
 		{
 			var range = Enumerable.Range(0, testSize);
