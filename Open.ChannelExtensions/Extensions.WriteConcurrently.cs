@@ -22,7 +22,6 @@ namespace Open.ChannelExtensions
 		/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 		/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Async scope.")]
 		public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
 			int maxConcurrency, IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default)
 		{

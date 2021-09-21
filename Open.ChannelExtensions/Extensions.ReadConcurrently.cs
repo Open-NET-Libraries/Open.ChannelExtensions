@@ -18,7 +18,6 @@ namespace Open.ChannelExtensions
 		/// <param name="receiver">The async receiver function.</param>
 		/// <param name="cancellationToken">An optional cancellation token.</param>
 		/// <returns>A task that completes when no more reading is to be done.</returns>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Async scope.")]
 		public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
 			int maxConcurrency,
 			Func<T, ValueTask> receiver,
