@@ -107,7 +107,7 @@ namespace Open.ChannelExtensions
 					!cancellationToken.IsCancellationRequested
 					&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 			}
-			catch (TaskCanceledException)
+			catch (OperationCanceledException)
 			{
 				// In case WaitToReadAsync is cancelled.
 			}

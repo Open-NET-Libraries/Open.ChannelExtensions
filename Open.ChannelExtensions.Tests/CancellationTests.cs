@@ -64,7 +64,7 @@ namespace Open.ChannelExtensions.Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.IsType<TaskCanceledException>(ex);
+				Assert.IsType<OperationCanceledException>(ex);
 			}
 
 			Assert.Equal(1, count);
@@ -97,7 +97,7 @@ namespace Open.ChannelExtensions.Tests
 			}
 			catch (Exception ex)
 			{
-				Assert.IsType<TaskCanceledException>(ex);
+				Assert.IsType<OperationCanceledException>(ex);
 			}
 
 			Assert.Equal(1, count);
