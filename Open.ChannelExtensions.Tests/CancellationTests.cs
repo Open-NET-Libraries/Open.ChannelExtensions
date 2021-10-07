@@ -13,9 +13,9 @@ public static class CancellationTests
 	public static async Task OperationCancellationPropagation()
 	{
 		int count = 0;
-		var range = Enumerable.Range(0, 1000);
+		System.Collections.Generic.IEnumerable<int> range = Enumerable.Range(0, 1000);
 		using var tokenSource = new CancellationTokenSource();
-		var token = tokenSource.Token;
+		CancellationToken token = tokenSource.Token;
 		try
 		{
 			await range
@@ -44,9 +44,9 @@ public static class CancellationTests
 		const int testSize = 1000000;
 		int total = 0;
 		int count = 0;
-		var range = Enumerable.Range(0, testSize);
+		System.Collections.Generic.IEnumerable<int> range = Enumerable.Range(0, testSize);
 		using var tokenSource = new CancellationTokenSource();
-		var token = tokenSource.Token;
+		CancellationToken token = tokenSource.Token;
 		try
 		{
 			await range
@@ -78,9 +78,9 @@ public static class CancellationTests
 		const int testSize = 1000000;
 		int total = 0;
 		int count = 0;
-		var range = Enumerable.Range(0, testSize);
+		System.Collections.Generic.IEnumerable<int> range = Enumerable.Range(0, testSize);
 		using var tokenSource = new CancellationTokenSource();
-		var token = tokenSource.Token;
+		CancellationToken token = tokenSource.Token;
 		try
 		{
 			await range

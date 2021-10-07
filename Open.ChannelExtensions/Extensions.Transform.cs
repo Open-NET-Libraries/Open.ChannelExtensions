@@ -23,7 +23,7 @@ public static partial class Extensions
 
 		public override bool TryRead(out TResult item)
 		{
-			if (_source.TryRead(out var e))
+			if (_source.TryRead(out T? e))
 			{
 				item = _transform(e);
 				return true;

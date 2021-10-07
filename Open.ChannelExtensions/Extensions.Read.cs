@@ -23,7 +23,7 @@ public static partial class Extensions
 		if (reader is null) throw new ArgumentNullException(nameof(reader));
 		Contract.EndContractBlock();
 
-		while (reader.TryRead(out var e))
+		while (reader.TryRead(out T? e))
 			yield return e;
 	}
 
@@ -48,7 +48,7 @@ public static partial class Extensions
 			while (
 				results.Count < max
 				&& !cancellationToken.IsCancellationRequested
-				&& reader.TryRead(out var item))
+				&& reader.TryRead(out T? item))
 			{
 				results.Add(item);
 			}
@@ -96,7 +96,7 @@ public static partial class Extensions
 				var next = new ValueTask();
 				while (
 					!cancellationToken.IsCancellationRequested
-					&& reader.TryRead(out var item))
+					&& reader.TryRead(out T? item))
 				{
 					await next.ConfigureAwait(false);
 					next = receiver(item, index++);
@@ -287,7 +287,7 @@ public static partial class Extensions
 		bool deferredExecution = false,
 		CancellationToken cancellationToken = default)
 	{
-		var count = await ReadUntilCancelledAsync(reader, cancellationToken, receiver, deferredExecution).ConfigureAwait(false);
+		long count = await ReadUntilCancelledAsync(reader, cancellationToken, receiver, deferredExecution).ConfigureAwait(false);
 		cancellationToken.ThrowIfCancellationRequested();
 		return count;
 	}

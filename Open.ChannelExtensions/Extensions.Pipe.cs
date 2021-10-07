@@ -88,19 +88,19 @@ public static partial class Extensions
 		int maxConcurrency, Func<TIn, ValueTask<TOut>> transform, int capacity = -1, bool singleReader = false,
 		CancellationToken cancellationToken = default)
 	{
-		var channel = CreateChannel<TOut>(capacity, singleReader);
-		var writer = channel.Writer;
+		Channel<TOut>? channel = CreateChannel<TOut>(capacity, singleReader);
+		ChannelWriter<TOut>? writer = channel.Writer;
 
 		source
 			.ReadAllConcurrentlyAsync(maxConcurrency, e =>
 			{
 				if (cancellationToken.IsCancellationRequested)
 					return new ValueTask(Task.FromCanceled(cancellationToken));
-				var result = transform(e);
+				ValueTask<TOut> result = transform(e);
 				return result.IsCompletedSuccessfully
 					? writer.WriteAsync(result.Result, cancellationToken)
 					: ValueNotReady(result, cancellationToken); // Result is not ready, so we need to wait for it.
-				}, cancellationToken)
+			}, cancellationToken)
 			.ContinueWith(
 				t => writer.Complete(t.Exception),
 				CancellationToken.None,

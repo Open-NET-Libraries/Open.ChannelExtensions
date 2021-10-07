@@ -19,11 +19,11 @@ public static class BasicTests
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Testing only.")]
 	public static async Task DeferredWriteRead(int testSize)
 	{
-		var range = Enumerable.Range(0, testSize);
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
 		var result = new List<int>(testSize);
 
 		var sw = Stopwatch.StartNew();
-		var reader = range
+		ChannelReader<int> reader = range
 			.ToChannel(singleReader: true, deferredExecution: true);
 
 		_ = reader.ReadAll(i => result.Add(i), true);
@@ -44,11 +44,11 @@ public static class BasicTests
 	[InlineData(testSize2)]
 	public static async Task ReadAll(int testSize)
 	{
-		var range = Enumerable.Range(0, testSize);
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
 		var result = new List<int>(testSize);
 
 		var sw = Stopwatch.StartNew();
-		var total = await range
+		long total = await range
 			.ToChannel(singleReader: true)
 			.ReadAll(i => result.Add(i));
 		sw.Stop();
@@ -66,11 +66,11 @@ public static class BasicTests
 	[InlineData(testSize2)]
 	public static async Task ReadAllAsync(int testSize)
 	{
-		var range = Enumerable.Range(0, testSize);
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
 		var result = new List<int>(testSize);
 
 		var sw = Stopwatch.StartNew();
-		var total = await range
+		long total = await range
 			.ToChannel(singleReader: true)
 			.ReadAllAsync(i =>
 			{
@@ -92,7 +92,7 @@ public static class BasicTests
 	[InlineData(testSize2)]
 	public static async Task PipeToBounded(int testSize)
 	{
-		var range = Enumerable.Range(0, testSize);
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
 		var result = new List<int>(testSize);
 
 		var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(100)
@@ -103,7 +103,7 @@ public static class BasicTests
 		});
 
 		var sw = Stopwatch.StartNew();
-		var total = await range
+		long total = await range
 			.ToChannel(singleReader: true)
 			.PipeTo(channel)
 			.ReadAllAsync(i =>
@@ -126,7 +126,7 @@ public static class BasicTests
 	[InlineData(testSize2)]
 	public static async Task PipeToUnbound(int testSize)
 	{
-		var range = Enumerable.Range(0, testSize);
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
 		var result = new List<int>(testSize);
 
 		var channel = Channel.CreateUnbounded<int>(new UnboundedChannelOptions()
@@ -137,7 +137,7 @@ public static class BasicTests
 		});
 
 		var sw = Stopwatch.StartNew();
-		var total = await range
+		long total = await range
 			.ToChannel(singleReader: true)
 			.PipeTo(channel)
 			.ReadAllAsync(i =>
@@ -163,11 +163,11 @@ public static class BasicTests
 	[InlineData(75, 50)]
 	public static async Task Batch(int testSize, int batchSize)
 	{
-		var range = Enumerable.Range(0, testSize);
-		var expectedBatchCount = (testSize / batchSize) + (testSize % batchSize == 0 ? 0 : 1);
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
+		int expectedBatchCount = testSize / batchSize + (testSize % batchSize == 0 ? 0 : 1);
 		var result1 = new List<List<int>>(expectedBatchCount);
 
-		var total = await range
+		long total = await range
 			.ToChannel(singleReader: true)
 			.Batch(batchSize, singleReader: true)
 			.ReadAll(result1.Add);
@@ -187,12 +187,12 @@ public static class BasicTests
 	[InlineData(100, 100)]
 	public static async Task BatchThenJoin(int testSize, int batchSize)
 	{
-		var range = Enumerable.Range(0, testSize);
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
 		var result1 = new List<List<int>>(testSize / batchSize + 1);
 
 		{
 			var sw = Stopwatch.StartNew();
-			var total = await range
+			long total = await range
 				.ToChannel(singleReader: true)
 				.Batch(batchSize, singleReader: true)
 				.ReadAll(i => result1.Add(i));
@@ -209,7 +209,7 @@ public static class BasicTests
 		{
 			var result2 = new List<int>(testSize);
 			var sw = Stopwatch.StartNew();
-			var total = await result1
+			long total = await result1
 				.ToChannel(singleReader: true)
 				.Join(singleReader: true)
 				.ReadAll(i => result2.Add(i));
@@ -233,12 +233,12 @@ public static class BasicTests
 	{
 		var random = new Random();
 
-		for (var i = 0; i < 1000; i++)
+		for (int i = 0; i < 1000; i++)
 		{
 			await BatchThenJoin(random.Next(1000) + 1, random.Next(1000) + 1);
 		}
 
-		for (var i = 0; i < 10000; i++)
+		for (int i = 0; i < 10000; i++)
 		{
 			await BatchThenJoin(random.Next(500) + 1, random.Next(5000) + 1);
 		}
@@ -251,11 +251,11 @@ public static class BasicTests
 	[InlineData(testSize2, 5001)]
 	public static async Task BatchJoin(int testSize, int batchSize)
 	{
-		var range = Enumerable.Range(0, testSize);
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
 		var result = new List<int>(testSize);
 
 		var sw = Stopwatch.StartNew();
-		var total = await range
+		long total = await range
 			.ToChannel(singleReader: true)
 			.Batch(batchSize, singleReader: true)
 			.Join(singleReader: true)
@@ -276,12 +276,12 @@ public static class BasicTests
 	[InlineData(1001)]
 	public static async Task JoinAsync(int repeat)
 	{
-		var testSize = repeat * repeat;
-		var range = Enumerable.Repeat(Samples(), repeat);
+		int testSize = repeat * repeat;
+		IEnumerable<IAsyncEnumerable<int>> range = Enumerable.Repeat(Samples(), repeat);
 		var result = new List<int>(testSize);
 
 		var sw = Stopwatch.StartNew();
-		var total = await range
+		long total = await range
 			.ToChannel(singleReader: true)
 			.Join(singleReader: true)
 			.ReadAll(i => result.Add(i));
@@ -295,7 +295,7 @@ public static class BasicTests
 
 		async IAsyncEnumerable<int> Samples()
 		{
-			for (var i = 0; i < repeat; i++)
+			for (int i = 0; i < repeat; i++)
 			{
 				var x = new ValueTask<int>(i);
 				yield return await x;
@@ -308,12 +308,12 @@ public static class BasicTests
 	[InlineData(testSize2)]
 	public static async Task Filter(int testSize)
 	{
-		var range = Enumerable.Range(0, testSize);
-		var count = testSize / 2;
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
+		int count = testSize / 2;
 		var result = new List<int>(count);
 
 		var sw = Stopwatch.StartNew();
-		var total = await range
+		long total = await range
 			.ToChannel(singleReader: true)
 			.Filter(i => i % 2 == 1)
 			.ReadAll(i => result.Add(i));

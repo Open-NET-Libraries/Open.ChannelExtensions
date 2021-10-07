@@ -44,8 +44,8 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 
 			source.Completion.ContinueWith(t =>
 			{
-					// Need to be sure writing is done before we continue...
-					lock (Buffer)
+				// Need to be sure writing is done before we continue...
+				lock (Buffer)
 				{
 					while (TryPipeItems()) { }
 					Buffer.Writer.Complete(t.Exception);
@@ -69,9 +69,9 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	/// <inheritdoc />
 	public override bool TryRead(out TOut item)
 	{
-		if (Buffer != null) do
+		if (Buffer is not null) do
 			{
-				if (Buffer.Reader.TryRead(out var i))
+				if (Buffer.Reader.TryRead(out TOut? i))
 				{
 					item = i;
 					return true;
@@ -86,13 +86,13 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	/// <inheritdoc />
 	public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
 	{
-		if (Buffer == null || Buffer.Reader.Completion.IsCompleted)
+		if (Buffer is null || Buffer.Reader.Completion.IsCompleted)
 			return new ValueTask<bool>(false);
 
 		if (cancellationToken.IsCancellationRequested)
 			return new ValueTask<bool>(Task.FromCanceled<bool>(cancellationToken));
 
-		var b = Buffer.Reader.WaitToReadAsync(cancellationToken);
+		ValueTask<bool> b = Buffer.Reader.WaitToReadAsync(cancellationToken);
 		return b.IsCompleted ? b : WaitToReadAsyncCore(b, cancellationToken);
 	}
 
@@ -102,17 +102,17 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	/// </summary>
 	protected virtual async ValueTask<bool> WaitToReadAsyncCore(ValueTask<bool> bufferWait, CancellationToken cancellationToken)
 	{
-		var source = Source;
-		if (source == null) return await bufferWait.ConfigureAwait(false);
+		ChannelReader<TIn>? source = Source;
+		if (source is null) return await bufferWait.ConfigureAwait(false);
 
 		using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-		var token = tokenSource.Token;
+		CancellationToken token = tokenSource.Token;
 
 	start:
 
 		if (bufferWait.IsCompleted) return await bufferWait.ConfigureAwait(false);
 
-		var s = source.WaitToReadAsync(token);
+		ValueTask<bool> s = source.WaitToReadAsync(token);
 		if (s.IsCompleted && !bufferWait.IsCompleted) TryPipeItems();
 
 		if (bufferWait.IsCompleted)

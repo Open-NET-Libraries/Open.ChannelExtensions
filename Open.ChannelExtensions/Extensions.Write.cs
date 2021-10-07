@@ -37,9 +37,9 @@ public static partial class Extensions
 		{
 			long count = 0;
 			var next = new ValueTask();
-			foreach (var e in source)
+			foreach (ValueTask<T> e in source)
 			{
-				var value = await e.ConfigureAwait(false);
+				T? value = await e.ConfigureAwait(false);
 				await next.ConfigureAwait(false);
 				count++;
 				next = target.WriteAsync(value, cancellationToken);
@@ -95,7 +95,12 @@ public static partial class Extensions
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		return WriteAllAsync(target, source.Select(e => new ValueTask<T>(e)), complete, deferredExecution, cancellationToken);
+		return WriteAllAsync(
+			target,
+			source.Select(e => new ValueTask<T>(e)),
+			complete,
+			deferredExecution,
+			cancellationToken);
 	}
 
 	/// <summary>
@@ -130,7 +135,12 @@ public static partial class Extensions
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		return WriteAllAsync(target, source.Select(e => new ValueTask<T>(e())), complete, deferredExecution, cancellationToken);
+		return WriteAllAsync(
+			target,
+			source.Select(e => new ValueTask<T>(e())),
+			complete,
+			deferredExecution,
+			cancellationToken);
 	}
 
 	/// <summary>
@@ -165,7 +175,12 @@ public static partial class Extensions
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		return WriteAllAsync(target, source.Select(e => new ValueTask<T>(e)), complete, deferredExecution, cancellationToken);
+		return WriteAllAsync(
+			target,
+			source.Select(e => new ValueTask<T>(e)),
+			complete,
+			deferredExecution,
+			cancellationToken);
 	}
 
 	/// <summary>
@@ -182,6 +197,7 @@ public static partial class Extensions
 		IEnumerable<T> source, bool complete, CancellationToken cancellationToken)
 		=> WriteAll(target, source, complete, false, cancellationToken);
 
+
 	/// <summary>
 	/// Consumes all lines from a TextReader and writes them to a channel.
 	/// </summary>
@@ -192,6 +208,7 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Is used correctly.")]
 	public static async ValueTask<long> WriteAllLines(this ChannelWriter<string> target,
 		TextReader source, bool complete = false, bool deferredExecution = false, CancellationToken cancellationToken = default)
 	{
@@ -199,17 +216,18 @@ public static partial class Extensions
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		var next = target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken);
+		ValueTask next = target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken);
 		await next.ConfigureAwait(false);
 
 		try
 		{
 			long count = 0;
-			var more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
+			bool more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 			while (!cancellationToken.IsCancellationRequested)
 			{
-				var line = await source.ReadLineAsync().ConfigureAwait(false);
-				if (line == null)
+				string? line = await source.ReadLineAsync().ConfigureAwait(false);
+				// the followig is written this way to help null analysis.
+				if (line is null)
 				{
 					more = false;
 					break;
@@ -283,7 +301,7 @@ public static partial class Extensions
 		{
 			long count = 0;
 			var next = new ValueTask();
-			await foreach (var value in source)
+			await foreach (T? value in source)
 			{
 				await next.ConfigureAwait(false);
 				count++;

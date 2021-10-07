@@ -34,9 +34,9 @@ public static partial class Extensions
 			return reader.ReadAllAsync(receiver, cancellationToken, true).AsTask();
 
 		var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-		var token = tokenSource.Token;
+		CancellationToken token = tokenSource.Token;
 		var readers = new Task<long>[maxConcurrency];
-		for (var r = 0; r < maxConcurrency; ++r)
+		for (int r = 0; r < maxConcurrency; ++r)
 			readers[r] = Read();
 
 		return Task
@@ -44,9 +44,11 @@ public static partial class Extensions
 			.ContinueWith(t =>
 				{
 					tokenSource.Dispose();
-					if (t.IsFaulted) return Task.FromException<long>(t.Exception);
-					if (t.IsCanceled) return Task.FromCanceled<long>(token);
-					return Task.FromResult(t.Result.Sum());
+					return t.IsFaulted
+						? Task.FromException<long>(t.Exception)
+						: t.IsCanceled
+						? Task.FromCanceled<long>(token)
+						: Task.FromResult(t.Result.Sum());
 				},
 				CancellationToken.None,
 				TaskContinuationOptions.ExecuteSynchronously,

@@ -35,14 +35,17 @@ public static class BatchTests
 						Assert.Equal(1, batch[0]);
 						Assert.Equal(2, batch[1]);
 						break;
+
 					case 1:
 						Assert.Equal(3, batch[0]);
 						Assert.Equal(4, batch[1]);
 						break;
+
 					case 2:
 						Assert.Equal(5, batch[0]);
 						Assert.Equal(6, batch[1]);
 						break;
+
 					default:
 						throw new Exception("Shouldn't arrive here.");
 				}
@@ -67,7 +70,7 @@ public static class BatchTests
 		});
 
 		using var tokenSource = new CancellationTokenSource();
-		var token = tokenSource.Token;
+		CancellationToken token = tokenSource.Token;
 		await c.Reader
 			.Batch(2)
 			.ReadAllAsync(async (batch, i) =>
@@ -117,7 +120,7 @@ public static class BatchTests
 		});
 
 		using var tokenSource = new CancellationTokenSource(10000);
-		var reader = c.Reader.Batch(3);
+		BatchingChannelReader<int> reader = c.Reader.Batch(3);
 		Assert.Equal(2, await reader.ReadAllAsync(tokenSource.Token, async (batch, i) =>
 			{
 				switch (i)
@@ -147,7 +150,7 @@ public static class BatchTests
 	public static async Task ForceBatchTest2()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.Batch(3);
+		BatchingChannelReader<int> reader = c.Reader.Batch(3);
 		_ = Task.Run(async () =>
 		{
 			await Task.Delay(1000);

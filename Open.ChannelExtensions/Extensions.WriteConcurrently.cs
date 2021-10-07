@@ -36,15 +36,15 @@ public static partial class Extensions
 		if (maxConcurrency == 1)
 			return target.WriteAllAsync(source, complete, true, cancellationToken).AsTask();
 
-		var shouldWait = target
+		Task? shouldWait = target
 			.WaitToWriteAndThrowIfClosedAsync("The target channel was closed before writing could begin.", cancellationToken)
 			.AsTask(); // ValueTasks can only have a single await.
 
 		var errorTokenSource = new CancellationTokenSource();
-		var errorToken = errorTokenSource.Token;
-		var enumerator = source.GetEnumerator();
+		CancellationToken errorToken = errorTokenSource.Token;
+		IEnumerator<ValueTask<T>>? enumerator = source.GetEnumerator();
 		var writers = new Task<long>[maxConcurrency];
-		for (var w = 0; w < maxConcurrency; w++)
+		for (int w = 0; w < maxConcurrency; w++)
 			writers[w] = WriteAllAsyncCore();
 
 		return Task
@@ -55,9 +55,11 @@ public static partial class Extensions
 					if (complete)
 						target.Complete(t.Exception);
 
-					if (t.IsFaulted) return Task.FromException<long>(t.Exception);
-					if (t.IsCanceled) return Task.FromCanceled<long>(cancellationToken);
-					return Task.FromResult(t.Result.Sum());
+					return t.IsFaulted
+						? Task.FromException<long>(t.Exception)
+						: t.IsCanceled
+						? Task.FromCanceled<long>(cancellationToken)
+						: Task.FromResult(t.Result.Sum());
 				},
 				CancellationToken.None,
 				TaskContinuationOptions.ExecuteSynchronously,
@@ -74,12 +76,12 @@ public static partial class Extensions
 				await shouldWait.ConfigureAwait(false);
 				long count = 0;
 				var next = new ValueTask();
-				var potentiallyCancelled = true; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
+				bool potentiallyCancelled = true; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 				while (!errorToken.IsCancellationRequested
 					&& !cancellationToken.IsCancellationRequested
-					&& (potentiallyCancelled = TryMoveNextSynchronized(enumerator, out var e)))
+					&& (potentiallyCancelled = TryMoveNextSynchronized(enumerator, out ValueTask<T> e)))
 				{
-					var value = await e.ConfigureAwait(false);
+					T? value = await e.ConfigureAwait(false);
 					await next.ConfigureAwait(false);
 					count++;
 					next = target.TryWrite(value) // do this to avoid unneccesary early cancel.

@@ -15,7 +15,7 @@ public static class ExceptionTests
 	public static async Task ExceptionPropagation()
 	{
 		int count = 0;
-		var range = Enumerable.Range(0, 1000);
+		System.Collections.Generic.IEnumerable<int> range = Enumerable.Range(0, 1000);
 		try
 		{
 			await range
@@ -43,7 +43,7 @@ public static class ExceptionTests
 		const int testSize = 100000000;
 		int total = 0;
 		int count = 0;
-		var range = Enumerable.Range(0, testSize);
+		System.Collections.Generic.IEnumerable<int> range = Enumerable.Range(0, testSize);
 		await Assert.ThrowsAsync<AggregateException>(async () =>
 		{
 			try

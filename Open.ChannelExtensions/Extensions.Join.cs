@@ -16,16 +16,18 @@ public static partial class Extensions
 
 		protected override bool TryPipeItems()
 		{
-			var source = Source;
-			if (source == null || source.Completion.IsCompleted || Buffer == null)
+			ChannelReader<TList>? source = Source;
+			if (source is null
+				|| source.Completion.IsCompleted
+				|| Buffer is null)
 				return false;
 
 			lock (Buffer)
 			{
-				if (!source.TryRead(out var batch))
+				if (!source.TryRead(out TList? batch))
 					return false;
 
-				foreach (var i in batch)
+				foreach (T? i in batch)
 				{
 					// Assume this will always be true for our internal unbound channel.
 					Buffer.Writer.TryWrite(i);
@@ -95,12 +97,15 @@ public static partial class Extensions
 	/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 	/// <param name="allowSynchronousContinuations">True can reduce the amount of scheduling and markedly improve performance, but may produce unexpected or even undesirable behavior.</param>
 	/// <returns>A channel reader containing the joined results.</returns>
-	public static ChannelReader<T> Join<T>(this ChannelReader<IAsyncEnumerable<T>> source, bool singleReader = false, bool allowSynchronousContinuations = false)
+	public static ChannelReader<T> Join<T>(
+		this ChannelReader<IAsyncEnumerable<T>> source,
+		bool singleReader = false,
+		bool allowSynchronousContinuations = false)
 	{
-		var buffer = CreateChannel<T>(1, singleReader, allowSynchronousContinuations);
-		var writer = buffer.Writer;
+		Channel<T>? buffer = CreateChannel<T>(1, singleReader, allowSynchronousContinuations);
+		ChannelWriter<T>? writer = buffer.Writer;
 
-		_ = JoinCore();
+		Task.Run(JoinCore);
 
 		return buffer.Reader;
 
@@ -109,12 +114,15 @@ public static partial class Extensions
 			try
 			{
 				await source
-					.ReadAllAsync(
-						async (batch, i) =>
-						{
-							await foreach (var e in batch)
-								await writer.WriteAsync(e).ConfigureAwait(false);
-						}).ConfigureAwait(false);
+					.ReadAllAsync(async (batch, i) =>
+					{
+						await foreach (T? e in batch)
+							await writer
+								.WriteAsync(e)
+								.ConfigureAwait(false);
+					})
+					.ConfigureAwait(false);
+
 				writer.Complete();
 			}
 			catch (Exception ex)

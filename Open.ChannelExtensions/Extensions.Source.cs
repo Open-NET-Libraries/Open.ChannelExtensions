@@ -20,14 +20,20 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IEnumerable<Func<TWrite>> source, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IEnumerable<Func<TWrite>> source,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		target.Writer.WriteAllAsync(source, true, deferredExecution, cancellationToken).ConfigureAwait(false);
+		target.Writer
+			.WriteAllAsync(source, true, deferredExecution, cancellationToken)
+			.AsTask();
+
 		return target.Reader;
 	}
 
@@ -40,8 +46,10 @@ public static partial class Extensions
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IEnumerable<Func<TWrite>> source, CancellationToken cancellationToken)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IEnumerable<Func<TWrite>> source,
+		CancellationToken cancellationToken)
 		=> SourceAsync(target, source, false, cancellationToken);
 
 	/// <summary>
@@ -54,14 +62,20 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IEnumerable<ValueTask<TWrite>> source, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IEnumerable<ValueTask<TWrite>> source,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		target.Writer.WriteAllAsync(source, true, deferredExecution, cancellationToken).ConfigureAwait(false);
+		target.Writer
+			.WriteAllAsync(source, true, deferredExecution, cancellationToken)
+			.AsTask();
+
 		return target.Reader;
 	}
 
@@ -74,8 +88,10 @@ public static partial class Extensions
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IEnumerable<ValueTask<TWrite>> source, CancellationToken cancellationToken)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IEnumerable<ValueTask<TWrite>> source,
+		CancellationToken cancellationToken)
 		=> SourceAsync(target, source, false, cancellationToken);
 
 	/// <summary>
@@ -88,14 +104,20 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IEnumerable<Task<TWrite>> source, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IEnumerable<Task<TWrite>> source,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		target.Writer.WriteAllAsync(source, true, deferredExecution, cancellationToken).ConfigureAwait(false);
+		target.Writer
+			.WriteAllAsync(source, true, deferredExecution, cancellationToken)
+			.AsTask();
+
 		return target.Reader;
 	}
 
@@ -108,8 +130,10 @@ public static partial class Extensions
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IEnumerable<Task<TWrite>> source, CancellationToken cancellationToken)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IEnumerable<Task<TWrite>> source,
+		CancellationToken cancellationToken)
 		=> SourceAsync(target, source, false, cancellationToken);
 
 	/// <summary>
@@ -122,14 +146,20 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> Source<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IEnumerable<TWrite> source, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ChannelReader<TRead> Source<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IEnumerable<TWrite> source,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		target.Writer.WriteAll(source, true, deferredExecution, cancellationToken).ConfigureAwait(false);
+		target.Writer
+			.WriteAll(source, true, deferredExecution, cancellationToken)
+			.AsTask();
+
 		return target.Reader;
 	}
 
@@ -142,8 +172,10 @@ public static partial class Extensions
 	/// <param name="source">The source data to use.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> Source<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IEnumerable<TWrite> source, CancellationToken cancellationToken)
+	public static ChannelReader<TRead> Source<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IEnumerable<TWrite> source,
+		CancellationToken cancellationToken)
 		=> Source(target, source, false, cancellationToken);
 
 	/// <summary>
@@ -156,8 +188,11 @@ public static partial class Extensions
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		int maxConcurrency, IEnumerable<Func<TWrite>> source, CancellationToken cancellationToken = default)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		int maxConcurrency,
+		IEnumerable<Func<TWrite>> source,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
@@ -179,8 +214,11 @@ public static partial class Extensions
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		int maxConcurrency, IEnumerable<ValueTask<TWrite>> source, CancellationToken cancellationToken = default)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		int maxConcurrency,
+		IEnumerable<ValueTask<TWrite>> source,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
@@ -205,8 +243,11 @@ public static partial class Extensions
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		int maxConcurrency, IEnumerable<Task<TWrite>> source, CancellationToken cancellationToken = default)
+	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		int maxConcurrency,
+		IEnumerable<Task<TWrite>> source,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
@@ -230,15 +271,18 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<T> Source<T>(this Channel<string, T> target,
-		TextReader source, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ChannelReader<T> Source<T>(
+		this Channel<string, T> target,
+		TextReader source,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
 
 		target.Writer
 			.WriteAllLines(source, true, deferredExecution, cancellationToken)
-			.ConfigureAwait(false);
+			.AsTask();
 
 		return target.Reader;
 	}
@@ -251,8 +295,10 @@ public static partial class Extensions
 	/// <param name="source">The source data to use.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<T> Source<T>(this Channel<string, T> target,
-		TextReader source, CancellationToken cancellationToken)
+	public static ChannelReader<T> Source<T>(
+		this Channel<string, T> target,
+		TextReader source,
+		CancellationToken cancellationToken)
 		=> Source(target, source, false, cancellationToken);
 
 #if NETSTANDARD2_1
@@ -266,15 +312,18 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> Source<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IAsyncEnumerable<TWrite> source, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ChannelReader<TRead> Source<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IAsyncEnumerable<TWrite> source,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
 
 		target.Writer
 			.WriteAllAsync(source, true, deferredExecution, cancellationToken)
-			.ConfigureAwait(false);
+			.AsTask();
 
 		return target.Reader;
 	}
@@ -288,8 +337,10 @@ public static partial class Extensions
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>The channel reader.</returns>
-	public static ChannelReader<TRead> Source<TWrite, TRead>(this Channel<TWrite, TRead> target,
-		IAsyncEnumerable<TWrite> source, CancellationToken cancellationToken)
+	public static ChannelReader<TRead> Source<TWrite, TRead>(
+		this Channel<TWrite, TRead> target,
+		IAsyncEnumerable<TWrite> source,
+		CancellationToken cancellationToken)
 		=> Source(target, source, false, cancellationToken);
 #endif
 }

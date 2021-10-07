@@ -61,7 +61,7 @@ public static partial class Extensions
 		if (cancellationToken.IsCancellationRequested)
 			return new ValueTask(Task.FromCanceled(cancellationToken));
 
-		var waitForWrite = writer.WaitToWriteAsync(cancellationToken);
+		ValueTask<bool> waitForWrite = writer.WaitToWriteAsync(cancellationToken);
 		if (!waitForWrite.IsCompletedSuccessfully)
 			return ThrowChannelClosedExceptionIfFalse(waitForWrite, ifClosedMessage);
 
@@ -82,7 +82,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before continuing.</param>
 	public static async ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, string ifClosedMessage, bool deferredExecution, CancellationToken cancellationToken = default)
 	{
-		var wait = writer.WaitToWriteAndThrowIfClosedAsync(ifClosedMessage, cancellationToken);
+		ValueTask wait = writer.WaitToWriteAndThrowIfClosedAsync(ifClosedMessage, cancellationToken);
 
 		if (deferredExecution)
 		{
@@ -112,7 +112,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before continuing.</param>
 	public static async ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, bool deferredExecution, CancellationToken cancellationToken = default)
 	{
-		var wait = writer.WaitToWriteAndThrowIfClosedAsync(null, cancellationToken);
+		ValueTask wait = writer.WaitToWriteAndThrowIfClosedAsync(null, cancellationToken);
 
 		if (deferredExecution)
 		{
@@ -289,7 +289,7 @@ public static partial class Extensions
 
 		do
 		{
-			while (!cancellationToken.IsCancellationRequested && reader.TryRead(out var item))
+			while (!cancellationToken.IsCancellationRequested && reader.TryRead(out T? item))
 				yield return item;
 		}
 		while (
@@ -311,10 +311,10 @@ public static partial class Extensions
 		if (channel is null) throw new ArgumentNullException(nameof(channel));
 		Contract.EndContractBlock();
 
-		var reader = channel.Reader;
+		ChannelReader<TOut>? reader = channel.Reader;
 		do
 		{
-			while (!cancellationToken.IsCancellationRequested && reader.TryRead(out var item))
+			while (!cancellationToken.IsCancellationRequested && reader.TryRead(out TOut? item))
 				yield return item;
 		}
 		while (

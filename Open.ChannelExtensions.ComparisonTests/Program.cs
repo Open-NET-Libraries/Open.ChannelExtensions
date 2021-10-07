@@ -19,7 +19,7 @@ namespace Open.ChannelExtensions.ComparisonTests
 				Console.WriteLine("Standard DataFlow operation test...");
 				var block = new ActionBlock<int>(async i => await Delay(i));
 				var sw = Stopwatch.StartNew();
-				foreach (var i in Enumerable.Range(0, repeat))
+				foreach (int i in Enumerable.Range(0, repeat))
 					block.Post(i);
 				block.Complete();
 				await block.Completion;
@@ -35,12 +35,12 @@ namespace Open.ChannelExtensions.ComparisonTests
 
 			{
 				Console.WriteLine("Standard Channel filter test...");
-				var source = Enumerable
+				System.Collections.Generic.IEnumerable<ValueTask<int>> source = Enumerable
 					.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
 					.Select((t, i) => t(i));
 
 				var sw = Stopwatch.StartNew();
-				var total = await source
+				long total = await source
 					.ToChannelAsync(singleReader: true)
 					.Filter(i => i % 2 == 0)
 					.ReadAll(Dummy);
@@ -55,7 +55,7 @@ namespace Open.ChannelExtensions.ComparisonTests
 				Console.WriteLine("Concurrent DataFlow operation test...");
 				var sw = Stopwatch.StartNew();
 				var block = new ActionBlock<int>(async i => await Delay(i), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = concurrency });
-				foreach (var i in Enumerable.Range(0, repeat))
+				foreach (int i in Enumerable.Range(0, repeat))
 					block.Post(i);
 				block.Complete();
 				await block.Completion;
@@ -80,7 +80,7 @@ namespace Open.ChannelExtensions.ComparisonTests
 			{
 				Console.WriteLine("Pipe operation test...");
 				var sw = Stopwatch.StartNew();
-				var total = await Enumerable
+				long total = await Enumerable
 					.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
 					.Select((t, i) => t(i))
 					.ToChannelAsync()

@@ -24,7 +24,7 @@ public static partial class Extensions
 		public override bool TryRead(out T item)
 		{
 
-			while (_source.TryRead(out var i))
+			while (_source.TryRead(out T? i))
 			{
 				item = i;
 				if (_predicate(i))
