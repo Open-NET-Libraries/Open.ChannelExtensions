@@ -22,8 +22,12 @@ public static partial class Extensions
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 
-	public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
-		int maxConcurrency, IEnumerable<ValueTask<T>> source, bool complete = false, CancellationToken cancellationToken = default)
+	public static Task<long> WriteAllConcurrentlyAsync<T>(
+		this ChannelWriter<T> target,
+		int maxConcurrency,
+		IEnumerable<ValueTask<T>> source,
+		bool complete = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
@@ -101,7 +105,9 @@ public static partial class Extensions
 		}
 	}
 
-	static bool TryMoveNextSynchronized<T>(IEnumerator<T> source, out T value)
+	static bool TryMoveNextSynchronized<T>(
+		IEnumerator<T> source,
+		out T value)
 	{
 		lock (source)
 		{
@@ -127,8 +133,12 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
-		int maxConcurrency, IEnumerable<Task<T>> source, bool complete = false, CancellationToken cancellationToken = default)
+	public static Task<long> WriteAllConcurrentlyAsync<T>(
+		this ChannelWriter<T> target,
+		int maxConcurrency,
+		IEnumerable<Task<T>> source,
+		bool complete = false,
+		CancellationToken cancellationToken = default)
 		=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.Select(e => new ValueTask<T>(e)), complete, cancellationToken);
 
 	/// <summary>
@@ -142,7 +152,11 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static Task<long> WriteAllConcurrentlyAsync<T>(this ChannelWriter<T> target,
-		int maxConcurrency, IEnumerable<Func<T>> source, bool complete = false, CancellationToken cancellationToken = default)
+	public static Task<long> WriteAllConcurrentlyAsync<T>(
+		this ChannelWriter<T> target,
+		int maxConcurrency,
+		IEnumerable<Func<T>> source,
+		bool complete = false,
+		CancellationToken cancellationToken = default)
 		=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.Select(e => new ValueTask<T>(e())), complete, cancellationToken);
 }

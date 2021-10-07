@@ -24,8 +24,12 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static async ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-		IEnumerable<ValueTask<T>> source, bool complete = false, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static async ValueTask<long> WriteAllAsync<T>(
+		this ChannelWriter<T> target,
+		IEnumerable<ValueTask<T>> source,
+		bool complete = false,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
@@ -73,8 +77,11 @@ public static partial class Extensions
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-		IEnumerable<ValueTask<T>> source, bool complete, CancellationToken cancellationToken)
+	public static ValueTask<long> WriteAllAsync<T>(
+		this ChannelWriter<T> target,
+		IEnumerable<ValueTask<T>> source,
+		bool complete,
+		CancellationToken cancellationToken)
 		=> WriteAllAsync(target, source, complete, false, cancellationToken);
 
 	/// <summary>
@@ -88,8 +95,12 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-		IEnumerable<Task<T>> source, bool complete = false, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ValueTask<long> WriteAllAsync<T>(
+		this ChannelWriter<T> target,
+		IEnumerable<Task<T>> source,
+		bool complete = false,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
@@ -113,8 +124,11 @@ public static partial class Extensions
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-		IEnumerable<Task<T>> source, bool complete, CancellationToken cancellationToken)
+	public static ValueTask<long> WriteAllAsync<T>(
+		this ChannelWriter<T> target,
+		IEnumerable<Task<T>> source,
+		bool complete,
+		CancellationToken cancellationToken)
 		=> WriteAllAsync(target, source, complete, false, cancellationToken);
 
 	/// <summary>
@@ -128,8 +142,12 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-		IEnumerable<Func<T>> source, bool complete = false, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ValueTask<long> WriteAllAsync<T>(
+		this ChannelWriter<T> target,
+		IEnumerable<Func<T>> source,
+		bool complete = false,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
@@ -153,8 +171,11 @@ public static partial class Extensions
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-		IEnumerable<Func<T>> source, bool complete, CancellationToken cancellationToken)
+	public static ValueTask<long> WriteAllAsync<T>(
+		this ChannelWriter<T> target,
+		IEnumerable<Func<T>> source,
+		bool complete,
+		CancellationToken cancellationToken)
 		=> WriteAllAsync(target, source, complete, false, cancellationToken);
 
 	/// <summary>
@@ -168,8 +189,12 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAll<T>(this ChannelWriter<T> target,
-		IEnumerable<T> source, bool complete = false, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static ValueTask<long> WriteAll<T>(
+		this ChannelWriter<T> target,
+		IEnumerable<T> source,
+		bool complete = false,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
@@ -193,8 +218,11 @@ public static partial class Extensions
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAll<T>(this ChannelWriter<T> target,
-		IEnumerable<T> source, bool complete, CancellationToken cancellationToken)
+	public static ValueTask<long> WriteAll<T>(
+		this ChannelWriter<T> target,
+		IEnumerable<T> source,
+		bool complete,
+		CancellationToken cancellationToken)
 		=> WriteAll(target, source, complete, false, cancellationToken);
 
 
@@ -209,8 +237,12 @@ public static partial class Extensions
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Is used correctly.")]
-	public static async ValueTask<long> WriteAllLines(this ChannelWriter<string> target,
-		TextReader source, bool complete = false, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static async ValueTask<long> WriteAllLines(
+		this ChannelWriter<string> target,
+		TextReader source,
+		bool complete = false,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
@@ -270,8 +302,11 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAllLines(this ChannelWriter<string> target,
-		TextReader source, bool complete, CancellationToken cancellationToken)
+	public static ValueTask<long> WriteAllLines(
+		this ChannelWriter<string> target,
+		TextReader source,
+		bool complete,
+		CancellationToken cancellationToken)
 		=> WriteAllLines(target, source, complete, false, cancellationToken);
 
 #if NETSTANDARD2_1
@@ -286,8 +321,12 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static async ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-		IAsyncEnumerable<T> source, bool complete = false, bool deferredExecution = false, CancellationToken cancellationToken = default)
+	public static async ValueTask<long> WriteAllAsync<T>(
+		this ChannelWriter<T> target,
+		IAsyncEnumerable<T> source,
+		bool complete = false,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
 	{
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		if (source is null) throw new ArgumentNullException(nameof(source));
@@ -336,8 +375,11 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	public static ValueTask<long> WriteAllAsync<T>(this ChannelWriter<T> target,
-		IAsyncEnumerable<T> source, bool complete, CancellationToken cancellationToken)
+	public static ValueTask<long> WriteAllAsync<T>(
+		this ChannelWriter<T> target,
+		IAsyncEnumerable<T> source,
+		bool complete,
+		CancellationToken cancellationToken)
 		=> WriteAllAsync(target, source, complete, false, cancellationToken);
 #endif
 }
