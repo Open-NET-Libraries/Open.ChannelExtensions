@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -268,6 +270,82 @@ public static class BatchTests
 			await Task.Delay(100);
 		}));
 	}
+
+
+
+	[Fact]
+	public static async Task BatchReadBehavior()
+	{
+		var c = Channel.CreateBounded<int>(new BoundedChannelOptions(20) { SingleReader = false, SingleWriter = false });
+		BatchingChannelReader<int> reader = c.Reader.Batch(10);
+		
+		var queue = new Queue<int>(Enumerable.Range(0, 100));
+		int e;
+		while(queue.TryDequeue(out e) && c.Writer.TryWrite(e))
+			await Task.Yield();
+
+		Assert.True(69 <= queue.Count);
+		await reader.WaitToReadAsync();
+		// At this point, a batch is prepared and there is room in the channel.
+		await Dequeue();
+
+		Assert.True(59 <= queue.Count);
+		Assert.True(reader.TryRead(out var batch));
+		Assert.Equal(10, batch.Count);
+		// At this point nothing is waiting so either a wait must occur or a read to trigger a new batch.
+
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+		await Dequeue();
+
+		Assert.True(49 <= queue.Count);
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+		await Dequeue();
+
+		Assert.True(39 <= queue.Count);
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+		await Dequeue();
+
+		Assert.True(29 <= queue.Count);
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+		await Dequeue();
+
+		Assert.True(19 <= queue.Count);
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+		await Dequeue();
+
+		Assert.True(09 <= queue.Count);
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+		await Dequeue();
+
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+		await Dequeue();
+
+		Assert.Empty(queue);
+		c.Writer.Complete();
+
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+
+		Assert.True(reader.TryRead(out batch));
+		Assert.Equal(10, batch.Count);
+
+		Assert.False(reader.TryRead(out _));
+
+		async ValueTask Dequeue()
+		{
+			Assert.True(c.Writer.TryWrite(e));
+			while (queue.TryDequeue(out e) && c.Writer.TryWrite(e))
+				await Task.Yield();
+		}
+	}
+
 
 }
 
