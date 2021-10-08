@@ -48,6 +48,9 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 				// Need to be sure writing is done before we continue...
 				lock (Buffer)
 				{
+					/* When the source is complete,
+					 * we dump all remaining into the buffer 
+					 * in order to propagate the completion and any exception. */
 					TryPipeItems(true);
 					Buffer.Writer.Complete(t.Exception);
 				}
@@ -114,14 +117,13 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	protected virtual async ValueTask<bool> WaitToReadAsyncCore(ValueTask<bool> bufferWait, CancellationToken cancellationToken)
 	{
 		ChannelReader<TIn>? source = Source;
-		if (source is null) return await bufferWait.ConfigureAwait(false);
+		if (source is null || bufferWait.IsCompleted) 
+			return await bufferWait.ConfigureAwait(false);
 
 		using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 		CancellationToken token = tokenSource.Token;
 
 	start:
-
-		if (bufferWait.IsCompleted) return await bufferWait.ConfigureAwait(false);
 
 		ValueTask<bool> s = source.WaitToReadAsync(token);
 		if (s.IsCompleted && !bufferWait.IsCompleted) TryPipeItems(false);
@@ -131,13 +133,11 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 			tokenSource.Cancel();
 			return await bufferWait.ConfigureAwait(false);
 		}
+
 		await s.ConfigureAwait(false);
-		if (bufferWait.IsCompleted)
-		{
-			tokenSource.Cancel();
-			return await bufferWait.ConfigureAwait(false);
-		}
+		if (bufferWait.IsCompleted)	return await bufferWait.ConfigureAwait(false);
 		TryPipeItems(false);
+		if (bufferWait.IsCompleted) return await bufferWait.ConfigureAwait(false);
 
 		goto start;
 	}

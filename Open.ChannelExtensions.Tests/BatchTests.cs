@@ -340,7 +340,7 @@ public static class BatchTests
 
 		async ValueTask Dequeue()
 		{
-			Assert.True(c.Writer.TryWrite(e));
+			if (!c.Writer.TryWrite(e)) return;
 			while (queue.TryDequeue(out e) && c.Writer.TryWrite(e))
 				await Task.Yield();
 		}

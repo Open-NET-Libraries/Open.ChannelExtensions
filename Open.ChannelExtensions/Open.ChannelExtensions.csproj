@@ -20,7 +20,7 @@
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.ChannelExtensions</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.1.1</Version>
+		<Version>5.1.2</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>

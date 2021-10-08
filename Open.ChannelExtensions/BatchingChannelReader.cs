@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -68,7 +69,25 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 		LazyInitializer.EnsureInitialized(ref _timer,
 			() => new Timer(obj => ForceBatch()));
 
+		if (_batch is null) return this;
+		
+		// Might be in the middle of a batch so we need to update the timeout.
+		lock(Buffer)
+		{
+			if (_batch is not null)	RefreshTimeout();
+		}
+
 		return this;
+	}
+
+	/// <summary>
+	/// If one exists, updates the timer's timeout value.
+	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected void RefreshTimeout()
+	{
+		var ok = _timer?.Change(_timeout, 0);
+		Debug.Assert(ok ?? true);
 	}
 
 	/// <param name="timeout">
@@ -139,13 +158,9 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 			Emit(ref c);
 
 		finalizeTimer:
-			
+
 			// Are we adding to the existing batch (active timeout) or did we create a new one?
-			if (newBatch && _batch is not null)
-			{
-				var ok = _timer?.Change(_timeout, 0);
-				Debug.Assert(ok ?? true);
-			}
+			if (newBatch && _batch is not null)	RefreshTimeout();
 
 			return batched;
 
@@ -167,15 +182,15 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 		CancellationToken cancellationToken)
 	{
 		ChannelReader<T>? source = Source;
-		if (source is null) return await bufferWait.ConfigureAwait(false);
 
-		Task<bool>? b = bufferWait.AsTask();
+		if (source is null || bufferWait.IsCompleted)
+			return await bufferWait.ConfigureAwait(false);
+
+		var b = bufferWait.AsTask();
 		using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 		CancellationToken token = tokenSource.Token;
 
 	start:
-
-		if (b.IsCompleted) return await b.ConfigureAwait(false);
 
 		ValueTask<bool> s = source.WaitToReadAsync(token);
 		if (s.IsCompleted && !b.IsCompleted) TryPipeItems(false);
@@ -186,14 +201,19 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 			return await b.ConfigureAwait(false);
 		}
 
+		// WhenAny will not throw when a task is cancelled.
 		await Task.WhenAny(s.AsTask(), b).ConfigureAwait(false);
-		if (b.IsCompleted)
+		if (b.IsCompleted) // Assuming it was bufferWait that completed.
 		{
 			tokenSource.Cancel();
 			return await b.ConfigureAwait(false);
 		}
 
 		TryPipeItems(false);
+
+		if (b.IsCompleted || token.IsCancellationRequested)
+			return await b.ConfigureAwait(false);
+
 		goto start;
 	}
 }
