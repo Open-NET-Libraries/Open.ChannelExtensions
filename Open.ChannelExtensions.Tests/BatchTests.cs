@@ -190,4 +190,84 @@ public static class BatchTests
 			await Task.Delay(500);
 		}));
 	}
+
+	[Fact]
+	public static async Task TimeoutTest0()
+	{
+		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
+		BatchingChannelReader<int> reader = c.Reader.Batch(10).WithTimeout(500);
+		var complete = false;
+		_ = Task.Run(async () =>
+		{
+			for (var i = 0; i < 5; i++)
+			{
+				c.Writer.TryWrite(i);
+			}
+
+			await Task.Delay(1000);
+			complete = true;
+			c.Writer.Complete();
+		});
+
+		using var tokenSource = new CancellationTokenSource(6000);
+		Assert.Equal(1, await reader.ReadAllAsync(tokenSource.Token, async (batch, i) =>
+		{
+			switch (i)
+			{
+				case 0:
+					Assert.Equal(5, batch.Count);
+					Assert.False(complete);
+					break;
+
+				default:
+					throw new Exception("Shouldn't arrive here.");
+			}
+			await Task.Delay(100);
+		}));
+	}
+
+
+	[Fact]
+	public static async Task TimeoutTest1()
+	{
+		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
+		BatchingChannelReader<int> reader = c.Reader.Batch(10).WithTimeout(500);
+		_ = Task.Run(async () =>
+		{
+			for(var i = 0;i<15;i++)
+			{
+				c.Writer.TryWrite(i);
+			}
+
+			await Task.Delay(1000);
+
+			for (var i = 0; i < 15; i++)
+			{
+				c.Writer.TryWrite(i);
+			}
+			c.Writer.Complete();
+		});
+
+		using var tokenSource = new CancellationTokenSource(6000);
+		Assert.Equal(4, await reader.ReadAllAsync(tokenSource.Token, async (batch, i) =>
+		{
+			switch (i)
+			{
+				case 0:
+				case 2:
+					Assert.Equal(10, batch.Count);
+					break;
+				case 1:
+				case 3:
+					Assert.Equal(5, batch.Count);
+					break;
+
+				default:
+					throw new Exception("Shouldn't arrive here.");
+			}
+			await Task.Delay(100);
+		}));
+	}
+
 }
+

@@ -90,11 +90,12 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 		if (Buffer is null || Buffer.Reader.Completion.IsCompleted)
 			return false;
 
-		var batched = false;
 		lock (Buffer)
 		{
 			if (Buffer.Reader.Completion.IsCompleted) return false;
 
+			var batched = false;
+			var newBatch = false;
 			List<T>? c = _batch;
 			ChannelReader<T>? source = Source;
 			if (source is null || source.Completion.IsCompleted)
@@ -106,35 +107,54 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 
 			while (source.TryRead(out T? item))
 			{
-				if (c is null) _batch = c = new List<T>(_batchSize) { item };
-				else c.Add(item);
+				if (c is not null) c.Add(item);
+				else
+				{
+					newBatch = true; // a new batch could start but not be emmited.
+					_batch = c = new List<T>(_batchSize) { item };
+				}
 
 				Debug.Assert(c.Count <= _batchSize);
-				if (c.Count != _batchSize) continue; // should never be greater.
+				var full = c.Count == _batchSize;
+				while (!full && source.TryRead(out item))
+				{
+					c.Add(item);
+					full = c.Count == _batchSize;
+				}
 
-				_batch = null; // _batch should always have at least 1 item in it.
-				batched = Buffer.Writer.TryWrite(c);
-				Debug.Assert(batched);
-				c = null;
+				if (!full) break;
+
+				Emit(ref c);
 			}
 
 			if (!flush || c is null)
 				goto finalizeTimer;
 
-			flushBatch:
+		flushBatch:
 
 			c.TrimExcess();
-			_batch = null;
+			Emit(ref c);
 
-			batched = Buffer.Writer.TryWrite(c);
-			Debug.Assert(batched);
-
-			finalizeTimer:
-
-			var ok = _timer?.Change(_batch is null ? Timeout.Infinite : _timeout, 0);
-			Debug.Assert(ok ?? true);
+		finalizeTimer:
+			
+			// Are we adding to the existing batch (active timeout) or did we create a new one?
+			if (newBatch && _batch is not null)
+			{
+				var ok = _timer?.Change(_timeout, 0);
+				Debug.Assert(ok ?? true);
+			}
 
 			return batched;
+
+			void Emit(ref List<T>? c)
+			{
+				_batch = null;
+				newBatch = false;
+				if (!batched) _timer?.Change(Timeout.Infinite, 0); // Since we're emmitting one, let's ensure the timeout is cancelled.
+				batched = Buffer!.Writer.TryWrite(c!);
+				Debug.Assert(batched);
+				c = null;
+			}
 		}
 	}
 

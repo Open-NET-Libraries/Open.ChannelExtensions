@@ -22,7 +22,29 @@
             Returns true if anything was added to the buffer.
             </summary>
         </member>
-        <member name="M:Open.ChannelExtensions.BatchingChannelReader`1.TryPipeItems">
+        <member name="M:Open.ChannelExtensions.BatchingChannelReader`1.WithTimeout(System.Int64)">
+            <summary>
+            Specifies a timeout by which a batch will be emmited there is at least one item but has been waiting
+            for longer than the timeout value.
+            </summary>
+            <param name="millisecondsTimeout">
+            The timeout value where after a batch is forced.<br/>
+            A value of zero or less cancels/clears any timeout.
+            </param>
+            <returns>The current reader.</returns>
+        </member>
+        <member name="M:Open.ChannelExtensions.BatchingChannelReader`1.WithTimeout(System.TimeSpan)">
+            <param name="timeout">
+            The timeout value where after a batch is forced.<br/>
+            A value of zero or less cancels/clears any timeout.<br/>
+            Note: Values are converted to milliseconds.
+            </param>
+            <inheritdoc cref="M:Open.ChannelExtensions.BatchingChannelReader`1.WithTimeout(System.Int64)"/>
+        </member>
+        <member name="M:Open.ChannelExtensions.BatchingChannelReader`1.OnBeforeFinalFlush">
+            <inheritdoc />
+        </member>
+        <member name="M:Open.ChannelExtensions.BatchingChannelReader`1.TryPipeItems(System.Boolean)">
             <inheritdoc />
         </member>
         <member name="M:Open.ChannelExtensions.BatchingChannelReader`1.WaitToReadAsyncCore(System.Threading.Tasks.ValueTask{System.Boolean},System.Threading.CancellationToken)">
@@ -50,14 +72,20 @@
             Base constructor for a BufferingChannelReader.
             </summary>
         </member>
+        <member name="M:Open.ChannelExtensions.BufferingChannelReader`2.OnBeforeFinalFlush">
+            <summary>
+            Called before the last items are flushed to the buffer.
+            </summary>
+        </member>
         <member name="P:Open.ChannelExtensions.BufferingChannelReader`2.Completion">
             <inheritdoc />
         </member>
-        <member name="M:Open.ChannelExtensions.BufferingChannelReader`2.TryPipeItems">
+        <member name="M:Open.ChannelExtensions.BufferingChannelReader`2.TryPipeItems(System.Boolean)">
             <summary>
             The method that triggers adding entries to the buffer.
             </summary>
-            <returns></returns>
+            <param name="flush">Signals that all items should be piped.</param>
+            <returns>True if items were transferred.</returns>
         </member>
         <member name="M:Open.ChannelExtensions.BufferingChannelReader`2.TryRead(`1@)">
             <inheritdoc />
@@ -82,7 +110,10 @@
             </summary>
             <typeparam name="T">The output type of the source channel.</typeparam>
             <param name="source">The channel to read from.</param>
-            <param name="batchSize">The maximum size of each batch.</param>
+            <param name="batchSize">
+            The maximum size of each batch.
+            Note: setting this value sets the capacity of each batch (reserves memory).
+            </param>
             <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
             <param name="allowSynchronousContinuations">True can reduce the amount of scheduling and markedly improve performance, but may produce unexpected or even undesirable behavior.</param>
             <returns>A channel reader containing the batches.</returns>
