@@ -134,6 +134,7 @@ channel.Reader
 ```cs
 values.Reader
     .Batch(10 /*batch size*/)
+    .WithTimeout(1000) // Any non-empty batches are flushed every second.
     .ReadAllAsync(async batch => {/*...*/});
 ```
 
