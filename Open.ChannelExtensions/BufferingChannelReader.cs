@@ -44,10 +44,11 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 
 			source.Completion.ContinueWith(t =>
 			{
+				OnBeforeFinalFlush();
 				// Need to be sure writing is done before we continue...
 				lock (Buffer)
 				{
-					while (TryPipeItems()) { }
+					TryPipeItems(true);
 					Buffer.Writer.Complete(t.Exception);
 				}
 
@@ -56,6 +57,12 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 		}
 	}
 
+	/// <summary>
+	/// Called before the last items are flushed to the buffer.
+	/// </summary>
+	protected virtual void OnBeforeFinalFlush()
+	{ }
+
 	private readonly Task _completion;
 	/// <inheritdoc />
 	public override Task Completion => _completion;
@@ -63,13 +70,16 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	/// <summary>
 	/// The method that triggers adding entries to the buffer.
 	/// </summary>
-	/// <returns></returns>
-	protected abstract bool TryPipeItems();
+	/// <param name="flush">Signals that all items should be piped.</param>
+	/// <returns>True if items were transferred.</returns>
+	protected abstract bool TryPipeItems(bool flush);
 
 	/// <inheritdoc />
 	public override bool TryRead(out TOut item)
 	{
-		if (Buffer is not null) do
+		if (Buffer is not null)
+		{
+			do
 			{
 				if (Buffer.Reader.TryRead(out TOut? i))
 				{
@@ -77,7 +87,8 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 					return true;
 				}
 			}
-			while (TryPipeItems());
+			while (TryPipeItems(false));
+		}
 
 		item = default!;
 		return false;
@@ -113,7 +124,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 		if (bufferWait.IsCompleted) return await bufferWait.ConfigureAwait(false);
 
 		ValueTask<bool> s = source.WaitToReadAsync(token);
-		if (s.IsCompleted && !bufferWait.IsCompleted) TryPipeItems();
+		if (s.IsCompleted && !bufferWait.IsCompleted) TryPipeItems(false);
 
 		if (bufferWait.IsCompleted)
 		{
@@ -126,7 +137,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 			tokenSource.Cancel();
 			return await bufferWait.ConfigureAwait(false);
 		}
-		TryPipeItems();
+		TryPipeItems(false);
 
 		goto start;
 	}

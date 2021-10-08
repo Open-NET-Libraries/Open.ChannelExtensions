@@ -65,9 +65,7 @@ public static partial class Extensions
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
 
-#pragma warning disable CA2012 // Not awaited because it's run by the scheduler and no need to incur the .AsTask() call.
-		_ = PipeTo(source, target.Writer, true, cancellationToken);
-#pragma warning restore CA2012
+		Task.Run(()=>PipeTo(source, target.Writer, true, cancellationToken));
 
 		return target.Reader;
 	}

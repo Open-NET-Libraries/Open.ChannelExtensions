@@ -14,7 +14,7 @@ public static partial class Extensions
 		{
 		}
 
-		protected override bool TryPipeItems()
+		protected override bool TryPipeItems(bool _)
 		{
 			ChannelReader<TList>? source = Source;
 			if (source is null
