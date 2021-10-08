@@ -125,6 +125,9 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 				if (!full) break;
 
 				Emit(ref c);
+
+				if (!flush)
+					goto finalizeTimer;
 			}
 
 			if (!flush || c is null)

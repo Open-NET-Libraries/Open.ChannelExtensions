@@ -20,8 +20,8 @@
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.ChannelExtensions</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>5.1.0</Version>
-		<PackageReleaseNotes>Added .WithTimeout(milliseconds) method for BatchChannelReader.</PackageReleaseNotes>
+		<Version>5.1.1</Version>
+		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
