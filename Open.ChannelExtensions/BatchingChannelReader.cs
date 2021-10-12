@@ -97,7 +97,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 	/// </param>
 	/// <inheritdoc cref="WithTimeout(long)"/>
 	public BatchingChannelReader<T> WithTimeout(TimeSpan timeout)
-		=> WithTimeout(TimeSpan.FromMilliseconds(timeout.TotalMilliseconds));
+		=> WithTimeout((long)timeout.TotalMilliseconds);
 
 	/// <inheritdoc />
 	protected override void OnBeforeFinalFlush()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -346,6 +347,80 @@ public static class BatchTests
 		}
 	}
 
+
+	[Fact]
+	public static async Task ReadBatchWithTimeoutEnumerableBakedIn()
+	{
+		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
+		_ = Task.Run(async () => {
+			//await Task.Delay(1000);
+			c.Writer.TryWrite(1);
+			c.Writer.TryWrite(2);
+
+			c.Writer.TryWrite(3);
+			await Task.Delay(600);
+
+			c.Writer.TryWrite(4);
+			c.Writer.TryWrite(5);
+			Debug.WriteLine("Writing Complete.");
+			c.Writer.Complete();
+		});
+		var i = 0;
+		await foreach (var batch in c.Reader.ReadBatchEnumerableAsyncBakedIn(2, TimeSpan.FromMilliseconds(500), CancellationToken.None))
+		{
+			switch (i)
+			{
+				case 0:
+					Assert.Equal(1, batch[0]);
+					Assert.Equal(2, batch[1]);
+					Debug.WriteLine("First batch received: " + string.Join(',', batch.Select(item => item)));
+					break;
+				case 1:
+					Assert.Equal(1, batch.Count);
+					Assert.Equal(3, batch[0]);
+					Debug.WriteLine("Second batch received: " + string.Join(',', batch.Select(item => item)));
+					break;
+				case 2:
+					Assert.Equal(4, batch[0]);
+					Assert.Equal(5, batch[1]);
+					Debug.WriteLine("Third batch received: " + string.Join(',', batch.Select(item => item)));
+					break;
+				default:
+					throw new Exception("Shouldn't arrive here. Got batch: " + string.Join(',', batch.Select(item => item)));
+			}
+			i++;
+		}
+		Assert.Equal(3, i);
+		await c.Reader.Completion; // Propagate possible failure
+	}
+	public static async IAsyncEnumerable<IList<T>> ReadBatchEnumerableAsyncBakedIn<T>(
+		this ChannelReader<T> channelReader,
+		int batchSize,
+		TimeSpan timeout,
+		[EnumeratorCancellation] CancellationToken cancellationToken = default)
+	{
+		var reader = channelReader.Batch(batchSize);
+		reader = reader.WithTimeout(timeout); // stack overflow here
+		while (true)
+		{
+			List<T> item;
+			try
+			{
+				item = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
+			}
+			catch (OperationCanceledException)
+			{
+				cancellationToken.ThrowIfCancellationRequested();
+				yield break;
+			}
+			catch (ChannelClosedException)
+			{
+				yield break;
+			}
+
+			if (item?.Count > 0) yield return item;
+		}
+	}
 
 }
 
