@@ -97,6 +97,7 @@ public static partial class Extensions
 	/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 	/// <param name="allowSynchronousContinuations">True can reduce the amount of scheduling and markedly improve performance, but may produce unexpected or even undesirable behavior.</param>
 	/// <returns>A channel reader containing the joined results.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Exception is propagated.")]
 	public static ChannelReader<T> Join<T>(
 		this ChannelReader<IAsyncEnumerable<T>> source,
 		bool singleReader = false,
