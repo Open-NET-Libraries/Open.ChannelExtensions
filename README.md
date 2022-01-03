@@ -25,6 +25,12 @@ A set of extensions for optimizing/simplifying System.Threading.Channels usage.
 * `Join`
 
 ---
+## Installation
+
+```nuget
+Install-Package Open.ChannelExtensions
+```
+---
 
 ## Examples
 
