@@ -330,32 +330,4 @@ public static class BasicTests
 		Assert.Equal(count, result.Count);
 		Assert.True(result.SequenceEqual(range.Where(i => i % 2 == 1)));
 	}
-
-	[Fact]
-	public static void PossibleSourceLoadingIssue()
-	{
-		const int expectedCount = 10000000;
-		int count_ = 0;
-
-		var queue = new BlockingCollection<int>();
-		var processingTask = StartProcessingTask2(queue.GetConsumingEnumerable());
-
-		for (var i = 0; i < expectedCount; i++)
-			queue.Add(i);
-
-		queue.CompleteAdding();
-
-		processingTask.Wait();
-
-		Assert.Equal(expectedCount, count_);
-
-		Task StartProcessingTask2(IEnumerable<int> source)
-			=> Channel.CreateUnbounded<int>()
-				.Source(source, true)
-				.ReadAll(IncrementCount2)
-				.AsTask();
-
-		void IncrementCount2(int c)
-			=> Interlocked.Increment(ref count_);
-	}
 }

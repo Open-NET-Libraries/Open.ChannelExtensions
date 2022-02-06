@@ -3,6 +3,6 @@
 internal class Program
 {
 #if NET472
-	public static void Main(string[] args) {}
+	public static void Main() {}
 #endif
 }
