@@ -273,7 +273,7 @@ public static class BatchTests
 	}
 
 
-
+	#if NET5_0_OR_GREATER
 	[Fact]
 	public static async Task BatchReadBehavior()
 	{
@@ -347,7 +347,6 @@ public static class BatchTests
 		}
 	}
 
-
 	[Fact]
 	public static async Task ReadBatchWithTimeoutEnumerableBakedIn()
 	{
@@ -393,6 +392,7 @@ public static class BatchTests
 		Assert.Equal(3, i);
 		await c.Reader.Completion; // Propagate possible failure
 	}
+
 	public static async IAsyncEnumerable<IList<T>> ReadBatchEnumerableAsyncBakedIn<T>(
 		this ChannelReader<T> channelReader,
 		int batchSize,
@@ -421,6 +421,6 @@ public static class BatchTests
 			if (item?.Count > 0) yield return item;
 		}
 	}
-
+#endif
 }
 

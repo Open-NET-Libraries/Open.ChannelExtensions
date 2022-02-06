@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,6 +19,7 @@ public static class BasicTests
 	[InlineData(testSize1)]
 	[InlineData(testSize2)]
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Testing only.")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
 	public static async Task DeferredWriteRead(int testSize)
 	{
 		IEnumerable<int> range = Enumerable.Range(0, testSize);
@@ -269,6 +272,7 @@ public static class BasicTests
 		Assert.True(result.SequenceEqual(range));
 	}
 
+#if NET5_0_OR_GREATER
 	[Theory]
 	[InlineData(11)]
 	[InlineData(51)]
@@ -302,6 +306,7 @@ public static class BasicTests
 			}
 		}
 	}
+#endif
 
 	[Theory]
 	[InlineData(testSize1)]
@@ -326,5 +331,28 @@ public static class BasicTests
 		Assert.True(result.SequenceEqual(range.Where(i => i % 2 == 1)));
 	}
 
+	[Fact]
+	public static void PossibleSourceLoadingIssue()
+	{
+		int count_ = 0;
 
+		var queue = new BlockingCollection<int>();
+		var processingTask = StartProcessingTask2(queue.GetConsumingEnumerable());
+
+		for (var i = 0; i < 100000000; i++)
+			queue.Add(i);
+
+		queue.CompleteAdding();
+
+		processingTask.Wait();
+
+		Task StartProcessingTask2(IEnumerable<int> source)
+			=> Channel.CreateUnbounded<int>()
+				.Source(source, true)
+				.ReadAll(IncrementCount2)
+				.AsTask();
+
+		void IncrementCount2(int c)
+			=> Interlocked.Increment(ref count_);
+	}
 }
