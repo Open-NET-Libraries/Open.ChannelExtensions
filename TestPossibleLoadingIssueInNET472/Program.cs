@@ -12,7 +12,7 @@ namespace TestPossibleLoadingIssueInNET472
 	{
 		static void Main()
 		{
-			const int expectedCount = 100000000;
+			const int expectedCount = 10000000;
 			int count_ = 0;
 
 			var queue = new BlockingCollection<int>();
