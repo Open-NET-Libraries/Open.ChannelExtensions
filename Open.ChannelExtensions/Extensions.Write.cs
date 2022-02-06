@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -108,7 +107,7 @@ public static partial class Extensions
 
 		return WriteAllAsync(
 			target,
-			source.Select(e => new ValueTask<T>(e)),
+			source.WrapValueTask(),
 			complete,
 			deferredExecution,
 			cancellationToken);
@@ -155,7 +154,7 @@ public static partial class Extensions
 
 		return WriteAllAsync(
 			target,
-			source.Select(e => new ValueTask<T>(e())),
+			source.WrapValueTask(),
 			complete,
 			deferredExecution,
 			cancellationToken);
@@ -202,7 +201,7 @@ public static partial class Extensions
 
 		return WriteAllAsync(
 			target,
-			source.Select(e => new ValueTask<T>(e)),
+			source.WrapValueTask(),
 			complete,
 			deferredExecution,
 			cancellationToken);
@@ -308,6 +307,8 @@ public static partial class Extensions
 		bool complete,
 		CancellationToken cancellationToken)
 		=> WriteAllLines(target, source, complete, false, cancellationToken);
+
+
 
 #if NETSTANDARD2_1
 	/// <summary>

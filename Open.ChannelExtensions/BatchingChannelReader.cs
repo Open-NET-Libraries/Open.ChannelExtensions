@@ -41,6 +41,8 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 	/// </summary>
 	public bool ForceBatch() => TryPipeItems(true);
 
+	void ForceBatch(object obj) => ForceBatch();
+
 	long _timeout = -1;
 	Timer? _timer;
 
@@ -67,7 +69,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 		}
 
 		LazyInitializer.EnsureInitialized(ref _timer,
-			() => new Timer(obj => ForceBatch()));
+			() => new Timer(ForceBatch));
 
 		if (_batch is null) return this;
 		

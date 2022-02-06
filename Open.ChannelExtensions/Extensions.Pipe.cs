@@ -28,9 +28,12 @@ public static partial class Extensions
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
 
+		// Acceptable closure.
+		ValueTask WriteTarget(T e) => target.WriteAsync(e, cancellationToken);
+
 		try
 		{
-			return await source.ReadAllAsync(e => target.WriteAsync(e, cancellationToken), cancellationToken).ConfigureAwait(false);
+			return await source.ReadAllAsync(WriteTarget, cancellationToken).ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{

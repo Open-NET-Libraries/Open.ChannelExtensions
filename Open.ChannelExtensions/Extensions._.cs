@@ -46,6 +46,25 @@ public static partial class Extensions
 		}
 	}
 
+	// Avoid potential lambda allocation.
+	internal static IEnumerable<ValueTask<T>> WrapValueTask<T>(this IEnumerable<T> source)
+	{
+		foreach (var e in source)
+			yield return new ValueTask<T>(e);
+	}
+
+	internal static IEnumerable<ValueTask<T>> WrapValueTask<T>(this IEnumerable<Task<T>> source)
+	{
+		foreach (var e in source)
+			yield return new ValueTask<T>(e);
+	}
+
+	internal static IEnumerable<ValueTask<T>> WrapValueTask<T>(this IEnumerable<Func<T>> source)
+	{
+		foreach (var e in source)
+			yield return new ValueTask<T>(e());
+	}
+
 	/// <summary>
 	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
 	/// </summary>
