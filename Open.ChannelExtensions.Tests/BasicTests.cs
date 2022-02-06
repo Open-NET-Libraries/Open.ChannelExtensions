@@ -334,17 +334,20 @@ public static class BasicTests
 	[Fact]
 	public static void PossibleSourceLoadingIssue()
 	{
+		const int expectedCount = 10000000;
 		int count_ = 0;
 
 		var queue = new BlockingCollection<int>();
 		var processingTask = StartProcessingTask2(queue.GetConsumingEnumerable());
 
-		for (var i = 0; i < 100000000; i++)
+		for (var i = 0; i < expectedCount; i++)
 			queue.Add(i);
 
 		queue.CompleteAdding();
 
 		processingTask.Wait();
+
+		Assert.Equal(expectedCount, count_);
 
 		Task StartProcessingTask2(IEnumerable<int> source)
 			=> Channel.CreateUnbounded<int>()
