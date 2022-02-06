@@ -141,7 +141,12 @@ public static partial class Extensions
 		IEnumerable<Task<T>> source,
 		bool complete = false,
 		CancellationToken cancellationToken = default)
-		=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.WrapValueTask(), complete, cancellationToken);
+		=> WriteAllConcurrentlyAsync(
+			target,
+			maxConcurrency,
+			(source ?? throw new ArgumentNullException(nameof(source))).WrapValueTask(),
+			complete,
+			cancellationToken);
 
 	/// <summary>
 	/// Asynchronously executes all entries and writes their results to the channel.
@@ -160,5 +165,9 @@ public static partial class Extensions
 		IEnumerable<Func<T>> source,
 		bool complete = false,
 		CancellationToken cancellationToken = default)
-		=> WriteAllConcurrentlyAsync(target, maxConcurrency, source.WrapValueTask(), complete, cancellationToken);
+		=> WriteAllConcurrentlyAsync(
+			target,
+			maxConcurrency,
+			(source ?? throw new ArgumentNullException(nameof(source))).WrapValueTask(),
+			complete, cancellationToken);
 }
