@@ -17,9 +17,7 @@ public static partial class Extensions
 		protected override bool TryPipeItems(bool _)
 		{
 			ChannelReader<TList>? source = Source;
-			if (source is null
-				|| source.Completion.IsCompleted
-				|| Buffer is null)
+			if (source?.Completion.IsCompleted != false || Buffer is null)
 				return false;
 
 			lock (Buffer)
@@ -115,12 +113,14 @@ public static partial class Extensions
 			try
 			{
 				await source
-					.ReadAllAsync(async (batch, i) =>
+					.ReadAllAsync(async (batch, _) =>
 					{
 						await foreach (T? e in batch)
+						{
 							await writer
 								.WriteAsync(e)
 								.ConfigureAwait(false);
+						}
 					})
 					.ConfigureAwait(false);
 
@@ -130,7 +130,6 @@ public static partial class Extensions
 			{
 				writer.Complete(ex);
 			}
-
 		}
 	}
 #endif

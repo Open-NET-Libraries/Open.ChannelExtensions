@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Open.ChannelExtensions;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1047:Non-asynchronous method name should not end with 'Async'.", Justification = "In order to differentiate between non async versions.")]
 public static partial class Extensions
 {
 	/// <summary>

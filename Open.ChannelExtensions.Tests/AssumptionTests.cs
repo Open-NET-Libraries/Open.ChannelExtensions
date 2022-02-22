@@ -38,6 +38,5 @@ public static class AssumptionTests
 			var result = await Task.WhenAny(t1.AsTask(), t2.AsTask()).ConfigureAwait(false);
 			Assert.True(result.IsCanceled);
 		}
-
 	}
 }

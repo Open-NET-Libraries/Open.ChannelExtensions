@@ -1,25 +1,15 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Open.ChannelExtensions.Tests;
 
 public class SpecialTests
 {
-	private readonly ITestOutputHelper output;
-
-	public SpecialTests(ITestOutputHelper outputHelper)
-	{
-		output = outputHelper;
-	}
-
 	[Fact]
 	public void PossibleSourceLoadingIssue()
 	{
@@ -47,7 +37,7 @@ public class SpecialTests
 				.ReadAll(IncrementCount2)
 				.AsTask();
 
-		void IncrementCount2(int c)
+		void IncrementCount2(int _)
 			=> Interlocked.Increment(ref count_);
 	}
 }

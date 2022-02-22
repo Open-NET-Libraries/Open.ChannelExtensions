@@ -23,7 +23,6 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	/// </summary>
 	protected Channel<TOut>? Buffer { get; }
 
-
 	/// <summary>
 	/// Base constructor for a BufferingChannelReader.
 	/// </summary>
@@ -100,7 +99,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	/// <inheritdoc />
 	public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
 	{
-		if (Buffer is null || Buffer.Reader.Completion.IsCompleted)
+		if (Buffer?.Reader.Completion.IsCompleted != false)
 			return new ValueTask<bool>(false);
 
 		if (cancellationToken.IsCancellationRequested)
@@ -117,7 +116,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	protected virtual async ValueTask<bool> WaitToReadAsyncCore(ValueTask<bool> bufferWait, CancellationToken cancellationToken)
 	{
 		ChannelReader<TIn>? source = Source;
-		if (source is null || bufferWait.IsCompleted) 
+		if (source is null || bufferWait.IsCompleted)
 			return await bufferWait.ConfigureAwait(false);
 
 		using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);

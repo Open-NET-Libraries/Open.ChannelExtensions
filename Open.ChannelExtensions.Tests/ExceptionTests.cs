@@ -8,7 +8,7 @@ namespace Open.ChannelExtensions.Tests;
 
 public static class ExceptionTests
 {
-
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1194:Implement exception constructors.")]
 	class TestException : Exception { }
 
 	[Fact]
@@ -48,7 +48,6 @@ public static class ExceptionTests
 		{
 			try
 			{
-
 				await range
 					.ToChannel()
 					.ReadAllConcurrently(8, i =>
@@ -60,7 +59,6 @@ public static class ExceptionTests
 							throw new TestException();
 						}
 					});
-
 			}
 			catch (Exception ex)
 			{

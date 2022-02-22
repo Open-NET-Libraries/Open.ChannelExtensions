@@ -41,7 +41,7 @@ public static partial class Extensions
 	}
 
 	/// <summary>
-	/// Transforms the 
+	/// Transforms the underlying values as they are being read.
 	/// </summary>
 	/// <typeparam name="T">The output type of the provided source reader and input type of the transform.</typeparam>
 	/// <typeparam name="TResult">The output type of the transform.</typeparam>
@@ -52,7 +52,7 @@ public static partial class Extensions
 		=> new TransformingChannelReader<T, TResult>(source, transform);
 
 	/// <summary>
-	/// Transforms the 
+	/// Transforms the underlying values as they are being read.
 	/// </summary>
 	/// <typeparam name="TWrite">Specifies the type of data that may be written to the channel.</typeparam>
 	/// <typeparam name="TRead">Specifies the type of data read from the source channel.</typeparam>
@@ -64,7 +64,7 @@ public static partial class Extensions
 		=> new(source, transform);
 
 	/// <summary>
-	/// Transforms the 
+	/// Transforms the underlying values as they are being read.
 	/// </summary>
 	/// <typeparam name="T">Specifies the type of data that may be written to the channel.</typeparam>
 	/// <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>

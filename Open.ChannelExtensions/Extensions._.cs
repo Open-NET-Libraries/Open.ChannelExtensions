@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
+[assembly: CLSCompliant(true)]
 namespace Open.ChannelExtensions;
 
 /// <summary>
@@ -66,7 +67,7 @@ public static partial class Extensions
 	}
 
 	/// <summary>
-	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
+	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.
 	/// </summary>
 	/// <typeparam name="T">The type being written to the channel</typeparam>
 	/// <param name="writer">The channel writer.</param>
@@ -92,13 +93,13 @@ public static partial class Extensions
 	}
 
 	/// <summary>
-	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
+	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.
 	/// </summary>
 	/// <typeparam name="T">The type being written to the channel</typeparam>
 	/// <param name="writer">The channel writer.</param>
 	/// <param name="ifClosedMessage">The message to include with the ChannelClosedException if thrown.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before continuing.</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
 	public static async ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, string ifClosedMessage, bool deferredExecution, CancellationToken cancellationToken = default)
 	{
 		ValueTask wait = writer.WaitToWriteAndThrowIfClosedAsync(ifClosedMessage, cancellationToken);
@@ -114,7 +115,7 @@ public static partial class Extensions
 	}
 
 	/// <summary>
-	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
+	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.
 	/// </summary>
 	/// <typeparam name="T">The type being written to the channel</typeparam>
 	/// <param name="writer">The channel writer.</param>
@@ -123,12 +124,12 @@ public static partial class Extensions
 		=> WaitToWriteAndThrowIfClosedAsync(writer, null, cancellationToken);
 
 	/// <summary>
-	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.  
+	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.
 	/// </summary>
 	/// <typeparam name="T">The type being written to the channel</typeparam>
 	/// <param name="writer">The channel writer.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before continuing.</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
 	public static async ValueTask WaitToWriteAndThrowIfClosedAsync<T>(this ChannelWriter<T> writer, bool deferredExecution, CancellationToken cancellationToken = default)
 	{
 		ValueTask wait = writer.WaitToWriteAndThrowIfClosedAsync(null, cancellationToken);
@@ -301,19 +302,24 @@ public static partial class Extensions
 	/// <param name="reader">The reader to read from.</param>
 	/// <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>
 	/// <returns>An IAsyncEnumerable for iterating the channel.</returns>
-	public static async IAsyncEnumerable<T> AsAsyncEnumerable<T>(this ChannelReader<T> reader, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+	public static IAsyncEnumerable<T> AsAsyncEnumerable<T>(this ChannelReader<T> reader, CancellationToken cancellationToken = default)
 	{
 		if (reader is null) throw new ArgumentNullException(nameof(reader));
 		Contract.EndContractBlock();
 
-		do
+		return AsAsyncEnumerableCore(reader, cancellationToken);
+
+		static async IAsyncEnumerable<T> AsAsyncEnumerableCore(ChannelReader<T> reader, [EnumeratorCancellation] CancellationToken cancellationToken)
 		{
-			while (!cancellationToken.IsCancellationRequested && reader.TryRead(out T? item))
-				yield return item;
+			do
+			{
+				while (!cancellationToken.IsCancellationRequested && reader.TryRead(out T? item))
+					yield return item;
+			}
+			while (
+				!cancellationToken.IsCancellationRequested
+				&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 		}
-		while (
-			!cancellationToken.IsCancellationRequested
-			&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 	}
 
 	/// <summary>
@@ -325,20 +331,25 @@ public static partial class Extensions
 	/// <param name="channel">The reader to read from.</param>
 	/// <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>
 	/// <returns>An IAsyncEnumerable for iterating the channel.</returns>
-	public static async IAsyncEnumerable<TOut> AsAsyncEnumerable<TIn, TOut>(this Channel<TIn, TOut> channel, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+	public static IAsyncEnumerable<TOut> AsAsyncEnumerable<TIn, TOut>(this Channel<TIn, TOut> channel, CancellationToken cancellationToken = default)
 	{
 		if (channel is null) throw new ArgumentNullException(nameof(channel));
 		Contract.EndContractBlock();
 
-		ChannelReader<TOut>? reader = channel.Reader;
-		do
+		return AsAsyncEnumerableCore(channel, cancellationToken);
+
+		static async IAsyncEnumerable<TOut> AsAsyncEnumerableCore(Channel<TIn, TOut> channel, [EnumeratorCancellation] CancellationToken cancellationToken)
 		{
-			while (!cancellationToken.IsCancellationRequested && reader.TryRead(out TOut? item))
-				yield return item;
+			ChannelReader<TOut>? reader = channel.Reader;
+			do
+			{
+				while (!cancellationToken.IsCancellationRequested && reader.TryRead(out TOut? item))
+					yield return item;
+			}
+			while (
+				!cancellationToken.IsCancellationRequested
+				&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 		}
-		while (
-			!cancellationToken.IsCancellationRequested
-			&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 	}
 #endif
 
@@ -434,5 +445,4 @@ public static partial class Extensions
 		CancellationToken cancellationToken = default)
 		=> CreateChannel<T>(capacity, singleReader)
 			.SourceAsync(maxConcurrency, source, cancellationToken);
-
 }

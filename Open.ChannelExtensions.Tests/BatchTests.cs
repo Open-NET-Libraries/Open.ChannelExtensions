@@ -54,7 +54,6 @@ public static class BatchTests
 				}
 				await Task.Delay(500);
 			});
-
 	}
 
 	[Fact]
@@ -104,9 +103,7 @@ public static class BatchTests
 				}
 				await Task.Delay(500);
 			});
-
 	}
-
 
 	[Fact]
 	public static async Task ForceBatchTest()
@@ -146,7 +143,6 @@ public static class BatchTests
 				}
 				await Task.Delay(500);
 			}));
-
 	}
 
 	[Fact]
@@ -229,7 +225,6 @@ public static class BatchTests
 		}));
 	}
 
-
 	[Fact]
 	public static async Task TimeoutTest1()
 	{
@@ -272,14 +267,13 @@ public static class BatchTests
 		}));
 	}
 
-
 	#if NET5_0_OR_GREATER
 	[Fact]
 	public static async Task BatchReadBehavior()
 	{
 		var c = Channel.CreateBounded<int>(new BoundedChannelOptions(20) { SingleReader = false, SingleWriter = false });
 		BatchingChannelReader<int> reader = c.Reader.Batch(10);
-		
+
 		var queue = new Queue<int>(Enumerable.Range(0, 100));
 		int e;
 		while(queue.TryDequeue(out e) && c.Writer.TryWrite(e))
@@ -423,4 +417,3 @@ public static class BatchTests
 	}
 #endif
 }
-

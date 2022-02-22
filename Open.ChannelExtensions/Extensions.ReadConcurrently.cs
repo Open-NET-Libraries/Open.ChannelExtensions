@@ -70,8 +70,7 @@ public static partial class Extensions
 			}
 		}
 
-		ValueTask ParallelReceiver(T item, long i) => receiver(item);
-
+		ValueTask ParallelReceiver(T item, long _) => receiver(item);
 	}
 
 	/// <summary>

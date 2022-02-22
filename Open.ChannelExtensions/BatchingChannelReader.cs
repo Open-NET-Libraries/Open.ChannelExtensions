@@ -59,7 +59,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 	{
 		_timeout = millisecondsTimeout <= 0 ? Timeout.Infinite : millisecondsTimeout;
 
-		if (Buffer is null || Buffer.Reader.Completion.IsCompleted)
+		if (Buffer?.Reader.Completion.IsCompleted != false)
 			return this;
 
 		if (_timeout == Timeout.Infinite)
@@ -72,7 +72,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 			() => new Timer(ForceBatch));
 
 		if (_batch is null) return this;
-		
+
 		// Might be in the middle of a batch so we need to update the timeout.
 		lock(Buffer)
 		{
@@ -108,7 +108,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 	/// <inheritdoc />
 	protected override bool TryPipeItems(bool flush)
 	{
-		if (Buffer is null || Buffer.Reader.Completion.IsCompleted)
+		if (Buffer?.Reader.Completion.IsCompleted != false)
 			return false;
 
 		lock (Buffer)
@@ -119,7 +119,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 			var newBatch = false;
 			List<T>? c = _batch;
 			ChannelReader<T>? source = Source;
-			if (source is null || source.Completion.IsCompleted)
+			if (source?.Completion.IsCompleted != false)
 			{
 				// All finished, if necessary, release the last batch to the buffer.
 				if (c is null) return false;
@@ -128,11 +128,14 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 
 			while (source.TryRead(out T? item))
 			{
-				if (c is not null) c.Add(item);
-				else
+				if (c is null)
 				{
 					newBatch = true; // a new batch could start but not be emmited.
 					_batch = c = new List<T>(_batchSize) { item };
+				}
+				else
+				{
+					c.Add(item);
 				}
 
 				Debug.Assert(c.Count <= _batchSize);

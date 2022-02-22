@@ -23,8 +23,13 @@ public static partial class Extensions
 		if (reader is null) throw new ArgumentNullException(nameof(reader));
 		Contract.EndContractBlock();
 
-		while (reader.TryRead(out T? e))
-			yield return e;
+		return ReadAvailableCore(reader);
+
+		static IEnumerable<T> ReadAvailableCore(ChannelReader<T> reader)
+		{
+			while (reader.TryRead(out T? e))
+				yield return e;
+		}
 	}
 
 	/// <summary>
@@ -86,7 +91,6 @@ public static partial class Extensions
 
 		if (deferredExecution)
 			await Task.Yield();
-
 
 		long index = 0;
 		try
@@ -153,7 +157,7 @@ public static partial class Extensions
 		CancellationToken cancellationToken,
 		Func<T, ValueTask> receiver,
 		bool deferredExecution = false)
-		=> ReadUntilCancelledAsync(reader, cancellationToken, (e, i) => receiver(e), deferredExecution);
+		=> ReadUntilCancelledAsync(reader, cancellationToken, (e, _) => receiver(e), deferredExecution);
 
 	/// <summary>
 	/// Reads items from the channel and passes them to the receiver.
@@ -243,7 +247,7 @@ public static partial class Extensions
 		bool deferredExecution = false)
 		=> reader.ReadUntilCancelledAsync(
 			cancellationToken,
-			(e, i) =>
+			(e, _) =>
 			{
 				receiver(e);
 				return new ValueTask();
@@ -440,15 +444,15 @@ public static partial class Extensions
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="reader">The channel reader to read from.</param>
 	/// <param name="receiver">The async receiver function.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 	public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
 		Func<T, ValueTask> receiver,
 		bool deferredExecution = false,
 		CancellationToken cancellationToken = default)
-		=> ReadAllAsync(reader, (e, i) => receiver(e), deferredExecution, cancellationToken);
+		=> ReadAllAsync(reader, (e, _) => receiver(e), deferredExecution, cancellationToken);
 
 	/// <summary>
 	/// Reads items from the channel and passes them to the receiver.
@@ -497,7 +501,7 @@ public static partial class Extensions
 		Func<T, Task> receiver,
 		bool deferredExecution = false,
 		CancellationToken cancellationToken = default)
-		=> ReadAllAsync(reader, (e, i) => new ValueTask(receiver(e)), deferredExecution, cancellationToken);
+		=> ReadAllAsync(reader, (e, _) => new ValueTask(receiver(e)), deferredExecution, cancellationToken);
 
 	/// <summary>
 	/// Reads items from the channel and passes them to the receiver.
@@ -547,7 +551,7 @@ public static partial class Extensions
 		Func<TRead, Task> receiver,
 		bool deferredExecution = false,
 		CancellationToken cancellationToken = default)
-		=> ReadAllAsync(channel, (e, i) => new ValueTask(receiver(e)), deferredExecution, cancellationToken);
+		=> ReadAllAsync(channel, (e, _) => new ValueTask(receiver(e)), deferredExecution, cancellationToken);
 
 	/// <summary>
 	/// Reads items from the channel and passes them to the receiver.
@@ -781,7 +785,7 @@ public static partial class Extensions
 		Contract.EndContractBlock();
 
 		return reader.ReadAllAsync(
-			(e, i) =>
+			(e, _) =>
 			{
 				receiver(e);
 				return new ValueTask();
@@ -811,8 +815,8 @@ public static partial class Extensions
 	/// </summary>
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="reader">The channel reader to read from.</param>
-	/// <param name="receiver">The receiver function.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
+	/// <param name="receiver">The receiver function.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
@@ -916,8 +920,8 @@ public static partial class Extensions
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="channel">The channel to read from.</param>
 	/// <param name="receiver">The TextWriter to recieve the lines.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 	public static ValueTask<long> ReadAllAsLines<T>(this Channel<T, string> channel,
@@ -963,5 +967,4 @@ public static partial class Extensions
 		await ReadAll(reader, list.Add).ConfigureAwait(false);
 		return list;
 	}
-
 }

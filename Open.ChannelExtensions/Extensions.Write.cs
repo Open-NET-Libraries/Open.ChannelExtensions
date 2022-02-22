@@ -224,12 +224,11 @@ public static partial class Extensions
 		CancellationToken cancellationToken)
 		=> WriteAll(target, source, complete, false, cancellationToken);
 
-
 	/// <summary>
 	/// Consumes all lines from a TextReader and writes them to a channel.
 	/// </summary>
-	/// <param name="source">The text reader to consume from.</param>
 	/// <param name="target">The channel to write to.</param>
+	/// <param name="source">The text reader to consume from.</param>
 	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
@@ -295,8 +294,8 @@ public static partial class Extensions
 	/// <summary>
 	/// Consumes all lines from a TextReader and writes them to a channel.
 	/// </summary>
-	/// <param name="source">The text reader to consume from.</param>
 	/// <param name="target">The channel to write to.</param>
+	/// <param name="source">The text reader to consume from.</param>
 	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
@@ -307,8 +306,6 @@ public static partial class Extensions
 		bool complete,
 		CancellationToken cancellationToken)
 		=> WriteAllLines(target, source, complete, false, cancellationToken);
-
-
 
 #if NETSTANDARD2_1
 	/// <summary>

@@ -8,7 +8,6 @@ namespace Open.ChannelExtensions.Tests;
 
 public static class CancellationTests
 {
-
 	[Fact]
 	public static async Task OperationCancellationPropagation()
 	{
@@ -71,7 +70,6 @@ public static class CancellationTests
 		Assert.NotEqual(testSize, total);
 	}
 
-
 	[Fact]
 	public static async Task CancellationPropagationConcurrent()
 	{
@@ -102,7 +100,5 @@ public static class CancellationTests
 
 		Assert.Equal(1, count);
 		Assert.NotEqual(testSize, total);
-
 	}
-
 }
