@@ -97,15 +97,12 @@ public static partial class Extensions
 		{
 			do
 			{
-				var next = new ValueTask();
 				while (
 					!cancellationToken.IsCancellationRequested
 					&& reader.TryRead(out T? item))
 				{
-					await next.ConfigureAwait(false);
-					next = receiver(item, index++);
+					await receiver(item, index++).ConfigureAwait(false);
 				}
-				await next.ConfigureAwait(false);
 			}
 			while (
 				!cancellationToken.IsCancellationRequested
