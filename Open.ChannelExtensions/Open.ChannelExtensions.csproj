@@ -21,7 +21,8 @@
 		<RepositoryUrl>https://github.com/Open-NET-Libraries/Open.ChannelExtensions</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>6.0.1</Version>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Version>6.0.2</Version>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -45,10 +46,6 @@
 			<PackagePath></PackagePath>
 		</None>
 	</ItemGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DocumentationFile>Documentation.xml</DocumentationFile>
-	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="System.Threading.Channels" Version="6.0.0" />
