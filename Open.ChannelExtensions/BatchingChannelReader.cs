@@ -86,10 +86,19 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 	/// If one exists, updates the timer's timeout value.
 	/// </summary>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected void RefreshTimeout()
+	protected void RefreshTimeout() => TryUpdateTimer(_timeout);
+
+	private void TryUpdateTimer(long timeout)
 	{
-		var ok = _timer?.Change(_timeout, 0);
-		Debug.Assert(ok ?? true);
+		try
+		{
+			var ok = _timer?.Change(timeout, 0);
+			Debug.Assert(ok ?? true);
+		}
+		catch(ObjectDisposedException)
+		{
+			// Rare instance where another thread has disposed the timer before .Change can be called.
+		}
 	}
 
 	/// <param name="timeout">
@@ -173,7 +182,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 			{
 				_batch = null;
 				newBatch = false;
-				if (!batched) _timer?.Change(Timeout.Infinite, 0); // Since we're emmitting one, let's ensure the timeout is cancelled.
+				if (!batched) TryUpdateTimer(Timeout.Infinite); // Since we're emmitting one, let's ensure the timeout is cancelled.
 				batched = Buffer!.Writer.TryWrite(c!);
 				Debug.Assert(batched);
 				c = null;
