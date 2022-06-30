@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
@@ -61,7 +62,7 @@ public static partial class Extensions
 		{
 			try
 			{
-				return await reader.ReadUntilCancelledAsync(token, ParallelReceiver, true).ConfigureAwait(false);
+				return await reader.ReadUntilCancelledAsync(token, (T item, long _) => receiver(item), true).ConfigureAwait(false);
 			}
 			catch
 			{
@@ -69,8 +70,6 @@ public static partial class Extensions
 				throw;
 			}
 		}
-
-		ValueTask ParallelReceiver(T item, long _) => receiver(item);
 	}
 
 	/// <summary>
@@ -237,4 +236,100 @@ public static partial class Extensions
 		CancellationToken cancellationToken,
 		Action<TRead> receiver)
 		=> ReadAllConcurrently(channel, maxConcurrency, receiver, cancellationToken);
+
+	/// <summary>
+	/// Partitions out potential reads to multiple threads as enumerables.
+	/// </summary>
+	/// <typeparam name="T">The item type.</typeparam>
+	/// <param name="reader">The channel reader to read from.</param>
+	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
+	/// <param name="receiver">The async receiver function.</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
+	/// <returns>A task that completes when no more reading is to be done.</returns>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Called when all tasks complete.")]
+	public static Task ReadAllConcurrentlyAsEnumerablesAsync<T>(this ChannelReader<T> reader,
+		int maxConcurrency,
+		Func<IEnumerable<T>, ValueTask> receiver,
+		CancellationToken cancellationToken = default)
+	{
+		if (reader is null) throw new ArgumentNullException(nameof(reader));
+		if (maxConcurrency < 1) throw new ArgumentOutOfRangeException(nameof(maxConcurrency), maxConcurrency, "Must be at least 1.");
+		Contract.EndContractBlock();
+
+		if (cancellationToken.IsCancellationRequested)
+			return Task.FromCanceled(cancellationToken);
+
+		if (maxConcurrency == 1)
+			return reader.ReadAllAsEnumerablesAsync(receiver, true, cancellationToken).AsTask();
+
+		var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+		CancellationToken token = tokenSource.Token;
+		var readers = new Task[maxConcurrency];
+		for (int r = 0; r < maxConcurrency; ++r)
+			readers[r] = Read();
+
+		return Task
+			.WhenAll(readers)
+			.ContinueWith(t =>
+			{
+				tokenSource.Dispose();
+				return t.IsFaulted
+					? Task.FromException(t.Exception)
+					: t.IsCanceled
+					? Task.FromCanceled(token)
+					: Task.CompletedTask;
+			},
+				CancellationToken.None,
+				TaskContinuationOptions.ExecuteSynchronously,
+				TaskScheduler.Current)
+			.Unwrap();
+
+		async Task Read()
+		{
+			try
+			{
+				await reader.ReadAllAsEnumerablesAsync(receiver, true, token).ConfigureAwait(false);
+			}
+			catch
+			{
+				tokenSource.Cancel();
+				throw;
+			}
+		}
+	}
+
+	/// <inheritdoc cref="ReadAllAsEnumerablesAsync{T}(ChannelReader{T}, Func{IEnumerable{T}, ValueTask}, bool, CancellationToken)"/>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	public static Task ReadAllConcurrentlyAsEnumerablesAsync<T>(this ChannelReader<T> reader,
+		int maxConcurrency,
+		CancellationToken cancellationToken,
+		Func<IEnumerable<T>, ValueTask> receiver)
+		=> ReadAllConcurrentlyAsEnumerablesAsync(reader, maxConcurrency, receiver, cancellationToken);
+
+	/// <inheritdoc cref="ReadAllAsEnumerablesAsync{T}(ChannelReader{T}, Func{IEnumerable{T}, ValueTask}, bool, CancellationToken)"/>
+	public static Task ReadAllConcurrentlyAsEnumerables<T>(this ChannelReader<T> reader,
+		int maxConcurrency,
+		Action<IEnumerable<T>> receiver,
+		CancellationToken cancellationToken = default)
+	{
+		if (receiver is null) throw new ArgumentNullException(nameof(receiver));
+		Contract.EndContractBlock();
+
+		return reader.ReadAllConcurrentlyAsEnumerablesAsync(
+			maxConcurrency,
+			e =>
+			{
+				receiver(e);
+				return new ValueTask();
+			},
+			cancellationToken);
+	}
+
+	/// <inheritdoc cref="ReadAllAsEnumerablesAsync{T}(ChannelReader{T}, Func{IEnumerable{T}, ValueTask}, bool, CancellationToken)"/>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	public static Task ReadAllConcurrentlyAsEnumerables<T>(this ChannelReader<T> reader,
+		int maxConcurrency,
+		CancellationToken cancellationToken,
+		Action<IEnumerable<T>> receiver)
+		=> ReadAllConcurrentlyAsEnumerables(reader, maxConcurrency, receiver, cancellationToken);
 }

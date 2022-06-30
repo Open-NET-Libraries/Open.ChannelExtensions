@@ -17,18 +17,27 @@ public static partial class Extensions
 	/// </summary>
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="reader">The channel reader to read from.</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>An enumerable that will read from the channel until no more are available for read</returns>
-	public static IEnumerable<T> ReadAvailable<T>(this ChannelReader<T> reader)
+	public static IEnumerable<T> ReadAvailable<T>(this ChannelReader<T> reader, CancellationToken cancellationToken = default)
 	{
 		if (reader is null) throw new ArgumentNullException(nameof(reader));
 		Contract.EndContractBlock();
 
-		return ReadAvailableCore(reader);
+		return ReadAvailableCore(reader, cancellationToken);
 
-		static IEnumerable<T> ReadAvailableCore(ChannelReader<T> reader)
+		static IEnumerable<T> ReadAvailableCore(ChannelReader<T> reader, CancellationToken token)
 		{
-			while (reader.TryRead(out T? e))
-				yield return e;
+			if (token.CanBeCanceled)
+			{
+				while (!token.IsCancellationRequested && reader.TryRead(out T? e))
+					yield return e;
+			}
+			else
+			{
+				while (reader.TryRead(out T? e))
+					yield return e;
+			}
 		}
 	}
 
@@ -48,22 +57,43 @@ public static partial class Extensions
 
 		var results = new List<T>(max);
 
-		do
+		if (cancellationToken.CanBeCanceled)
 		{
-			while (
-				results.Count < max
-				&& !cancellationToken.IsCancellationRequested
-				&& reader.TryRead(out T? item))
+			do
 			{
-				results.Add(item);
+				while (
+					results.Count < max
+					&& !cancellationToken.IsCancellationRequested
+					&& reader.TryRead(out T? item))
+				{
+					results.Add(item);
+				}
+
+				if (results.Count == max)
+					return results;
+
+				cancellationToken.ThrowIfCancellationRequested();
 			}
-
-			if (results.Count == max)
-				return results;
-
-			cancellationToken.ThrowIfCancellationRequested();
+			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 		}
-		while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
+		else
+		{
+			do
+			{
+				while (
+					results.Count < max
+					&& reader.TryRead(out T? item))
+				{
+					results.Add(item);
+				}
+
+				if (results.Count == max)
+					return results;
+
+				cancellationToken.ThrowIfCancellationRequested();
+			}
+			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
+		}
 
 		results.TrimExcess();
 		return results;
@@ -95,18 +125,32 @@ public static partial class Extensions
 		long index = 0;
 		try
 		{
-			do
+			if(cancellationToken.CanBeCanceled)
 			{
+				do
+				{
+					while (
+						!cancellationToken.IsCancellationRequested
+						&& reader.TryRead(out T? item))
+					{
+						await receiver(item, index++).ConfigureAwait(false);
+					}
+				}
 				while (
 					!cancellationToken.IsCancellationRequested
-					&& reader.TryRead(out T? item))
-				{
-					await receiver(item, index++).ConfigureAwait(false);
-				}
+					&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 			}
-			while (
-				!cancellationToken.IsCancellationRequested
-				&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
+			else
+			{
+				do
+				{
+					while (reader.TryRead(out T? item))
+					{
+						await receiver(item, index++).ConfigureAwait(false);
+					}
+				}
+				while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
+			}
 		}
 		catch (OperationCanceledException)
 		{
@@ -291,6 +335,72 @@ public static partial class Extensions
 		long count = await ReadUntilCancelledAsync(reader, cancellationToken, receiver, deferredExecution).ConfigureAwait(false);
 		cancellationToken.ThrowIfCancellationRequested();
 		return count;
+	}
+
+	/// <inheritdoc cref="ReadAllAsEnumerablesAsync{T}(ChannelReader{T}, Func{IEnumerable{T}, ValueTask}, bool, CancellationToken)"/>
+	public static ValueTask ReadAllAsEnumerables<T>(this ChannelReader<T> reader,
+		Action<IEnumerable<T>> receiver,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
+	{
+		if (receiver is null) throw new ArgumentNullException(nameof(receiver));
+		Contract.EndContractBlock();
+
+		return reader.ReadAllAsEnumerablesAsync(
+			e =>
+			{
+				receiver(e);
+				return new ValueTask();
+			},
+			deferredExecution,
+			cancellationToken);
+	}
+
+	/// <summary>
+	/// Provides an enumerable to a receiver function.<br/>
+	/// The enumerable will yield items while they are available
+	/// and complete when none are available.<br/>
+	/// </summary>
+	/// <remarks>See <seealso cref="ReadAvailable{T}(ChannelReader{T}, CancellationToken)"/>.</remarks>
+	/// <typeparam name="T">The item type.</typeparam>
+	/// <param name="reader">The channel reader to read from.</param>
+	/// <param name="receiver">The async receiver function.</param>
+	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
+	public static async ValueTask ReadAllAsEnumerablesAsync<T>(this ChannelReader<T> reader,
+		Func<IEnumerable<T>, ValueTask> receiver,
+		bool deferredExecution = false,
+		CancellationToken cancellationToken = default)
+	{
+		if (reader is null) throw new ArgumentNullException(nameof(reader));
+		if (receiver is null) throw new ArgumentNullException(nameof(receiver));
+		Contract.EndContractBlock();
+
+		if (deferredExecution)
+			await Task.Yield();
+
+		try
+		{
+			if (cancellationToken.CanBeCanceled)
+			{
+				while (
+					!cancellationToken.IsCancellationRequested
+					&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
+				{
+					await receiver(reader.ReadAvailable(cancellationToken)).ConfigureAwait(false);
+				}
+				return;
+			}
+
+			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
+			{
+				await receiver(reader.ReadAvailable(cancellationToken)).ConfigureAwait(false);
+			}
+		}
+		catch (OperationCanceledException)
+		{
+			// In case WaitToReadAsync is cancelled.
+		}
 	}
 
 	/// <summary>

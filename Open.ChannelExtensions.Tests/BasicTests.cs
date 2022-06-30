@@ -64,6 +64,127 @@ public static class BasicTests
 		result.Clear();
 	}
 
+	[Fact]
+	public static async Task ReadAllAsEnumerables1()
+	{
+		var channel = Channel.CreateUnbounded<int>();
+		var read = channel.Reader.ReadAllAsEnumerables(e =>
+		{
+			Thread.Sleep(100);
+			Assert.Equal(1000, e.Count());
+		});
+
+		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		for (var i = 0; i < 5; i++)
+		{
+			await Task.Delay(1000);
+			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		}
+
+		channel.Writer.Complete();
+		await read;
+	}
+
+	[Fact]
+	public static async Task ReadAllAsEnumerablesAsync1()
+	{
+		var channel = Channel.CreateUnbounded<int>();
+		var read = channel.Reader.ReadAllAsEnumerablesAsync(async e =>
+		{
+			await Task.Delay(100);
+			Assert.Equal(1000, e.Count());
+		});
+
+		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		for (var i = 0; i < 5; i++)
+		{
+			await Task.Delay(1000);
+			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		}
+
+		channel.Writer.Complete();
+		await read;
+	}
+
+	[Fact]
+	public static async Task ReadAllConcurrentlyAsEnumerablesAsync()
+	{
+		var channel = Channel.CreateUnbounded<int>();
+		int total = 0;
+		var read = channel.Reader.ReadAllConcurrentlyAsEnumerablesAsync(3, async e =>
+		{
+			foreach(var i in e)
+			{
+				await Task.Delay(1);
+				Interlocked.Increment(ref total);
+			}
+		});
+
+		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		for (var i = 0; i < 5; i++)
+		{
+			await Task.Delay(1000);
+			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		}
+
+		channel.Writer.Complete();
+		await read;
+
+		Assert.Equal(6000, total);
+	}
+
+
+	[Fact]
+	public static async Task ReadAllConcurrentlyAsEnumerables()
+	{
+		var channel = Channel.CreateUnbounded<int>();
+		int total = 0;
+		var read = channel.Reader.ReadAllConcurrentlyAsEnumerables(3, e =>
+		{
+			foreach (var i in e)
+			{
+				for(var n = 0; n < 2000000; n++)
+				{
+					// loop delay
+				}
+				Interlocked.Increment(ref total);
+			}
+		});
+
+		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		for (var i = 0; i < 5; i++)
+		{
+			await Task.Delay(1000);
+			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		}
+
+		channel.Writer.Complete();
+		await read;
+
+		Assert.Equal(6000, total);
+	}
+
+
+	[Fact]
+	public static async Task ReadAllAsEnumerables2()
+	{
+		var channel = Channel.CreateUnbounded<int>();
+		int total = 0;
+		var read = channel.Reader.ReadAllAsEnumerables(e => total += e.Count());
+
+		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		for (var i = 0; i < 5; i++)
+		{
+			await Task.Delay(1000);
+			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
+		}
+
+		channel.Writer.Complete();
+		await read;
+
+		Assert.Equal(6000, total);
+	}
+
 	[Theory]
 	[InlineData(testSize1)]
 	[InlineData(testSize2)]
