@@ -120,7 +120,7 @@ public static class BatchTests
 		});
 
 		using var tokenSource = new CancellationTokenSource(10000);
-		BatchingChannelReader<int> reader = c.Reader.Batch(3);
+		var reader = c.Reader.Batch(3);
 		Assert.Equal(2, await reader.ReadAllAsync(tokenSource.Token, async (batch, i) =>
 			{
 				switch (i)
@@ -149,7 +149,7 @@ public static class BatchTests
 	public static async Task ForceBatchTest2()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		BatchingChannelReader<int> reader = c.Reader.Batch(3);
+		var reader = c.Reader.Batch(3);
 		_ = Task.Run(async () =>
 		{
 			await Task.Delay(1000);
@@ -194,7 +194,7 @@ public static class BatchTests
 	public static async Task TimeoutTest0()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		BatchingChannelReader<int> reader = c.Reader.Batch(10).WithTimeout(500);
+		var reader = c.Reader.Batch(10).WithTimeout(500);
 		var complete = false;
 		_ = Task.Run(async () =>
 		{
@@ -229,7 +229,7 @@ public static class BatchTests
 	public static async Task TimeoutTest1()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		BatchingChannelReader<int> reader = c.Reader.Batch(10).WithTimeout(500);
+		var reader = c.Reader.Batch(10).WithTimeout(500);
 		_ = Task.Run(async () =>
 		{
 			for(var i = 0;i<15;i++)
@@ -272,7 +272,7 @@ public static class BatchTests
 	public static async Task BatchReadBehavior()
 	{
 		var c = Channel.CreateBounded<int>(new BoundedChannelOptions(20) { SingleReader = false, SingleWriter = false });
-		BatchingChannelReader<int> reader = c.Reader.Batch(10);
+		var reader = c.Reader.Batch(10);
 
 		var queue = new Queue<int>(Enumerable.Range(0, 100));
 		int e;

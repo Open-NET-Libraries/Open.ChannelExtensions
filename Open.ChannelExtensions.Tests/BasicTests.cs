@@ -303,6 +303,31 @@ public static class BasicTests
 		Assert.True(r.SequenceEqual(range));
 	}
 
+
+	[Theory]
+	[InlineData(1000, 51)]
+	[InlineData(50, 1000)]
+	[InlineData(1001, 51)]
+	[InlineData(51, 5001)]
+	[InlineData(75, 50)]
+	public static async Task BatchToQueues(int testSize, int batchSize)
+	{
+		IEnumerable<int> range = Enumerable.Range(0, testSize);
+		int expectedBatchCount = testSize / batchSize + (testSize % batchSize == 0 ? 0 : 1);
+		var result1 = new List<Queue<int>>(expectedBatchCount);
+
+		long total = await range
+			.ToChannel(singleReader: true)
+			.BatchToQueues(batchSize, singleReader: true)
+			.ReadAll(result1.Add);
+
+		Assert.Equal(expectedBatchCount, result1.Count);
+
+		var r = result1.SelectMany(e => e).ToList();
+		Assert.Equal(testSize, r.Count);
+		Assert.True(r.SequenceEqual(range));
+	}
+
 	[Theory]
 	[InlineData(testSize1, 51)]
 	[InlineData(testSize1, 5001)]

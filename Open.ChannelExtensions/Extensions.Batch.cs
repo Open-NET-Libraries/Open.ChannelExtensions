@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Channels;
 
 namespace Open.ChannelExtensions;
@@ -17,10 +18,18 @@ public static partial class Extensions
 	/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 	/// <param name="allowSynchronousContinuations">True can reduce the amount of scheduling and markedly improve performance, but may produce unexpected or even undesirable behavior.</param>
 	/// <returns>A channel reader containing the batches.</returns>
-	public static BatchingChannelReader<T> Batch<T>(
+	public static BatchingChannelReader<T, List<T>> Batch<T>(
 		this ChannelReader<T> source,
 		int batchSize,
 		bool singleReader = false,
 		bool allowSynchronousContinuations = false)
-		=> new(source ?? throw new ArgumentNullException(nameof(source)), batchSize, singleReader, allowSynchronousContinuations);
+		=> new BatchingChannelReader<T>(source ?? throw new ArgumentNullException(nameof(source)), batchSize, singleReader, allowSynchronousContinuations);
+
+	/// <inheritdoc cref="Batch{T}(ChannelReader{T}, int, bool, bool)" />
+	public static BatchingChannelReader<T, Queue<T>> BatchToQueues<T>(
+		this ChannelReader<T> source,
+		int batchSize,
+		bool singleReader = false,
+		bool allowSynchronousContinuations = false)
+		=> new QueueBatchingChannelReader<T>(source ?? throw new ArgumentNullException(nameof(source)), batchSize, singleReader, allowSynchronousContinuations);
 }

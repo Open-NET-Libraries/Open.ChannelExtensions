@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -13,16 +14,17 @@ namespace Open.ChannelExtensions;
 /// A ChannelReader that batches results.
 /// Use the .Batch extension instead of constructing this directly.
 /// </summary>
-public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
+public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<T, TBatch>
+	where TBatch : class
 {
 	private readonly int _batchSize;
-	private List<T>? _batch;
+	private TBatch? _batch;
 
 	/// <summary>
 	/// Constructs a BatchingChannelReader.
 	/// Use the .Batch extension instead of constructing this directly.
 	/// </summary>
-	public BatchingChannelReader(
+	protected BatchingChannelReader(
 		ChannelReader<T> source,
 		int batchSize,
 		bool singleReader,
@@ -55,7 +57,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 	/// A value of zero or less cancels/clears any timeout.
 	/// </param>
 	/// <returns>The current reader.</returns>
-	public BatchingChannelReader<T> WithTimeout(long millisecondsTimeout)
+	public BatchingChannelReader<T, TBatch> WithTimeout(long millisecondsTimeout)
 	{
 		_timeout = millisecondsTimeout <= 0 ? Timeout.Infinite : millisecondsTimeout;
 
@@ -74,9 +76,9 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 		if (_batch is null) return this;
 
 		// Might be in the middle of a batch so we need to update the timeout.
-		lock(Buffer)
+		lock (Buffer)
 		{
-			if (_batch is not null)	RefreshTimeout();
+			if (_batch is not null) RefreshTimeout();
 		}
 
 		return this;
@@ -95,7 +97,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 			var ok = _timer?.Change(timeout, 0);
 			Debug.Assert(ok ?? true);
 		}
-		catch(ObjectDisposedException)
+		catch (ObjectDisposedException)
 		{
 			// Rare instance where another thread has disposed the timer before .Change can be called.
 		}
@@ -107,12 +109,32 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 	/// Note: Values are converted to milliseconds.
 	/// </param>
 	/// <inheritdoc cref="WithTimeout(long)"/>
-	public BatchingChannelReader<T> WithTimeout(TimeSpan timeout)
+	public BatchingChannelReader<T, TBatch> WithTimeout(TimeSpan timeout)
 		=> WithTimeout((long)timeout.TotalMilliseconds);
 
 	/// <inheritdoc />
 	protected override void OnBeforeFinalFlush()
 		=> Interlocked.Exchange(ref _timer, null)?.Dispose();
+
+	/// <summary>
+	/// Creates a batch for consumption.
+	/// </summary>
+	protected abstract TBatch CreateBatch(int capacity);
+
+	/// <summary>
+	/// Trims the excess capacity of a batch before releasing.
+	/// </summary>
+	protected abstract void TrimBatch(TBatch batch);
+
+	/// <summary>
+	/// Adds an item to the batch.
+	/// </summary>
+	protected abstract void AddBatchItem(TBatch batch, T item);
+
+	/// <summary>
+	/// Adds an item to the batch.
+	/// </summary>
+	protected abstract int GetBatchSize(TBatch batch);
 
 	/// <inheritdoc />
 	protected override bool TryPipeItems(bool flush)
@@ -126,7 +148,7 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 
 			var batched = false;
 			var newBatch = false;
-			List<T>? c = _batch;
+			TBatch? c = _batch;
 			ChannelReader<T>? source = Source;
 			if (source?.Completion.IsCompleted != false)
 			{
@@ -140,19 +162,20 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 				if (c is null)
 				{
 					newBatch = true; // a new batch could start but not be emmited.
-					_batch = c = new List<T>(_batchSize) { item };
+					_batch = c = CreateBatch(_batchSize);
+					AddBatchItem(c,item);
 				}
 				else
 				{
-					c.Add(item);
+					AddBatchItem(c, item);
 				}
 
-				Debug.Assert(c.Count <= _batchSize);
-				var full = c.Count == _batchSize;
+				Debug.Assert(GetBatchSize(c) <= _batchSize);
+				var full = GetBatchSize(c) == _batchSize;
 				while (!full && source.TryRead(out item))
 				{
-					c.Add(item);
-					full = c.Count == _batchSize;
+					AddBatchItem(c, item);
+					full = GetBatchSize(c) == _batchSize;
 				}
 
 				if (!full) break;
@@ -166,19 +189,19 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 			if (!flush || c is null)
 				goto finalizeTimer;
 
-		flushBatch:
+			flushBatch:
 
-			c.TrimExcess();
+			TrimBatch(c);
 			Emit(ref c);
 
 		finalizeTimer:
 
 			// Are we adding to the existing batch (active timeout) or did we create a new one?
-			if (newBatch && _batch is not null)	RefreshTimeout();
+			if (newBatch && _batch is not null) RefreshTimeout();
 
 			return batched;
 
-			void Emit(ref List<T>? c)
+			void Emit(ref TBatch? c)
 			{
 				_batch = null;
 				newBatch = false;
@@ -230,4 +253,54 @@ public class BatchingChannelReader<T> : BufferingChannelReader<T, List<T>>
 
 		goto start;
 	}
+}
+
+/// <inheritdoc />
+[SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Expect non-null.")]
+public class QueueBatchingChannelReader<T> : BatchingChannelReader<T, Queue<T>>
+{
+	/// <inheritdoc />
+	public QueueBatchingChannelReader(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
+		: base(source, batchSize, singleReader, syncCont) { }
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override void AddBatchItem(Queue<T> batch, T item) => batch.Enqueue(item);
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override Queue<T> CreateBatch(int capacity) => new(capacity);
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override int GetBatchSize(Queue<T> batch) => batch.Count;
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override void TrimBatch(Queue<T> batch) => batch!.TrimExcess();
+}
+
+/// <inheritdoc />
+[SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Expect non-null.")]
+public class BatchingChannelReader<T> : BatchingChannelReader<T, List<T>>
+{
+	/// <inheritdoc />
+	public BatchingChannelReader(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
+		: base(source, batchSize, singleReader, syncCont) { }
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override void AddBatchItem(List<T> batch, T item) => batch.Add(item);
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override List<T> CreateBatch(int capacity) => new(capacity);
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override int GetBatchSize(List<T> batch) => batch.Count;
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override void TrimBatch(List<T> batch) => batch!.TrimExcess();
 }
