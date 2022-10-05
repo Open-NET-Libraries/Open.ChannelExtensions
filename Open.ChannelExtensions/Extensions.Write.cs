@@ -34,10 +34,12 @@ public static partial class Extensions
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		await target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken).ConfigureAwait(false);
-
 		try
 		{
+			await target
+				.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken)
+				.ConfigureAwait(false);
+
 			long count = 0;
 			var next = new ValueTask();
 			foreach (ValueTask<T> e in source)
@@ -50,11 +52,12 @@ public static partial class Extensions
 			await next.ConfigureAwait(false);
 			return count;
 		}
+		catch(ChannelClosedException) { throw; }
 		catch (Exception ex)
 		{
 			if (complete)
 			{
-				target.Complete(ex);
+				target.TryComplete(ex);
 				complete = false;
 			}
 			throw;
@@ -62,7 +65,7 @@ public static partial class Extensions
 		finally
 		{
 			if (complete)
-				target.Complete();
+				target.TryComplete();
 		}
 	}
 
@@ -246,11 +249,11 @@ public static partial class Extensions
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		ValueTask next = target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken);
-		await next.ConfigureAwait(false);
-
 		try
 		{
+			ValueTask next = target.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken);
+			await next.ConfigureAwait(false);
+
 			long count = 0;
 			bool more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 			while (!cancellationToken.IsCancellationRequested)
@@ -275,11 +278,12 @@ public static partial class Extensions
 			if (more) cancellationToken.ThrowIfCancellationRequested();
 			return count;
 		}
+		catch (ChannelClosedException) { throw; }
 		catch (Exception ex)
 		{
 			if (complete)
 			{
-				target.Complete(ex);
+				target.TryComplete(ex);
 				complete = false;
 			}
 			throw;
@@ -287,7 +291,7 @@ public static partial class Extensions
 		finally
 		{
 			if (complete)
-				target.Complete();
+				target.TryComplete();
 		}
 	}
 
@@ -330,12 +334,12 @@ public static partial class Extensions
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		Contract.EndContractBlock();
 
-		await target
-			.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken)
-			.ConfigureAwait(false);
-
 		try
 		{
+			await target
+				.WaitToWriteAndThrowIfClosedAsync(ChannelClosedMessage, deferredExecution, cancellationToken)
+				.ConfigureAwait(false);
+
 			long count = 0;
 			var next = new ValueTask();
 			await foreach (T? value in source)
@@ -347,11 +351,12 @@ public static partial class Extensions
 			await next.ConfigureAwait(false);
 			return count;
 		}
+		catch (ChannelClosedException) { throw; }
 		catch (Exception ex)
 		{
 			if (complete)
 			{
-				target.Complete(ex);
+				target.TryComplete(ex);
 				complete = false;
 			}
 			throw;
@@ -359,7 +364,7 @@ public static partial class Extensions
 		finally
 		{
 			if (complete)
-				target.Complete();
+				target.TryComplete();
 		}
 	}
 

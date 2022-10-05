@@ -20,6 +20,7 @@ public static partial class Extensions
 	/// <param name="completion">The underlying ValueTask used to pass the data from the source to the channel.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
+	/// <remarks>Calling this method does not throw if the channel is already closed.</remarks>
 	/// <returns>The channel reader.</returns>
 	public static ChannelReader<TRead> SourceAsync<TWrite, TRead>(
 		this Channel<TWrite, TRead> target,

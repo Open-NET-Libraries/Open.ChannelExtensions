@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -70,5 +71,36 @@ public static class ExceptionTests
 
 		Assert.Equal(1, count);
 		Assert.NotEqual(testSize, total);
+	}
+
+	[Fact]
+	public static void ChannelClosed()
+	{
+		var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(1000)
+		{
+			SingleWriter = true,
+			SingleReader = true,
+		});
+		channel.Writer.Complete();
+		// Needs to throw immediately if true.
+		Assert.Throws<ChannelClosedException>(() => channel.Writer.WaitToWriteAndThrowIfClosedAsync());
+	}
+
+	[Fact]
+	public static async Task WriteAllThrowIfClosed()
+	{
+		var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(1000)
+		{
+			SingleWriter = true,
+			SingleReader = true,
+		});
+		var reader = channel.Source(Enumerable.Range(0, 10_000));
+		await reader.ReadAll(_ => { });
+
+		await Assert.ThrowsAsync<ChannelClosedException>(async ()=>
+		{
+			channel.Source(Enumerable.Range(0, 10_000), out var completion);
+			await completion;
+		});
 	}
 }

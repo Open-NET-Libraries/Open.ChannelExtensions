@@ -66,6 +66,27 @@ public static partial class Extensions
 			yield return new ValueTask<T>(e());
 	}
 
+
+	/// <summary>
+	/// Uses <see cref="ChannelWriter{T}.WaitToWriteAsync(CancellationToken)"/> to peek and see if the channel can still be written to.
+	/// </summary>
+	/// <typeparam name="T">The type being written to the channel</typeparam>
+	/// <param name="writer">The channel writer.</param>
+	/// <param name="ifClosedMessage">The message to include with the ChannelClosedException if thrown.</param>
+	/// <exception cref="ChannelClosedException">If the channel writer will no longer accept messages.</exception>
+	public static void ThrowIfClosed<T>(this ChannelWriter<T> writer, string? ifClosedMessage = null)
+	{
+		if (writer is null) throw new ArgumentNullException(nameof(writer));
+		ValueTask<bool> waitForWrite = writer.WaitToWriteAsync();
+		if (!waitForWrite.IsCompletedSuccessfully || waitForWrite.Result)
+			return;
+
+		if (string.IsNullOrWhiteSpace(ifClosedMessage))
+			throw new ChannelClosedException();
+
+		throw new ChannelClosedException(ifClosedMessage);
+	}
+
 	/// <summary>
 	/// Waits for opportunity to write to a channel and throws a ChannelClosedException if the channel is closed.
 	/// </summary>
