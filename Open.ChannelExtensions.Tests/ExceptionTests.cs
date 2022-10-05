@@ -74,6 +74,7 @@ public static class ExceptionTests
 	}
 
 	[Fact]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Needs to happen synchronously")]
 	public static void ChannelClosed()
 	{
 		var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(1000)

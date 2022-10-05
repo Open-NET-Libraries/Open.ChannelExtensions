@@ -126,12 +126,10 @@ static class Program
 
 	static void Dummy(int i)
 	{
-
 	}
 
 	static void Dummy(long i)
 	{
-
 	}
 
 	static async ValueTask<int> Delay(int i)

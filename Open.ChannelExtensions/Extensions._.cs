@@ -66,7 +66,6 @@ public static partial class Extensions
 			yield return new ValueTask<T>(e());
 	}
 
-
 	/// <summary>
 	/// Uses <see cref="ChannelWriter{T}.WaitToWriteAsync(CancellationToken)"/> to peek and see if the channel can still be written to.
 	/// </summary>

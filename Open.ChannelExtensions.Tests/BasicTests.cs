@@ -133,7 +133,6 @@ public static class BasicTests
 		Assert.Equal(6000, total);
 	}
 
-
 	[Fact]
 	public static async Task ReadAllConcurrentlyAsEnumerables()
 	{
@@ -163,7 +162,6 @@ public static class BasicTests
 
 		Assert.Equal(6000, total);
 	}
-
 
 	[Fact]
 	public static async Task ReadAllAsEnumerables2()
@@ -302,7 +300,6 @@ public static class BasicTests
 		Assert.Equal(testSize, r.Count);
 		Assert.True(r.SequenceEqual(range));
 	}
-
 
 	[Theory]
 	[InlineData(1000, 51)]
