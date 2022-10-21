@@ -164,22 +164,22 @@ var transformed = channel.Pipe(
 
 ```cs
 // Transform values in a source channel to new unbounded channel with a max concurrency of X.
-const X = 4;
+const int X = 4;
 var transformed = channel.Pipe(
     X, async value => /* transformation */);
 ```
 
 ```cs
 // Transform values in a source channel to new bounded channel bound of N entries.
-const N = 5;
+const int N = 5;
 var transformed = channel.Pipe(
     async value => /* transformation */, N);
 ```
 
 ```cs
 // Transform values in a source channel to new bounded channel bound of N entries with a max concurrency of X.
-const X = 4;
-const N = 5;
+const int X = 4;
+const int N = 5;
 var transformed = channel.Pipe(
     X, async value => /* transformation */, N);
 
