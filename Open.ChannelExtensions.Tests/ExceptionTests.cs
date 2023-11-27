@@ -39,6 +39,35 @@ public static class ExceptionTests
 	}
 
 	[Fact]
+	public static async Task TransformExceptionPropagation()
+	{
+		int count = 0;
+		System.Collections.Generic.IEnumerable<int> range = Enumerable.Range(0, 1000);
+		try
+		{
+			await range
+				.ToChannel()
+				.Transform(i =>
+				{
+					if (i == 500)
+					{
+						Interlocked.Increment(ref count);
+						throw new TestException();
+					}
+
+					return i.ToString();
+				})
+				.ReadAll(_ => {});
+		}
+		catch (Exception ex)
+		{
+			Assert.IsType<TestException>(ex);
+		}
+
+		Assert.Equal(1, count);
+	}
+
+	[Fact]
 	public static async Task ExceptionPropagationConcurrent()
 	{
 		const int testSize = 100000000;
