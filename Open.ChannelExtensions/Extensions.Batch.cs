@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Channels;
-
-namespace Open.ChannelExtensions;
+﻿namespace Open.ChannelExtensions;
 
 public static partial class Extensions
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.IO;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace Open.ChannelExtensions;
 
@@ -52,7 +46,7 @@ public static partial class Extensions
 			await next.ConfigureAwait(false);
 			return count;
 		}
-		catch(ChannelClosedException) { throw; }
+		catch (ChannelClosedException) { throw; }
 		catch (Exception ex)
 		{
 			if (complete)
@@ -237,7 +231,7 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Is used correctly.")]
+	[SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Is used correctly.")]
 	public static async ValueTask<long> WriteAllLines(
 		this ChannelWriter<string> target,
 		TextReader source,

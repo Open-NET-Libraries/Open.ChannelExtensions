@@ -219,3 +219,6 @@ dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
 # RCS1123: Add parentheses when necessary.
 dotnet_diagnostic.RCS1123.severity = silent
+
+# IDE0290: Don't suggest primary constructor.
+dotnet_diagnostic.IDE0290.severity = silent

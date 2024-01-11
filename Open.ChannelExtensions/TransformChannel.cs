@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using System.Threading.Channels;
-
-namespace Open.ChannelExtensions;
+﻿namespace Open.ChannelExtensions;
 
 /// <summary>
 /// A channel wrapper that takes the provided channel and transforms them on demand when being read.

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+﻿namespace Open.ChannelExtensions;
 
-namespace Open.ChannelExtensions;
-
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1047:Non-asynchronous method name should not end with 'Async'.", Justification = "In order to differentiate between non async versions.")]
+[SuppressMessage("Roslynator", "RCS1047:Non-asynchronous method name should not end with 'Async'.", Justification = "In order to differentiate between non async versions.")]
 public static partial class Extensions
 {
 	/// <summary>
@@ -69,7 +63,7 @@ public static partial class Extensions
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
 
-		Task.Run(()=>PipeTo(source, target.Writer, true, cancellationToken));
+		Task.Run(() => PipeTo(source, target.Writer, true, cancellationToken));
 
 		return target.Reader;
 	}

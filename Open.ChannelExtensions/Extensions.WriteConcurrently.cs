@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-
-namespace Open.ChannelExtensions;
+﻿namespace Open.ChannelExtensions;
 
 public static partial class Extensions
 {
@@ -21,8 +13,6 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed when all are complete.")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1849:Call async methods when in an async method", Justification = "Task is already complete.")]
 	public static Task<long> WriteAllConcurrentlyAsync<T>(
 		this ChannelWriter<T> target,
 		int maxConcurrency,

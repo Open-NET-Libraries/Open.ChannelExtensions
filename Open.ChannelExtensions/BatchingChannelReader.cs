@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-
-namespace Open.ChannelExtensions;
+﻿namespace Open.ChannelExtensions;
 
 /// <summary>
 /// A ChannelReader that batches results.
@@ -163,7 +153,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 				{
 					newBatch = true; // a new batch could start but not be emmited.
 					_batch = c = CreateBatch(_batchSize);
-					AddBatchItem(c,item);
+					AddBatchItem(c, item);
 				}
 				else
 				{
@@ -256,7 +246,6 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 }
 
 /// <inheritdoc />
-[SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Expect non-null.")]
 public class QueueBatchingChannelReader<T> : BatchingChannelReader<T, Queue<T>>
 {
 	/// <inheritdoc />
@@ -281,7 +270,6 @@ public class QueueBatchingChannelReader<T> : BatchingChannelReader<T, Queue<T>>
 }
 
 /// <inheritdoc />
-[SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Expect non-null.")]
 public class BatchingChannelReader<T> : BatchingChannelReader<T, List<T>>
 {
 	/// <inheritdoc />

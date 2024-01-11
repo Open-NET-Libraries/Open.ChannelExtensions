@@ -1,10 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-
-namespace Open.ChannelExtensions;
+﻿namespace Open.ChannelExtensions;
 
 /// <summary>
 /// Base class for buffering results of a source ChannelReader.
@@ -100,7 +94,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
 	{
 		var buffer = Buffer;
-		if(buffer is null) return new ValueTask<bool>(false);
+		if (buffer is null) return new ValueTask<bool>(false);
 
 		var completion = buffer.Reader.Completion;
 		if (completion.IsCompleted)
@@ -142,7 +136,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 		}
 
 		await s.ConfigureAwait(false);
-		if (bufferWait.IsCompleted)	return await bufferWait.ConfigureAwait(false);
+		if (bufferWait.IsCompleted) return await bufferWait.ConfigureAwait(false);
 		TryPipeItems(false);
 		if (bufferWait.IsCompleted) return await bufferWait.ConfigureAwait(false);
 
