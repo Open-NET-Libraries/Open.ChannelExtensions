@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading.Channels;
-using Xunit;
-
-namespace Open.ChannelExtensions.Tests;
+﻿namespace Open.ChannelExtensions.Tests;
 public static class PipelineExceptionTests
 {
 	const int BatchSize = 20;
@@ -32,7 +26,7 @@ public static class PipelineExceptionTests
 			.PipeAsync(1, evt => new ValueTask<int>(evt))
 			.ReadAll(_ => { });
 
-		if(elementToThrow == Elements)
+		if (elementToThrow == Elements)
 			channel.Writer.Complete(new Exception());
 		else
 			channel.Writer.Complete();
@@ -63,7 +57,7 @@ public static class PipelineExceptionTests
 			.PipeAsync(1, evt => new ValueTask<List<int>>(evt))
 			.ReadAll(_ => { });
 
-		if(elementToThrow == Elements)
+		if (elementToThrow == Elements)
 			channel.Writer.Complete(new Exception());
 		else
 			channel.Writer.Complete();

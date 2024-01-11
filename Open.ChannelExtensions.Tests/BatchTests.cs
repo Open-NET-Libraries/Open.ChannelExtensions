@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-using Xunit;
+﻿using System.Runtime.CompilerServices;
 
 namespace Open.ChannelExtensions.Tests;
 
@@ -232,7 +224,7 @@ public static class BatchTests
 		var reader = c.Reader.Batch(10).WithTimeout(500);
 		_ = Task.Run(async () =>
 		{
-			for(var i = 0;i<15;i++)
+			for (var i = 0; i < 15; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
@@ -267,7 +259,7 @@ public static class BatchTests
 		}));
 	}
 
-	#if NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER
 	[Fact]
 	public static async Task BatchReadBehavior()
 	{
@@ -276,7 +268,7 @@ public static class BatchTests
 
 		var queue = new Queue<int>(Enumerable.Range(0, 100));
 		int e;
-		while(queue.TryDequeue(out e) && c.Writer.TryWrite(e))
+		while (queue.TryDequeue(out e) && c.Writer.TryWrite(e))
 			await Task.Yield();
 
 		Assert.True(69 <= queue.Count);
@@ -345,7 +337,8 @@ public static class BatchTests
 	public static async Task ReadBatchWithTimeoutEnumerableBakedIn()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		_ = Task.Run(async () => {
+		_ = Task.Run(async () =>
+		{
 			//await Task.Delay(1000);
 			c.Writer.TryWrite(1);
 			c.Writer.TryWrite(2);

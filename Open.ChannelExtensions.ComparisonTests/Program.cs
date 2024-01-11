@@ -17,21 +17,21 @@ static class Program
 
 		{
 			Console.WriteLine("Standard DataFlow operation test...");
-			var block = new ActionBlock<int>(async i => await Delay(i));
+			var block = new ActionBlock<int>(async i => await Delay(i).ConfigureAwait(false));
 			var sw = Stopwatch.StartNew();
 			foreach (int i in Enumerable.Range(0, repeat))
 				block.Post(i);
 			block.Complete();
-			await block.Completion;
+			await block.Completion.ConfigureAwait(false);
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
 			Console.WriteLine();
 		}
 
-		await BasicTests.ReadAll(testSize);
-		await BasicTests.ReadAllAsync(testSize);
-		await BasicTests.BatchThenJoin(testSize, 5001);
-		await BasicTests.BatchJoin(testSize, 50);
+		await BasicTests.ReadAll(testSize).ConfigureAwait(false);
+		await BasicTests.ReadAllAsync(testSize).ConfigureAwait(false);
+		await BasicTests.BatchThenJoin(testSize, 5001).ConfigureAwait(false);
+		await BasicTests.BatchJoin(testSize, 50).ConfigureAwait(false);
 
 		{
 			Console.WriteLine("Standard Channel filter test...");
@@ -43,7 +43,7 @@ static class Program
 			long total = await source
 				.ToChannelAsync(singleReader: true)
 				.Filter(i => i % 2 == 0)
-				.ReadAll(Dummy);
+				.ReadAll(Dummy).ConfigureAwait(false);
 			sw.Stop();
 
 			Debug.Assert(total == repeat / 2);
@@ -54,11 +54,11 @@ static class Program
 		{
 			Console.WriteLine("Concurrent DataFlow operation test...");
 			var sw = Stopwatch.StartNew();
-			var block = new ActionBlock<int>(async i => await Delay(i), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = concurrency });
+			var block = new ActionBlock<int>(async i => await Delay(i).ConfigureAwait(false), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = concurrency });
 			foreach (int i in Enumerable.Range(0, repeat))
 				block.Post(i);
 			block.Complete();
-			await block.Completion;
+			await block.Completion.ConfigureAwait(false);
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
 			Console.WriteLine();
@@ -71,7 +71,7 @@ static class Program
 				.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
 				.Select((t, i) => t(i))
 				.ToChannelAsync(singleReader: false, maxConcurrency: concurrency)
-				.ReadAllConcurrently(4, Dummy);
+				.ReadAllConcurrently(4, Dummy).ConfigureAwait(false);
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
 			Console.WriteLine();
@@ -85,7 +85,7 @@ static class Program
 				.Select((t, i) => t(i))
 				.ToChannelAsync()
 				.Pipe(i => i * 2)
-				.ReadAll(Dummy);
+				.ReadAll(Dummy).ConfigureAwait(false);
 			sw.Stop();
 			Debug.Assert(total == repeat);
 			Console.WriteLine(sw.Elapsed);
@@ -100,7 +100,7 @@ static class Program
 				.Select((t, i) => t(i))
 				.ToChannelAsync()
 				.Transform(i => i * 2L)
-				.ReadAll(Dummy);
+				.ReadAll(Dummy).ConfigureAwait(false);
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
 			Console.WriteLine();
@@ -134,7 +134,7 @@ static class Program
 
 	static async ValueTask<int> Delay(int i)
 	{
-		await Task.Delay(100);
+		await Task.Delay(100).ConfigureAwait(false);
 		return i;
 	}
 }

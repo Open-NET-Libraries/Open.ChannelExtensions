@@ -1,15 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace Open.ChannelExtensions.Tests;
+﻿namespace Open.ChannelExtensions.Tests;
 
 public static class ExceptionTests
 {
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1194:Implement exception constructors.")]
+	[SuppressMessage("Roslynator", "RCS1194:Implement exception constructors.")]
 	class TestException : Exception { }
 
 	[Fact]
@@ -57,7 +50,7 @@ public static class ExceptionTests
 
 					return i.ToString();
 				})
-				.ReadAll(_ => {});
+				.ReadAll(_ => { });
 		}
 		catch (Exception ex)
 		{
@@ -103,7 +96,7 @@ public static class ExceptionTests
 	}
 
 	[Fact]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Needs to happen synchronously")]
+	[SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Needs to happen synchronously")]
 	public static void ChannelClosed()
 	{
 		var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(1000)
@@ -127,7 +120,7 @@ public static class ExceptionTests
 		var reader = channel.Source(Enumerable.Range(0, 10_000));
 		await reader.ReadAll(_ => { });
 
-		await Assert.ThrowsAsync<ChannelClosedException>(async ()=>
+		await Assert.ThrowsAsync<ChannelClosedException>(async () =>
 		{
 			channel.Source(Enumerable.Range(0, 10_000), out var completion);
 			await completion;

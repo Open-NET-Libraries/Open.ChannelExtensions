@@ -1,13 +1,3 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-using Xunit;
-
 namespace Open.ChannelExtensions.Tests;
 
 public static class BasicTests
@@ -18,8 +8,8 @@ public static class BasicTests
 	[Theory]
 	[InlineData(testSize1)]
 	[InlineData(testSize2)]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Testing only.")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
+	[SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Testing only.")]
+	[SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
 	public static async Task DeferredWriteRead(int testSize)
 	{
 		IEnumerable<int> range = Enumerable.Range(0, testSize);
@@ -113,7 +103,7 @@ public static class BasicTests
 		int total = 0;
 		var read = channel.Reader.ReadAllConcurrentlyAsEnumerablesAsync(3, async e =>
 		{
-			foreach(var i in e)
+			foreach (var i in e)
 			{
 				await Task.Delay(1);
 				Interlocked.Increment(ref total);
@@ -142,7 +132,7 @@ public static class BasicTests
 		{
 			foreach (var i in e)
 			{
-				for(var n = 0; n < 2000000; n++)
+				for (var n = 0; n < 2000000; n++)
 				{
 					// loop delay
 				}
