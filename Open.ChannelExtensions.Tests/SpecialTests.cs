@@ -5,7 +5,7 @@ namespace Open.ChannelExtensions.Tests;
 public class SpecialTests
 {
 	[Fact]
-	public void PossibleSourceLoadingIssue()
+	public async Task PossibleSourceLoadingIssue()
 	{
 		const int expectedCount = 10000000;
 		int count_ = 0;
@@ -21,7 +21,7 @@ public class SpecialTests
 
 		queue.CompleteAdding();
 
-		processingTask.Wait();
+		await processingTask;
 
 		Assert.Equal(expectedCount, count_);
 
