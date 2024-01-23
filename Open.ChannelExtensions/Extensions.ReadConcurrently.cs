@@ -26,7 +26,11 @@ public static partial class Extensions
 		if (maxConcurrency == 1)
 			return reader.ReadAllAsync(receiver, cancellationToken, true).AsTask();
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA2000 // Dispose objects before losing scope
 		var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 		CancellationToken token = tokenSource.Token;
 		var readers = new Task<long>[maxConcurrency];
 		for (int r = 0; r < maxConcurrency; ++r)
@@ -37,11 +41,15 @@ public static partial class Extensions
 			.ContinueWith(t =>
 				{
 					tokenSource.Dispose();
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1849 // Call async methods when in an async method
 					return t.IsFaulted
-						? Task.FromException<long>(t.Exception)
+						? Task.FromException<long>(t.Exception!)
 						: t.IsCanceled
 						? Task.FromCanceled<long>(token)
 						: Task.FromResult(t.Result.Sum());
+#pragma warning restore CA1849 // Call async methods when in an async method
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 				},
 				CancellationToken.None,
 				TaskContinuationOptions.ExecuteSynchronously,
@@ -56,7 +64,7 @@ public static partial class Extensions
 			}
 			catch
 			{
-				tokenSource.Cancel();
+				await tokenSource.CancelAsync().ConfigureAwait(false);
 				throw;
 			}
 		}
@@ -251,7 +259,11 @@ public static partial class Extensions
 		if (maxConcurrency == 1)
 			return reader.ReadAllAsEnumerablesAsync(receiver, true, cancellationToken).AsTask();
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA2000 // Dispose objects before losing scope
 		var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 		CancellationToken token = tokenSource.Token;
 		var readers = new Task[maxConcurrency];
 		for (int r = 0; r < maxConcurrency; ++r)
@@ -260,14 +272,14 @@ public static partial class Extensions
 		return Task
 			.WhenAll(readers)
 			.ContinueWith(t =>
-			{
-				tokenSource.Dispose();
-				return t.IsFaulted
-					? Task.FromException(t.Exception)
-					: t.IsCanceled
-					? Task.FromCanceled(token)
-					: Task.CompletedTask;
-			},
+				{
+					tokenSource.Dispose();
+					return t.IsFaulted
+						? Task.FromException(t.Exception!)
+						: t.IsCanceled
+						? Task.FromCanceled(token)
+						: Task.CompletedTask;
+				},
 				CancellationToken.None,
 				TaskContinuationOptions.ExecuteSynchronously,
 				TaskScheduler.Current)
@@ -281,7 +293,7 @@ public static partial class Extensions
 			}
 			catch
 			{
-				tokenSource.Cancel();
+				await tokenSource.CancelAsync().ConfigureAwait(false);
 				throw;
 			}
 		}

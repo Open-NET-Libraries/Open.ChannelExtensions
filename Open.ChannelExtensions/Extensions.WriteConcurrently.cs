@@ -35,7 +35,11 @@ public static partial class Extensions
 			.WaitToWriteAndThrowIfClosedAsync("The target channel was closed before writing could begin.", cancellationToken)
 			.AsTask(); // ValueTasks can only have a single await.
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA2000 // Dispose objects before losing scope
 		var errorTokenSource = new CancellationTokenSource();
+#pragma warning restore CA2000 // Dispose objects before losing scope
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 		CancellationToken errorToken = errorTokenSource.Token;
 		IEnumerator<ValueTask<T>>? enumerator = source.GetEnumerator();
 		var writers = new Task<long>[maxConcurrency];
@@ -50,11 +54,15 @@ public static partial class Extensions
 					if (complete)
 						target.Complete(t.Exception);
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1849 // Call async methods when in an async method
 					return t.IsFaulted
-						? Task.FromException<long>(t.Exception)
+						? Task.FromException<long>(t.Exception!)
 						: t.IsCanceled
 						? Task.FromCanceled<long>(cancellationToken)
 						: Task.FromResult(t.Result.Sum());
+#pragma warning restore CA1849 // Call async methods when in an async method
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 				},
 				CancellationToken.None,
 				TaskContinuationOptions.ExecuteSynchronously,
@@ -89,7 +97,11 @@ public static partial class Extensions
 			}
 			catch
 			{
+#if NET8_0_OR_GREATER
+				await errorTokenSource.CancelAsync().ConfigureAwait(false);
+#else
 				errorTokenSource.Cancel();
+#endif
 				throw;
 			}
 		}

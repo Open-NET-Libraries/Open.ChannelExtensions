@@ -2,7 +2,7 @@
 
 public static partial class Extensions
 {
-	class JoiningChannelReader<TList, T> : BufferingChannelReader<TList, T>
+	sealed class JoiningChannelReader<TList, T> : BufferingChannelReader<TList, T>
 		where TList : IEnumerable<T>
 	{
 		public JoiningChannelReader(ChannelReader<TList> source, bool singleReader) : base(source, singleReader)
@@ -81,7 +81,8 @@ public static partial class Extensions
 	public static ChannelReader<T> Join<T>(this ChannelReader<T[]> source, bool singleReader = false)
 		=> new JoiningChannelReader<T[], T>(source, singleReader);
 
-#if NETSTANDARD2_1
+#if NETSTANDARD2_0
+#else
 	/// <summary>
 	/// Joins collections of the same type into a single channel reader in the order provided.
 	/// </summary>
@@ -90,6 +91,8 @@ public static partial class Extensions
 	/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 	/// <param name="allowSynchronousContinuations">True can reduce the amount of scheduling and markedly improve performance, but may produce unexpected or even undesirable behavior.</param>
 	/// <returns>A channel reader containing the joined results.</returns>
+	[SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "For NET STandard 2.1")]
+	[SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Potential exception type is too far removed.")]
 	public static ChannelReader<T> Join<T>(
 		this ChannelReader<IAsyncEnumerable<T>> source,
 		bool singleReader = false,
