@@ -252,8 +252,12 @@ public static partial class Extensions
 			bool more = false; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 			while (!cancellationToken.IsCancellationRequested)
 			{
+#if NET8_0_OR_GREATER
+				string? line = await source.ReadLineAsync(cancellationToken).ConfigureAwait(false);
+#else
 				string? line = await source.ReadLineAsync().ConfigureAwait(false);
-				// the followig is written this way to help null analysis.
+#endif
+				// the following is written this way to help null analysis.
 				if (line is null)
 				{
 					more = false;

@@ -40,6 +40,16 @@ public static partial class Extensions
 		}
 	}
 
+#if NET8_0_OR_GREATER
+#else
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static ValueTask CancelAsync(this CancellationTokenSource source)
+	{
+		source.Cancel();
+		return new ValueTask();
+	}
+#endif
+
 	// Avoid potential lambda allocation.
 	internal static IEnumerable<ValueTask<T>> WrapValueTask<T>(this IEnumerable<T> source)
 	{

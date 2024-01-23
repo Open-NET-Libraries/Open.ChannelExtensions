@@ -405,7 +405,6 @@ public static class BasicTests
 		Assert.True(result.SequenceEqual(range));
 	}
 
-#if NET5_0_OR_GREATER
 	[Theory]
 	[InlineData(11)]
 	[InlineData(51)]
@@ -439,7 +438,6 @@ public static class BasicTests
 			}
 		}
 	}
-#endif
 
 	[Theory]
 	[InlineData(testSize1)]

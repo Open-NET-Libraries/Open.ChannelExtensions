@@ -33,7 +33,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 	/// </summary>
 	public bool ForceBatch() => TryPipeItems(true);
 
-	void ForceBatch(object obj) => ForceBatch();
+	void ForceBatch(object? obj) => ForceBatch();
 
 	long _timeout = -1;
 	Timer? _timer;
@@ -224,7 +224,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 
 		if (b.IsCompleted)
 		{
-			tokenSource.Cancel();
+			await tokenSource.CancelAsync().ConfigureAwait(false);
 			return await b.ConfigureAwait(false);
 		}
 
@@ -232,7 +232,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 		await Task.WhenAny(s.AsTask(), b).ConfigureAwait(false);
 		if (b.IsCompleted) // Assuming it was bufferWait that completed.
 		{
-			tokenSource.Cancel();
+			await tokenSource.CancelAsync().ConfigureAwait(false);
 			return await b.ConfigureAwait(false);
 		}
 
@@ -254,7 +254,11 @@ public class QueueBatchingChannelReader<T> : BatchingChannelReader<T, Queue<T>>
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override void AddBatchItem(Queue<T> batch, T item) => batch.Enqueue(item);
+	protected override void AddBatchItem(Queue<T> batch, T item)
+	{
+		Debug.Assert(batch is not null);
+		batch!.Enqueue(item);
+	}
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -262,11 +266,19 @@ public class QueueBatchingChannelReader<T> : BatchingChannelReader<T, Queue<T>>
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override int GetBatchSize(Queue<T> batch) => batch.Count;
+	protected override int GetBatchSize(Queue<T> batch)
+	{
+		Debug.Assert(batch is not null);
+		return batch!.Count;
+	}
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override void TrimBatch(Queue<T> batch) => batch!.TrimExcess();
+	protected override void TrimBatch(Queue<T> batch)
+	{
+		Debug.Assert(batch is not null);
+		batch!.TrimExcess();
+	}
 }
 
 /// <inheritdoc />
@@ -278,7 +290,11 @@ public class BatchingChannelReader<T> : BatchingChannelReader<T, List<T>>
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override void AddBatchItem(List<T> batch, T item) => batch.Add(item);
+	protected override void AddBatchItem(List<T> batch, T item)
+	{
+		Debug.Assert(batch is not null);
+		batch!.Add(item);
+	}
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -286,9 +302,17 @@ public class BatchingChannelReader<T> : BatchingChannelReader<T, List<T>>
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override int GetBatchSize(List<T> batch) => batch.Count;
+	protected override int GetBatchSize(List<T> batch)
+	{
+		Debug.Assert(batch is not null);
+		return batch!.Count;
+	}
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override void TrimBatch(List<T> batch) => batch!.TrimExcess();
+	protected override void TrimBatch(List<T> batch)
+	{
+		Debug.Assert(batch is not null);
+		batch!.TrimExcess();
+	}
 }

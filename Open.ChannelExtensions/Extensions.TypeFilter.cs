@@ -2,7 +2,7 @@
 
 public static partial class Extensions
 {
-	class TypeFilteringChannelReader<TSource, T> : ChannelReader<T>
+	sealed class TypeFilteringChannelReader<TSource, T> : ChannelReader<T>
 	{
 		public TypeFilteringChannelReader(ChannelReader<TSource> source)
 		{

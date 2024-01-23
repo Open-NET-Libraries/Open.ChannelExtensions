@@ -100,7 +100,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 		if (completion.IsCompleted)
 		{
 			return completion.IsFaulted
-				? new ValueTask<bool>(Task.FromException<bool>(completion.Exception))
+				? new ValueTask<bool>(Task.FromException<bool>(completion.Exception!))
 				: new ValueTask<bool>(false);
 		}
 
@@ -131,7 +131,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 
 		if (bufferWait.IsCompleted)
 		{
-			tokenSource.Cancel();
+			await tokenSource.CancelAsync().ConfigureAwait(false);
 			return await bufferWait.ConfigureAwait(false);
 		}
 
