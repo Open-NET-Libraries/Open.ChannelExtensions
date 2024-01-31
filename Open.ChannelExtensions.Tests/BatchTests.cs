@@ -81,7 +81,7 @@ public static class BatchTests
 						_ = Task.Run(async () =>
 						{
 							await Task.Delay(60000, token);
-							if (!token.IsCancellationRequested) c.Writer.TryComplete(new Exception("Should have completed successfuly."));
+							if (!token.IsCancellationRequested) c.Writer.TryComplete(new Exception("Should have completed successfully."));
 						});
 						break;
 					case 2:
@@ -259,7 +259,6 @@ public static class BatchTests
 		}));
 	}
 
-#if NET5_0_OR_GREATER
 	[Fact]
 	public static async Task BatchReadBehavior()
 	{
@@ -408,5 +407,4 @@ public static class BatchTests
 			if (item?.Count > 0) yield return item;
 		}
 	}
-#endif
 }

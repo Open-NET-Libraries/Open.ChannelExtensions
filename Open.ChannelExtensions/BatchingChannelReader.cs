@@ -39,7 +39,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 	Timer? _timer;
 
 	/// <summary>
-	/// Specifies a timeout by which a batch will be emmited there is at least one item but has been waiting
+	/// Specifies a timeout by which a batch will be emitted there is at least one item but has been waiting
 	/// for longer than the timeout value.
 	/// </summary>
 	/// <param name="millisecondsTimeout">
@@ -151,7 +151,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 			{
 				if (c is null)
 				{
-					newBatch = true; // a new batch could start but not be emmited.
+					newBatch = true; // a new batch could start but not be emitted.
 					_batch = c = CreateBatch(_batchSize);
 					AddBatchItem(c, item);
 				}
@@ -195,7 +195,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 			{
 				_batch = null;
 				newBatch = false;
-				if (!batched) TryUpdateTimer(Timeout.Infinite); // Since we're emmitting one, let's ensure the timeout is cancelled.
+				if (!batched) TryUpdateTimer(Timeout.Infinite); // Since we're emitting one, let's ensure the timeout is cancelled.
 				batched = Buffer!.Writer.TryWrite(c!);
 				Debug.Assert(batched);
 				c = null;
