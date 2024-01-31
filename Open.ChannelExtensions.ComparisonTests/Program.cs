@@ -106,7 +106,6 @@ static class Program
 			Console.WriteLine();
 		}
 
-#if NETCOREAPP3_0
 		{
 			Console.WriteLine("Async Enumerable test...");
 			var sw = Stopwatch.StartNew();
@@ -120,7 +119,6 @@ static class Program
 			Console.WriteLine(sw.Elapsed);
 			Console.WriteLine();
 		}
-#endif
 
 	}
 

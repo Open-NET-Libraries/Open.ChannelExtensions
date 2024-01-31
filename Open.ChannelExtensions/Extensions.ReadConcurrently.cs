@@ -79,7 +79,7 @@ public static partial class Extensions
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <param name="receiver">The async receiver function.</param>
 	/// <returns>A task that completes when no more reading is to be done.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
 		int maxConcurrency,
 		CancellationToken cancellationToken,
@@ -132,7 +132,7 @@ public static partial class Extensions
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <param name="receiver">The async receiver function.</param>
 	/// <returns>A task that completes when no more reading is to be done.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static Task<long> ReadAllConcurrentlyAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 		int maxConcurrency,
 		CancellationToken cancellationToken,
@@ -190,7 +190,7 @@ public static partial class Extensions
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <param name="receiver">The receiver function.</param>
 	/// <returns>A task that completes when no more reading is to be done.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static Task<long> ReadAllConcurrently<T>(this ChannelReader<T> reader,
 		int maxConcurrency,
 		CancellationToken cancellationToken,
@@ -228,7 +228,7 @@ public static partial class Extensions
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <param name="receiver">The receiver function.</param>
 	/// <returns>A task that completes when no more reading is to be done.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static Task<long> ReadAllConcurrently<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 		int maxConcurrency,
 		CancellationToken cancellationToken,
@@ -300,7 +300,7 @@ public static partial class Extensions
 	}
 
 	/// <inheritdoc cref="ReadAllAsEnumerablesAsync{T}(ChannelReader{T}, Func{IEnumerable{T}, ValueTask}, bool, CancellationToken)"/>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static Task ReadAllConcurrentlyAsEnumerablesAsync<T>(this ChannelReader<T> reader,
 		int maxConcurrency,
 		CancellationToken cancellationToken,
@@ -327,7 +327,7 @@ public static partial class Extensions
 	}
 
 	/// <inheritdoc cref="ReadAllAsEnumerablesAsync{T}(ChannelReader{T}, Func{IEnumerable{T}, ValueTask}, bool, CancellationToken)"/>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static Task ReadAllConcurrentlyAsEnumerables<T>(this ChannelReader<T> reader,
 		int maxConcurrency,
 		CancellationToken cancellationToken,
