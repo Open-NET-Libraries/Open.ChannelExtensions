@@ -21,7 +21,9 @@ public class SpecialTests
 
 		queue.CompleteAdding();
 
+#pragma warning disable xUnit1031 // Do not use blocking task operations in test method
 		processingTask.Wait();
+#pragma warning restore xUnit1031 // Do not use blocking task operations in test method
 
 		Assert.Equal(expectedCount, count_);
 
