@@ -32,6 +32,7 @@ public static class PipelineExceptionTests
 			channel.Writer.Complete();
 
 		await Assert.ThrowsAsync<AggregateException>(async () => await task);
+		await Assert.ThrowsAsync<ChannelClosedException>(async () => await channel.CompleteAsync());
 	}
 
 	[Theory]
@@ -63,5 +64,6 @@ public static class PipelineExceptionTests
 			channel.Writer.Complete();
 
 		await Assert.ThrowsAsync<AggregateException>(async () => await task);
+		await Assert.ThrowsAsync<ChannelClosedException>(async () => await channel.CompleteAsync());
 	}
 }
