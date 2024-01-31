@@ -423,7 +423,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
 		CancellationToken cancellationToken,
 		Func<T, long, ValueTask> receiver,
@@ -480,7 +480,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 		CancellationToken cancellationToken,
 		Func<TRead, long, ValueTask> receiver,
@@ -532,7 +532,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 		CancellationToken cancellationToken,
 		Func<TRead, long, Task> receiver,
@@ -581,7 +581,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> ReadAllAsync<T>(this ChannelReader<T> reader,
 		CancellationToken cancellationToken,
 		Func<T, ValueTask> receiver,
@@ -630,7 +630,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> TaskReadAllAsync<T>(this ChannelReader<T> reader,
 		CancellationToken cancellationToken,
 		Func<T, Task> receiver,
@@ -682,7 +682,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> TaskReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 		CancellationToken cancellationToken,
 		Func<TRead, Task> receiver,
@@ -740,7 +740,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> ReadAllAsync<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 		CancellationToken cancellationToken,
 		Func<TRead, ValueTask> receiver,
@@ -753,7 +753,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="reader">The channel reader to read from.</param>
 	/// <param name="receiver">The receiver function.</param>
-	/// <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
+	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
@@ -783,7 +783,7 @@ public static partial class Extensions
 	/// <param name="reader">The channel reader to read from.</param>
 	/// <param name="receiver">The receiver function.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
+	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
 	public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
@@ -799,10 +799,10 @@ public static partial class Extensions
 	/// <param name="reader">The channel reader to read from.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <param name="receiver">The receiver function.</param>
-	/// <param name="deferredExecution">If true, calls await Task.Yield() before writreadinging.</param>
+	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
 		CancellationToken cancellationToken,
 		Action<T, long> receiver,
@@ -860,7 +860,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 		CancellationToken cancellationToken,
 		Action<TRead, long> receiver,
@@ -921,7 +921,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> ReadAll<T>(this ChannelReader<T> reader,
 		CancellationToken cancellationToken,
 		Action<T> receiver,
@@ -978,7 +978,7 @@ public static partial class Extensions
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
-	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convience.")]
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static ValueTask<long> ReadAll<TWrite, TRead>(this Channel<TWrite, TRead> channel,
 		CancellationToken cancellationToken,
 		Action<TRead> receiver,
@@ -1020,7 +1020,7 @@ public static partial class Extensions
 	/// </summary>
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="channel">The channel to read from.</param>
-	/// <param name="receiver">The TextWriter to recieve the lines.</param>
+	/// <param name="receiver">The TextWriter to receive the lines.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The count of items read after the reader has completed.
@@ -1041,7 +1041,7 @@ public static partial class Extensions
 	/// </summary>
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="channel">The channel to read from.</param>
-	/// <param name="receiver">The TextWriter to recieve the lines.</param>
+	/// <param name="receiver">The TextWriter to receive the lines.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before reading.</param>
 	/// <returns>The count of items read after the reader has completed.

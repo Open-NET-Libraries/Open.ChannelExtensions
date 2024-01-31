@@ -12,7 +12,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
@@ -69,7 +69,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
@@ -86,7 +86,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
@@ -116,7 +116,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
@@ -133,7 +133,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
@@ -163,7 +163,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
@@ -180,7 +180,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
@@ -210,7 +210,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
@@ -226,7 +226,7 @@ public static partial class Extensions
 	/// </summary>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The text reader to consume from.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
@@ -298,7 +298,7 @@ public static partial class Extensions
 	/// </summary>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The text reader to consume from.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>
@@ -317,7 +317,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
@@ -373,7 +373,7 @@ public static partial class Extensions
 	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="target">The channel to write to.</param>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is emtpy).</param>
+	/// <param name="complete">If true, will call .Complete() if all the results have successfully been written (or the source is empty).</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>A task containing the count of items written that completes when all the data has been written to the channel writer.
 	/// The count should be ignored if the number of iterations could exceed the max value of long.</returns>

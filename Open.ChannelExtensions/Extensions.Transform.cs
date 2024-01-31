@@ -41,7 +41,7 @@ public static partial class Extensions
 	/// <typeparam name="TResult">The output type of the transform.</typeparam>
 	/// <param name="source">The source channel reader.</param>
 	/// <param name="transform">The transform function.</param>
-	/// <returns>A channel reader representing the tranformed results.</returns>
+	/// <returns>A channel reader representing the transformed results.</returns>
 	public static ChannelReader<TResult> Transform<T, TResult>(this ChannelReader<T> source, Func<T, TResult> transform)
 		=> new TransformingChannelReader<T, TResult>(source, transform);
 
@@ -53,7 +53,7 @@ public static partial class Extensions
 	/// <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
 	/// <param name="source">The source channel reader.</param>
 	/// <param name="transform">The transform function.</param>
-	/// <returns>A channel reader representing the tranformed results.</returns>
+	/// <returns>A channel reader representing the transformed results.</returns>
 	public static TransformChannel<TWrite, TRead, TResult> Transform<TWrite, TRead, TResult>(this Channel<TWrite, TRead> source, Func<TRead, TResult> transform)
 		=> new(source, transform);
 
@@ -64,7 +64,7 @@ public static partial class Extensions
 	/// <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
 	/// <param name="source">The source channel reader.</param>
 	/// <param name="transform">The transform function.</param>
-	/// <returns>A channel reader representing the tranformed results.</returns>
+	/// <returns>A channel reader representing the transformed results.</returns>
 	public static TransformChannel<T, TResult> Transform<T, TResult>(this Channel<T> source, Func<T, TResult> transform)
 		=> new(source, transform);
 }
