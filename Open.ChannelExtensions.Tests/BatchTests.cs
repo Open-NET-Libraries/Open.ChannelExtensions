@@ -259,7 +259,6 @@ public static class BatchTests
 		}));
 	}
 
-#if NET5_0_OR_GREATER
 	[Fact]
 	public static async Task BatchReadBehavior()
 	{
@@ -408,5 +407,4 @@ public static class BatchTests
 			if (item?.Count > 0) yield return item;
 		}
 	}
-#endif
 }

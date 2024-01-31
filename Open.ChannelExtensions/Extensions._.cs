@@ -266,7 +266,8 @@ public static partial class Extensions
 		=> CreateChannel<T>(capacity, singleReader)
 			.Source(source, deferredExecution, cancellationToken);
 
-#if NETSTANDARD2_1
+#if NETSTANDARD2_0
+#else
 	/// <summary>
 	/// Writes all entries from the source to a channel and calls complete when finished.
 	/// </summary>
