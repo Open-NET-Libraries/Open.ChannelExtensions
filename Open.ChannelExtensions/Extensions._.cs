@@ -266,7 +266,8 @@ public static partial class Extensions
 		=> CreateChannel<T>(capacity, singleReader)
 			.Source(source, deferredExecution, cancellationToken);
 
-#if NETSTANDARD2_1
+#if NETSTANDARD2_0
+#else
 	/// <summary>
 	/// Writes all entries from the source to a channel and calls complete when finished.
 	/// </summary>
@@ -349,7 +350,7 @@ public static partial class Extensions
 	/// Iterates over the results in a Channel.
 	/// Provided as an alternative to .ReadAllAsync() which at the time of publishing this, only exists in .NET Core 3.0 and not .NET Standard 2.1
 	/// </summary>
-	/// <typeparam name="TIn">The type recieved by the source channel.</typeparam>
+	/// <typeparam name="TIn">The type received by the source channel.</typeparam>
 	/// <typeparam name="TOut">The outgoing type from the source channel.</typeparam>
 	/// <param name="channel">The reader to read from.</param>
 	/// <param name="cancellationToken">An optional cancellation token that will break out of the iteration.</param>

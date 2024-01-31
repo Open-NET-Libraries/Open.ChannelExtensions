@@ -259,7 +259,6 @@ public static class BatchTests
 		}));
 	}
 
-#if NET5_0_OR_GREATER
 	[Fact]
 	public static async Task BatchReadBehavior()
 	{
@@ -362,7 +361,7 @@ public static class BatchTests
 					Debug.WriteLine("First batch received: " + string.Join(',', batch.Select(item => item)));
 					break;
 				case 1:
-					Assert.Equal(1, batch.Count);
+					Assert.Single(batch);
 					Assert.Equal(3, batch[0]);
 					Debug.WriteLine("Second batch received: " + string.Join(',', batch.Select(item => item)));
 					break;
@@ -408,5 +407,4 @@ public static class BatchTests
 			if (item?.Count > 0) yield return item;
 		}
 	}
-#endif
 }
