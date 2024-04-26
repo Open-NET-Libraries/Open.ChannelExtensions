@@ -5,9 +5,9 @@ public static partial class Extensions
 	/// <summary>
 	/// Merges the unmatchedChannelReader parameter into the source channel.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="unmatchedChannelReader">Channel for the unmatched items to merged into the source channel</param>
+	/// <param name="unmatchedChannelReader">The unmatched channel to be merged back into the source channel</param>
 	/// <param name="cancellationToken">A cancellation token.</param>
 	/// <returns></returns>
 	public static ChannelReader<T> Merge<T>(this ChannelReader<T> source, ChannelReader<T> unmatchedChannelReader, CancellationToken cancellationToken)
