@@ -1,4 +1,5 @@
 ﻿namespace Open.ChannelExtensions.Tests;
+
 public class SplitAndMergeTests
 {
 	[Fact]
