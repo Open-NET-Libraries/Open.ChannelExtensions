@@ -51,12 +51,14 @@ public static partial class Extensions
 
 		public override bool TryRead(out T item)
 		{
+			int previous = -1;
 			// Try as many times as there are sources before giving up.
 			for (var attempt = 0; attempt < _count; attempt++)
 			{
 				// If the value overflows, it will be negative, which is fine, we'll adapt.
 				var i = Interlocked.Increment(ref _next) % _count;
 				if (i < 0) i += _count;
+
 				var source = _sources[i];
 
 				if (source.TryRead(out T? s))
@@ -64,6 +66,14 @@ public static partial class Extensions
 					item = s;
 					return true;
 				}
+
+				// Help the round-robin to try each source at least once.
+				// If previous is not -1 and i is not the next in the sequence,
+				// then another thread has already tried that source.
+				if (previous != -1 && (previous + 1) % _count != i)
+					attempt--; // Allow for an extra attempt. 
+
+				previous = i;
 			}
 
 			item = default!;
