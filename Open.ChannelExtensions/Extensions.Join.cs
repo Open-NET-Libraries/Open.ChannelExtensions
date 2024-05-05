@@ -2,13 +2,10 @@
 
 public static partial class Extensions
 {
-	sealed class JoiningChannelReader<TList, T> : BufferingChannelReader<TList, T>
+	sealed class JoiningChannelReader<TList, T>(ChannelReader<TList> source, bool singleReader)
+		: BufferingChannelReader<TList, T>(source, singleReader)
 		where TList : IEnumerable<T>
 	{
-		public JoiningChannelReader(ChannelReader<TList> source, bool singleReader) : base(source, singleReader)
-		{
-		}
-
 		protected override bool TryPipeItems(bool _)
 		{
 			ChannelReader<TList>? source = Source;
