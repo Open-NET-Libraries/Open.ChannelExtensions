@@ -156,7 +156,6 @@ public sealed class MergingChannelReader<T> : ChannelReader<T>
 
 		int count = _sources.Length + (others?.Length ?? 0);
 
-		count += _sources.Length;
 		ImmutableArray<ChannelReader<T>>.Builder builder;
 		if (other is MergingChannelReader<T> mcr)
 		{
@@ -174,6 +173,7 @@ public sealed class MergingChannelReader<T> : ChannelReader<T>
 		}
 
 		if (others is not null) builder.AddRange(others);
+		Debug.Assert(builder.Count == builder.Capacity);
 
 		return new (builder.MoveToImmutable());
 	}
