@@ -29,15 +29,7 @@ public class TransformChannel<TWrite, TRead, TResult> : Channel<TWrite, TResult>
 /// </summary>
 /// <typeparam name="T">Specifies the type of data that may be written to the channel.</typeparam>
 /// <typeparam name="TResult">Specifies the type of data that may be read from the channel.</typeparam>
-public class TransformChannel<T, TResult> : TransformChannel<T, T, TResult>
+public class TransformChannel<T, TResult>(Channel<T, T> source, Func<T, TResult> transform)
+	: TransformChannel<T, T, TResult>(source, transform)
 {
-	/// <summary>
-	/// Creates a channel wrapper that takes the provided channel and transforms them on demand when being read.
-	/// </summary>
-	/// <param name="source">The channel containing the source data.</param>
-	/// <param name="transform">The transform function to be applied to the results when being read.</param>
-	public TransformChannel(Channel<T, T> source, Func<T, TResult> transform)
-		: base(source, transform)
-	{
-	}
 }

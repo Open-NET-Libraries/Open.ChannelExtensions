@@ -1060,12 +1060,12 @@ public static partial class Extensions
 	/// <param name="reader">The channel reader to read from.</param>
 	/// <param name="initialCapacity">An optional capacity to initialze the list with.</param>
 	/// <returns>A list containing all the items from the completed channel.</returns>
-	public static async ValueTask<List<T>> ToListAsync<T>(this ChannelReader<T> reader, int initialCapacity = 0)
+	public static async ValueTask<List<T>> ToListAsync<T>(this ChannelReader<T> reader, int initialCapacity = -1)
 	{
 		if (reader is null) throw new ArgumentNullException(nameof(reader));
 		Contract.EndContractBlock();
 
-		List<T> list = initialCapacity == 0 ? new() : new(initialCapacity);
+		List<T> list = initialCapacity < 0 ? new() : new(initialCapacity);
 		await ReadAll(reader, list.Add).ConfigureAwait(false);
 		return list;
 	}
