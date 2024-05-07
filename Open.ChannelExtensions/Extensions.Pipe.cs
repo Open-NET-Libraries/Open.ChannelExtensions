@@ -382,6 +382,14 @@ public static partial class Extensions
 	}
 
 	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, ChannelOptions, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilter<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		ChannelOptions options,
+		Func<T, bool> predicate,
+		CancellationToken cancellationToken = default)
+		=> PipeFilter(source, out unmatched, options, 1, predicate, cancellationToken);
+
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, ChannelOptions, int, Func{T, bool}, CancellationToken)"/>
 	public static ChannelReader<T> PipeFilterAsync<T>(this ChannelReader<T> source,
 		out ChannelReader<T> unmatched,
 		ChannelOptions options,
@@ -416,6 +424,14 @@ public static partial class Extensions
 		return matchedChannel.Reader;
 	}
 
+	/// <inheritdoc cref="PipeFilterAsync{T}(ChannelReader{T}, out ChannelReader{T}, ChannelOptions, int, Func{T, ValueTask{bool}}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilterAsync<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		ChannelOptions options,
+		Func<T, ValueTask<bool>> predicate,
+		CancellationToken cancellationToken = default)
+		=> PipeFilterAsync(source, out unmatched, options, 1, predicate, cancellationToken);
+
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="unmatched">Channel containing the unmatched items</param>
 	/// <param name="capacity">
@@ -439,6 +455,14 @@ public static partial class Extensions
 	}
 
 	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, int, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilter<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		int capacity,
+		Func<T, bool> predicate,
+		CancellationToken cancellationToken = default)
+		=> PipeFilter(source, out unmatched, capacity, 1, predicate, cancellationToken);
+
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, int, int, Func{T, bool}, CancellationToken)"/>
 	public static ChannelReader<T> PipeFilterAsync<T>(this ChannelReader<T> source,
 		out ChannelReader<T> unmatched,
 		int capacity,
@@ -449,4 +473,12 @@ public static partial class Extensions
 		var options = CreateOptions(capacity, false, false, maxConcurrency == 1);
 		return PipeFilterAsync(source, out unmatched, options, maxConcurrency, predicate, cancellationToken);
 	}
+
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, int, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilterAsync<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		int capacity,
+		Func<T, ValueTask<bool>> predicate,
+		CancellationToken cancellationToken = default)
+		=> PipeFilterAsync(source, out unmatched, capacity, 1, predicate, cancellationToken);
 }
