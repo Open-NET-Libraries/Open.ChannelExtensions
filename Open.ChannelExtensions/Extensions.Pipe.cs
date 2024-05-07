@@ -345,7 +345,7 @@ public static partial class Extensions
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The <see cref="ChannelReader{T}"/> containing only the items that match the <paramref name="predicate"/>.</returns>
 	/// <remarks>
-	/// All items not matching the predicate are written to the <paramref name="unmatched"/> channel.
+	/// All items not matching the <paramref name="predicate"/> are written to the <paramref name="unmatched"/> channel.
 	/// </remarks>
 	public static ChannelReader<T> PipeFilter<T>(this ChannelReader<T> source,
 		out ChannelReader<T> unmatched,
