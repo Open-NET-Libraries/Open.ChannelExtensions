@@ -332,7 +332,7 @@ public static partial class Extensions
 	/// function before buffering the results into another channel for consumption.
 	/// </para>
 	/// <para>
-	/// If you do no need the unmatched items,
+	/// If you do not need the unmatched items,
 	/// use the <see cref="Filter{T}(ChannelReader{T}, Func{T, bool})"/> extension.
 	/// </para>
 	/// </summary>
