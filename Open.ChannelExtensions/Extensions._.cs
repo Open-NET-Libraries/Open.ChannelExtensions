@@ -18,6 +18,22 @@ public static partial class Extensions
 			? Channel.CreateUnbounded<T>(ubco)
 			: throw new ArgumentException("Unsupported channel option type.", nameof(channelOptions));
 
+	internal static ChannelOptions CreateOptions(int capacity = -1, bool singleReader = false, bool syncCont = false, bool singleWriter = true)
+		=> capacity > 0
+		? new BoundedChannelOptions(capacity)
+		{
+			SingleWriter = singleWriter,
+			SingleReader = singleReader,
+			AllowSynchronousContinuations = syncCont,
+			FullMode = BoundedChannelFullMode.Wait
+		}
+		: new UnboundedChannelOptions
+		{
+			SingleWriter = singleWriter,
+			SingleReader = singleReader,
+			AllowSynchronousContinuations = syncCont
+		};
+
 	internal static Channel<T> CreateChannel<T>(int capacity = -1, bool singleReader = false, bool syncCont = false, bool singleWriter = true)
 		=> capacity > 0
 			? Channel.CreateBounded<T>(new BoundedChannelOptions(capacity)

@@ -325,4 +325,160 @@ public static partial class Extensions
 
 		return Pipe(source.Reader, transform, capacity, singleReader, cancellationToken);
 	}
+
+	/// <summary>
+	/// <para>
+	/// Reads all entries and filters the values using the <paramref name="predicate"/>
+	/// function before buffering the results into another channel for consumption.
+	/// </para>
+	/// <para>
+	/// If you do not need the unmatched items,
+	/// use the <see cref="Filter{T}(ChannelReader{T}, Func{T, bool})"/> extension.
+	/// </para>
+	/// </summary>
+	/// <typeparam name="T">The input type of the channel.</typeparam>
+	/// <param name="source">The asynchronous source data to use.</param>
+	/// <param name="unmatched">Channel containing the unmatched items</param>
+	/// <param name="options">The settings to use for the created channels.</param>
+	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
+	/// <param name="predicate">Predicate to test against</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
+	/// <returns>The <see cref="ChannelReader{T}"/> containing only the items that match the <paramref name="predicate"/>.</returns>
+	/// <remarks>
+	/// All items not matching the <paramref name="predicate"/> are written to the <paramref name="unmatched"/> channel.
+	/// </remarks>
+	public static ChannelReader<T> PipeFilter<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		ChannelOptions options,
+		int maxConcurrency,
+		Func<T, bool> predicate,
+		CancellationToken cancellationToken = default)
+	{
+		var singleWriter = maxConcurrency == 1;
+
+		var matchedChannel = CreateChannel<T>(options);
+		var matchedWriter = matchedChannel.Writer;
+
+		var unmatchedChannel = CreateChannel<T>(options);
+		var unmatchedWriter = unmatchedChannel.Writer;
+
+		source
+			.ReadAllConcurrentlyAsync(maxConcurrency, e =>
+			{
+				var writer = predicate(e) ? matchedWriter : unmatchedWriter;
+				return writer.WriteAsync(e, cancellationToken);
+			}, cancellationToken)
+			.ContinueWith(t =>
+			{
+				unmatchedWriter.Complete(t.Exception);
+				matchedWriter.Complete(t.Exception);
+			},
+			CancellationToken.None,
+			TaskContinuationOptions.ExecuteSynchronously,
+			TaskScheduler.Current);
+
+		unmatched = unmatchedChannel.Reader;
+		return matchedChannel.Reader;
+	}
+
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, ChannelOptions, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilter<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		ChannelOptions options,
+		Func<T, bool> predicate,
+		CancellationToken cancellationToken = default)
+		=> PipeFilter(source, out unmatched, options, 1, predicate, cancellationToken);
+
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, ChannelOptions, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilterAsync<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		ChannelOptions options,
+		int maxConcurrency,
+		Func<T, ValueTask<bool>> predicate,
+		CancellationToken cancellationToken = default)
+	{
+		var singleWriter = maxConcurrency == 1;
+
+		var matchedChannel = CreateChannel<T>(options);
+		var matchedWriter = matchedChannel.Writer;
+
+		var unmatchedChannel = CreateChannel<T>(options);
+		var unmatchedWriter = unmatchedChannel.Writer;
+
+		source
+			.ReadAllConcurrentlyAsync(maxConcurrency, async e =>
+			{
+				var writer = await predicate(e).ConfigureAwait(false) ? matchedWriter : unmatchedWriter;
+				await writer.WriteAsync(e, cancellationToken).ConfigureAwait(false);
+			}, cancellationToken)
+			.ContinueWith(t =>
+			{
+				unmatchedWriter.Complete(t.Exception);
+				matchedWriter.Complete(t.Exception);
+			},
+			CancellationToken.None,
+			TaskContinuationOptions.ExecuteSynchronously,
+			TaskScheduler.Current);
+
+		unmatched = unmatchedChannel.Reader;
+		return matchedChannel.Reader;
+	}
+
+	/// <inheritdoc cref="PipeFilterAsync{T}(ChannelReader{T}, out ChannelReader{T}, ChannelOptions, int, Func{T, ValueTask{bool}}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilterAsync<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		ChannelOptions options,
+		Func<T, ValueTask<bool>> predicate,
+		CancellationToken cancellationToken = default)
+		=> PipeFilterAsync(source, out unmatched, options, 1, predicate, cancellationToken);
+
+	/// <param name="source">The asynchronous source data to use.</param>
+	/// <param name="unmatched">Channel containing the unmatched items</param>
+	/// <param name="capacity">
+	/// <para>The width of the pipe: how many entries to buffer while waiting to be read from.</para>
+	///	<para>Applies to both the matched (return) and <paramref name="unmatched"/> (out) channels.</para>
+	///	<para>A value less that 1 will produce unbound channels.</para>
+	///	</param>
+	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
+	/// <param name="predicate">Predicate to test against</param>
+	/// <param name="cancellationToken">An optional cancellation token.</param>
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, ChannelOptions, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilter<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		int capacity,
+		int maxConcurrency,
+		Func<T, bool> predicate,
+		CancellationToken cancellationToken = default)
+	{
+		var options = CreateOptions(capacity, false, false, maxConcurrency == 1);
+		return PipeFilter(source, out unmatched, options, maxConcurrency, predicate, cancellationToken);
+	}
+
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, int, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilter<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		int capacity,
+		Func<T, bool> predicate,
+		CancellationToken cancellationToken = default)
+		=> PipeFilter(source, out unmatched, capacity, 1, predicate, cancellationToken);
+
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, int, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilterAsync<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		int capacity,
+		int maxConcurrency,
+		Func<T, ValueTask<bool>> predicate,
+		CancellationToken cancellationToken = default)
+	{
+		var options = CreateOptions(capacity, false, false, maxConcurrency == 1);
+		return PipeFilterAsync(source, out unmatched, options, maxConcurrency, predicate, cancellationToken);
+	}
+
+	/// <inheritdoc cref="PipeFilter{T}(ChannelReader{T}, out ChannelReader{T}, int, int, Func{T, bool}, CancellationToken)"/>
+	public static ChannelReader<T> PipeFilterAsync<T>(this ChannelReader<T> source,
+		out ChannelReader<T> unmatched,
+		int capacity,
+		Func<T, ValueTask<bool>> predicate,
+		CancellationToken cancellationToken = default)
+		=> PipeFilterAsync(source, out unmatched, capacity, 1, predicate, cancellationToken);
 }

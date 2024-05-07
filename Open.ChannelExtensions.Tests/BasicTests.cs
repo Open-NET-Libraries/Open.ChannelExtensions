@@ -461,4 +461,56 @@ public static class BasicTests
 		Assert.Equal(count, result.Count);
 		Assert.True(result.SequenceEqual(range.Where(i => i % 2 == 1)));
 	}
+
+	[Fact]
+	public static async Task PipeFilterTest()
+	{
+		const int each = 5_000;
+		const int total = 2 * each;
+
+		var source = Enumerable.Range(0, total).ToChannel(300);
+
+		var evenFilter = source
+			.PipeFilter(out var unmatched, 100, 10,
+				static e => e % 2 == 0)
+			.ToListAsync(each);
+
+		var oddFilter = unmatched
+			.ToListAsync(each);
+
+		var even = await evenFilter;
+		var odd = await oddFilter;
+
+		even.Count.Should().Be(each);
+		odd.Count.Should().Be(each);
+		even.Should().OnlyContain(e => e % 2 == 0);
+		odd.Should().OnlyContain(e => e % 2 != 0);
+	}
+
+	[Fact]
+	public static async Task PipeFilterAsyncTest()
+	{
+		const int each = 5_000;
+		const int total = 2 * each;
+
+		var source = Enumerable.Range(0, total).ToChannel(300);
+
+		var evenFilter = source
+			.PipeFilterAsync(out var unmatched, 10, 100, static async e => {
+				await Task.Yield();
+				return e % 2 == 0;
+			})
+			.ToListAsync(each);
+
+		var oddFilter = unmatched
+			.ToListAsync(each);
+
+		var even = await evenFilter;
+		var odd = await oddFilter;
+
+		even.Count.Should().Be(each);
+		odd.Count.Should().Be(each);
+		even.Should().OnlyContain(e => e % 2 == 0);
+		odd.Should().OnlyContain(e => e % 2 != 0);
+	}
 }
