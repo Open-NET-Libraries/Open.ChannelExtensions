@@ -34,7 +34,7 @@ public static partial class Extensions
 		{
 			if (complete)
 			{
-				target.Complete(ex);
+				target.TryComplete(ex);
 				complete = false;
 			}
 			throw;
@@ -42,7 +42,7 @@ public static partial class Extensions
 		finally
 		{
 			if (complete)
-				target.Complete();
+				target.TryComplete();
 		}
 	}
 
