@@ -146,7 +146,7 @@ public static partial class Extensions
 				while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 			}
 		}
-		catch (OperationCanceledException)
+		catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
 		{
 			// In case WaitToReadAsync is cancelled.
 		}
@@ -391,7 +391,7 @@ public static partial class Extensions
 				await receiver(reader.ReadAvailable(cancellationToken)).ConfigureAwait(false);
 			}
 		}
-		catch (OperationCanceledException)
+		catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
 		{
 			// In case WaitToReadAsync is cancelled.
 		}
