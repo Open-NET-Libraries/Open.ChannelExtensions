@@ -7,6 +7,24 @@ public static partial class Extensions
 	private const string MustBeAtLeast1 = "Must be at least 1.";
 
 	/// <summary>
+	/// Waits for read to complete or the cancellation token to be cancelled.
+	/// </summary>
+	public static async ValueTask<bool> WaitToReadOrCancelAsync<T>(this ChannelReader<T> reader, CancellationToken cancellationToken)
+	{
+		if (reader is null) throw new ArgumentNullException(nameof(reader));
+		Contract.EndContractBlock();
+
+		try
+		{
+			return await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false);
+		}
+		catch (OperationCanceledException)
+		{
+			return false;
+		}
+	}
+
+	/// <summary>
 	/// Creates an enumerable that will read from the channel until no more are available for read.
 	/// </summary>
 	/// <typeparam name="T">The item type.</typeparam>
@@ -117,38 +135,32 @@ public static partial class Extensions
 			await Task.Yield();
 
 		long index = 0;
-		try
+
+		if (cancellationToken.CanBeCanceled)
 		{
-			if (cancellationToken.CanBeCanceled)
+			do
 			{
-				do
-				{
-					while (
-						!cancellationToken.IsCancellationRequested
-						&& reader.TryRead(out T? item))
-					{
-						await receiver(item, index++).ConfigureAwait(false);
-					}
-				}
 				while (
 					!cancellationToken.IsCancellationRequested
-					&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
-			}
-			else
-			{
-				do
+					&& reader.TryRead(out T? item))
 				{
-					while (reader.TryRead(out T? item))
-					{
-						await receiver(item, index++).ConfigureAwait(false);
-					}
+					await receiver(item, index++).ConfigureAwait(false);
 				}
-				while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 			}
+			while (
+				!cancellationToken.IsCancellationRequested
+				&& await reader.WaitToReadOrCancelAsync(cancellationToken).ConfigureAwait(false));
 		}
-		catch (OperationCanceledException)
+		else
 		{
-			// In case WaitToReadAsync is cancelled.
+			do
+			{
+				while (reader.TryRead(out T? item))
+				{
+					await receiver(item, index++).ConfigureAwait(false);
+				}
+			}
+			while (await reader.WaitToReadOrCancelAsync(cancellationToken).ConfigureAwait(false));
 		}
 
 		return index;
@@ -373,27 +385,20 @@ public static partial class Extensions
 		if (deferredExecution)
 			await Task.Yield();
 
-		try
+		if (cancellationToken.CanBeCanceled)
 		{
-			if (cancellationToken.CanBeCanceled)
-			{
-				while (
-					!cancellationToken.IsCancellationRequested
-					&& await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
-				{
-					await receiver(reader.ReadAvailable(cancellationToken)).ConfigureAwait(false);
-				}
-				return;
-			}
-
-			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
+			while (
+				!cancellationToken.IsCancellationRequested
+				&& await reader.WaitToReadOrCancelAsync(cancellationToken).ConfigureAwait(false))
 			{
 				await receiver(reader.ReadAvailable(cancellationToken)).ConfigureAwait(false);
 			}
+			return;
 		}
-		catch (OperationCanceledException)
+
+		while (await reader.WaitToReadOrCancelAsync(cancellationToken).ConfigureAwait(false))
 		{
-			// In case WaitToReadAsync is cancelled.
+			await receiver(reader.ReadAvailable(cancellationToken)).ConfigureAwait(false);
 		}
 	}
 
