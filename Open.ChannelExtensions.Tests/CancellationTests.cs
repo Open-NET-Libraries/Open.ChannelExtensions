@@ -57,7 +57,7 @@ public static class CancellationTests
 		}
 		catch (Exception ex)
 		{
-			Assert.IsType<OperationCanceledException>(ex);
+			Assert.IsType<TaskCanceledException>(ex);
 		}
 
 		Assert.Equal(1, count);
