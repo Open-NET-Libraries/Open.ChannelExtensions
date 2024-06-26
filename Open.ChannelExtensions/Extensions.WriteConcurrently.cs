@@ -78,7 +78,7 @@ public static partial class Extensions
 			{
 				await shouldWait.ConfigureAwait(false);
 				long count = 0;
-				var next = new ValueTask();
+				ValueTask next = default;
 				bool potentiallyCancelled = true; // if it completed and actually returned false, no need to bubble the cancellation since it actually completed.
 				while (!errorToken.IsCancellationRequested
 					&& !cancellationToken.IsCancellationRequested
@@ -88,7 +88,7 @@ public static partial class Extensions
 					await next.ConfigureAwait(false);
 					count++;
 					next = target.TryWrite(value) // do this to avoid unnecessary early cancel.
-						? new ValueTask()
+						? default
 						: target.WriteAsync(value, cancellationToken);
 				}
 				await next.ConfigureAwait(false);

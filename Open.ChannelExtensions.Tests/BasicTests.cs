@@ -187,7 +187,7 @@ public static class BasicTests
 			.ReadAllAsync(i =>
 			{
 				result.Add(i);
-				return new ValueTask();
+				return default;
 			});
 		sw.Stop();
 
@@ -221,7 +221,7 @@ public static class BasicTests
 			.ReadAllAsync(i =>
 			{
 				result.Add(i);
-				return new ValueTask();
+				return default;
 			});
 		sw.Stop();
 
@@ -255,7 +255,7 @@ public static class BasicTests
 			.ReadAllAsync(i =>
 			{
 				result.Add(i);
-				return new ValueTask();
+				return default;
 			});
 		sw.Stop();
 

@@ -65,7 +65,7 @@ public static partial class Extensions
 	internal static ValueTask CancelAsync(this CancellationTokenSource source)
 	{
 		source.Cancel();
-		return new ValueTask();
+		return default;
 	}
 #endif
 
@@ -174,7 +174,7 @@ public static partial class Extensions
 			return ThrowChannelClosedExceptionIfFalse(waitForWrite, ifClosedMessage);
 
 		if (waitForWrite.Result)
-			return new ValueTask();
+			return default;
 
 		if (string.IsNullOrWhiteSpace(ifClosedMessage)) throw new ChannelClosedException();
 		throw new ChannelClosedException(ifClosedMessage);

@@ -102,7 +102,6 @@ public static partial class Extensions
 				if (results.Count == max)
 					return results;
 
-				cancellationToken.ThrowIfCancellationRequested();
 			}
 			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 		}
@@ -134,8 +133,9 @@ public static partial class Extensions
 		if (deferredExecution)
 			await Task.Yield();
 
-		long index = 0;
+		long count = 0;
 
+		// Note: if the channel has complete with an OperationCanceledException, this will throw when waiting to read.
 		if (cancellationToken.CanBeCanceled)
 		{
 			do
@@ -144,7 +144,7 @@ public static partial class Extensions
 					!cancellationToken.IsCancellationRequested
 					&& reader.TryRead(out T? item))
 				{
-					await receiver(item, index++).ConfigureAwait(false);
+					await receiver(item, count++).ConfigureAwait(false);
 				}
 			}
 			while (
@@ -157,13 +157,13 @@ public static partial class Extensions
 			{
 				while (reader.TryRead(out T? item))
 				{
-					await receiver(item, index++).ConfigureAwait(false);
+					await receiver(item, count++).ConfigureAwait(false);
 				}
 			}
-			while (await reader.WaitToReadOrCancelAsync(cancellationToken).ConfigureAwait(false));
+			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 		}
 
-		return index;
+		return count;
 	}
 
 	/// <summary>
@@ -250,7 +250,7 @@ public static partial class Extensions
 			(e, i) =>
 			{
 				receiver(e, i);
-				return new ValueTask();
+				return default;
 			},
 			deferredExecution);
 
@@ -297,7 +297,7 @@ public static partial class Extensions
 			(e, _) =>
 			{
 				receiver(e);
-				return new ValueTask();
+				return default;
 			},
 			deferredExecution);
 
@@ -356,7 +356,7 @@ public static partial class Extensions
 			e =>
 			{
 				receiver(e);
-				return new ValueTask();
+				return default;
 			},
 			deferredExecution,
 			cancellationToken);
@@ -396,7 +396,7 @@ public static partial class Extensions
 			return;
 		}
 
-		while (await reader.WaitToReadOrCancelAsync(cancellationToken).ConfigureAwait(false))
+		while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
 		{
 			await receiver(reader.ReadAvailable(cancellationToken)).ConfigureAwait(false);
 		}
@@ -775,7 +775,7 @@ public static partial class Extensions
 			.ReadAllAsync((e, i) =>
 			{
 				receiver(e, i);
-				return new ValueTask();
+				return default;
 			},
 			deferredExecution,
 			cancellationToken);
@@ -894,7 +894,7 @@ public static partial class Extensions
 			(e, _) =>
 			{
 				receiver(e);
-				return new ValueTask();
+				return default;
 			},
 			deferredExecution,
 			cancellationToken);

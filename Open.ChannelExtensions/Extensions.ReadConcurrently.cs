@@ -177,7 +177,7 @@ public static partial class Extensions
 			e =>
 			{
 				receiver(e);
-				return new ValueTask();
+				return default;
 			},
 			cancellationToken);
 
@@ -321,7 +321,7 @@ public static partial class Extensions
 			e =>
 			{
 				receiver(e);
-				return new ValueTask();
+				return default;
 			},
 			cancellationToken);
 	}
