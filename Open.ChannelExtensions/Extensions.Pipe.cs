@@ -1,4 +1,6 @@
-﻿namespace Open.ChannelExtensions;
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Open.ChannelExtensions;
 
 [SuppressMessage("Roslynator", "RCS1047:Non-asynchronous method name should not end with 'Async'.", Justification = "In order to differentiate between non async versions.")]
 public static partial class Extensions
@@ -98,7 +100,22 @@ public static partial class Extensions
 					: ValueNotReady(result, cancellationToken); // Result is not ready, so we need to wait for it.
 			}, cancellationToken)
 			.ContinueWith(
-				t => writer.Complete(t.Exception),
+				t =>
+				{
+					Exception? ex = t.Exception;
+
+					/* We could have been cancelled
+					 * via a thrown cancel exception
+					 * that is not triggered by the token. */
+					if (ex is null
+						&& t.Status is TaskStatus.Canceled
+						&& !cancellationToken.IsCancellationRequested)
+					{
+						ex = new OperationCanceledException();
+					}
+
+					writer.Complete(ex);
+				},
 				CancellationToken.None,
 				TaskContinuationOptions.ExecuteSynchronously,
 				TaskScheduler.Current);

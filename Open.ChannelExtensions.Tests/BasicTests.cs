@@ -513,4 +513,37 @@ public static class BasicTests
 		even.Should().OnlyContain(e => e % 2 == 0);
 		odd.Should().OnlyContain(e => e % 2 != 0);
 	}
+
+	[Fact]
+	public static async Task ChannelReadAllAsyncExceptionTest()
+	{
+		static ValueTask<int> AsyncReceiver()
+			=> throw new OperationCanceledException("test exception");
+
+		// Should throw.
+		await Assert.ThrowsAsync<OperationCanceledException>(
+			async () => await Enumerable.Repeat(0, 10)
+				.ToChannel()
+				.ReadAllAsync(async _ => await AsyncReceiver())
+		);
+	}
+
+	[Fact]
+	public static async Task PipeAsyncReadAllExceptionTest()
+	{
+		static ValueTask<int> AsyncReceiver()
+			=> throw new OperationCanceledException("test exception");
+
+		// Should also throw.
+		await Assert.ThrowsAsync<OperationCanceledException>(
+			async () =>
+			{
+				var reader = Enumerable.Repeat(0, 10)
+					.ToChannel()
+					.PipeAsync(1, async _ => await AsyncReceiver());
+
+				_ = await reader.ReadAll(_ => { });
+			});
+	}
+
 }
