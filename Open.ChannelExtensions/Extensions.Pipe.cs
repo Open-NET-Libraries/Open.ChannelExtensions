@@ -1,6 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace Open.ChannelExtensions;
+﻿namespace Open.ChannelExtensions;
 
 [SuppressMessage("Roslynator", "RCS1047:Non-asynchronous method name should not end with 'Async'.", Justification = "In order to differentiate between non async versions.")]
 public static partial class Extensions

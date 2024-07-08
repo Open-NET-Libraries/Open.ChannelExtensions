@@ -117,13 +117,16 @@ public static partial class Extensions
 	[ExcludeFromCodeCoverage]
 	public static ChannelReader<TSource> PropagateCompletion<TSource, TTargetIn, TTargetOut>(
 		this ChannelReader<TSource> source, Channel<TTargetIn, TTargetOut> target, CancellationToken cancellationToken = default)
-		=> PropagateCompletion(source, target.Writer, cancellationToken);
+		=> target is null
+		? throw new ArgumentNullException(nameof(target))
+		: source.PropagateCompletion(target.Writer, cancellationToken);
 
 	/// <inheritdoc cref="PropagateCompletion{TSource, TTarget}(ChannelReader{TSource}, ChannelWriter{TTarget}, CancellationToken)"/>
 	[ExcludeFromCodeCoverage]
 	public static Channel<TSourceIn, TSourceOut> PropagateCompletion<TSourceIn, TSourceOut, TTarget>(
 		this Channel<TSourceIn, TSourceOut> source, ChannelWriter<TTarget> target, CancellationToken cancellationToken = default)
 	{
+		if (source is null) throw new ArgumentNullException(nameof(source));
 		_ = source.Reader.PropagateCompletion(target, cancellationToken);
 		return source;
 	}
@@ -132,7 +135,9 @@ public static partial class Extensions
 	[ExcludeFromCodeCoverage]
 	public static Channel<TSourceIn, TSourceOut> PropagateCompletion<TSourceIn, TSourceOut, TTargetIn, TTargetOut>(
 		this Channel<TSourceIn, TSourceOut> source, Channel<TTargetIn, TTargetOut> target, CancellationToken cancellationToken = default)
-		=> PropagateCompletion(source, target.Writer, cancellationToken);
+		=> target is null
+		? throw new ArgumentNullException(nameof(target))
+		: source.PropagateCompletion(target.Writer, cancellationToken);
 
 	/// <summary>
 	/// Uses <see cref="ChannelWriter{T}.WaitToWriteAsync(CancellationToken)"/> to peek and see if the channel can still be written to.
