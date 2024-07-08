@@ -36,7 +36,7 @@ static class Program
 		{
 			Console.WriteLine("Standard Channel filter test...");
 			System.Collections.Generic.IEnumerable<ValueTask<int>> source = Enumerable
-				.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
+				.Repeat(Delay, repeat)
 				.Select((t, i) => t(i));
 
 			var sw = Stopwatch.StartNew();
@@ -68,7 +68,7 @@ static class Program
 			Console.WriteLine("Concurrent Channel operation test...");
 			var sw = Stopwatch.StartNew();
 			await Enumerable
-				.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
+				.Repeat(Delay, repeat)
 				.Select((t, i) => t(i))
 				.ToChannelAsync(singleReader: false, maxConcurrency: concurrency)
 				.ReadAllConcurrently(4, Dummy).ConfigureAwait(false);
@@ -81,7 +81,7 @@ static class Program
 			Console.WriteLine("Pipe operation test...");
 			var sw = Stopwatch.StartNew();
 			long total = await Enumerable
-				.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
+				.Repeat(Delay, repeat)
 				.Select((t, i) => t(i))
 				.ToChannelAsync()
 				.Pipe(i => i * 2)
@@ -96,7 +96,7 @@ static class Program
 			Console.WriteLine("Transform operation test...");
 			var sw = Stopwatch.StartNew();
 			await Enumerable
-				.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
+				.Repeat(Delay, repeat)
 				.Select((t, i) => t(i))
 				.ToChannelAsync()
 				.Transform(i => i * 2L)
@@ -110,16 +110,18 @@ static class Program
 			Console.WriteLine("Async Enumerable test...");
 			var sw = Stopwatch.StartNew();
 			await foreach (var e in Enumerable
-				.Repeat((Func<int, ValueTask<int>>)Delay, repeat)
+				.Repeat(Delay, repeat)
 				.Select((t, i) => t(i))
 				.ToChannelAsync()
-				.ReadAllAsync())
+				.ReadAllAsync().ConfigureAwait(false))
+			{
 				Dummy(e);
+			}
+
 			sw.Stop();
 			Console.WriteLine(sw.Elapsed);
 			Console.WriteLine();
 		}
-
 	}
 
 	static void Dummy(int i)

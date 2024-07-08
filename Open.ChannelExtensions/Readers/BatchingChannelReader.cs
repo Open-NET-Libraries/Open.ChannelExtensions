@@ -246,12 +246,9 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 }
 
 /// <inheritdoc />
-public class QueueBatchingChannelReader<T> : BatchingChannelReader<T, Queue<T>>
+public class QueueBatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
+	: BatchingChannelReader<T, Queue<T>>(source, batchSize, singleReader, syncCont)
 {
-	/// <inheritdoc />
-	public QueueBatchingChannelReader(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
-		: base(source, batchSize, singleReader, syncCont) { }
-
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	protected override void AddBatchItem(Queue<T> batch, T item)
@@ -282,12 +279,9 @@ public class QueueBatchingChannelReader<T> : BatchingChannelReader<T, Queue<T>>
 }
 
 /// <inheritdoc />
-public class BatchingChannelReader<T> : BatchingChannelReader<T, List<T>>
+public class BatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
+	: BatchingChannelReader<T, List<T>>(source, batchSize, singleReader, syncCont)
 {
-	/// <inheritdoc />
-	public BatchingChannelReader(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
-		: base(source, batchSize, singleReader, syncCont) { }
-
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	protected override void AddBatchItem(List<T> batch, T item)

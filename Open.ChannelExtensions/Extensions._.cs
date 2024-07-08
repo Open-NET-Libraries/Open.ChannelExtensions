@@ -6,6 +6,9 @@ namespace Open.ChannelExtensions;
 /// <summary>
 /// Extensions for operating with System.Threading.Channels.
 /// </summary>
+[SuppressMessage("RCS1047FadeOut",
+	"RCS1047FadeOut: Async Naming",
+	Justification = "Some methods use the Async suffix to distinguish between the contents of their parameters.")]
 public static partial class Extensions
 {
 	internal static Channel<T> CreateChannel<T>(ChannelOptions channelOptions)
@@ -14,6 +17,22 @@ public static partial class Extensions
 		: channelOptions is UnboundedChannelOptions ubco
 			? Channel.CreateUnbounded<T>(ubco)
 			: throw new ArgumentException("Unsupported channel option type.", nameof(channelOptions));
+
+	internal static ChannelOptions CreateOptions(int capacity = -1, bool singleReader = false, bool syncCont = false, bool singleWriter = true)
+		=> capacity > 0
+		? new BoundedChannelOptions(capacity)
+		{
+			SingleWriter = singleWriter,
+			SingleReader = singleReader,
+			AllowSynchronousContinuations = syncCont,
+			FullMode = BoundedChannelFullMode.Wait
+		}
+		: new UnboundedChannelOptions
+		{
+			SingleWriter = singleWriter,
+			SingleReader = singleReader,
+			AllowSynchronousContinuations = syncCont
+		};
 
 	internal static Channel<T> CreateChannel<T>(int capacity = -1, bool singleReader = false, bool syncCont = false, bool singleWriter = true)
 		=> capacity > 0
@@ -46,7 +65,7 @@ public static partial class Extensions
 	internal static ValueTask CancelAsync(this CancellationTokenSource source)
 	{
 		source.Cancel();
-		return new ValueTask();
+		return default;
 	}
 #endif
 
@@ -68,6 +87,57 @@ public static partial class Extensions
 		foreach (var e in source)
 			yield return new ValueTask<T>(e());
 	}
+
+	/// <summary>
+	/// Will propagate the completion of the <paramref name="source"/> channel reader to the <paramref name="target"/> channel writer.
+	/// </summary>
+	/// <remarks>If the <paramref name="cancellationToken"/> is cancelled, the propagation will not occur.</remarks>
+	/// <returns>The source reader.</returns>
+	public static ChannelReader<TSource> PropagateCompletion<TSource, TTarget>(
+		this ChannelReader<TSource> source, ChannelWriter<TTarget> target, CancellationToken cancellationToken = default)
+	{
+		if (source is null) throw new ArgumentNullException(nameof(source));
+		if (target is null) throw new ArgumentNullException(nameof(target));
+		Contract.EndContractBlock();
+
+		if (cancellationToken.IsCancellationRequested)
+			return source;
+
+		source.Completion.ContinueWith(t => {
+			if (t.IsFaulted)
+				target.TryComplete(t.Exception);
+			else
+				target.TryComplete();
+		}, cancellationToken);
+
+		return source;
+	}
+
+	/// <inheritdoc cref="PropagateCompletion{TSource, TTarget}(ChannelReader{TSource}, ChannelWriter{TTarget}, CancellationToken)"/>
+	[ExcludeFromCodeCoverage]
+	public static ChannelReader<TSource> PropagateCompletion<TSource, TTargetIn, TTargetOut>(
+		this ChannelReader<TSource> source, Channel<TTargetIn, TTargetOut> target, CancellationToken cancellationToken = default)
+		=> target is null
+		? throw new ArgumentNullException(nameof(target))
+		: source.PropagateCompletion(target.Writer, cancellationToken);
+
+	/// <inheritdoc cref="PropagateCompletion{TSource, TTarget}(ChannelReader{TSource}, ChannelWriter{TTarget}, CancellationToken)"/>
+	[ExcludeFromCodeCoverage]
+	public static Channel<TSourceIn, TSourceOut> PropagateCompletion<TSourceIn, TSourceOut, TTarget>(
+		this Channel<TSourceIn, TSourceOut> source, ChannelWriter<TTarget> target, CancellationToken cancellationToken = default)
+	{
+		if (source is null) throw new ArgumentNullException(nameof(source));
+		_ = source.Reader.PropagateCompletion(target, cancellationToken);
+		return source;
+	}
+
+	/// <inheritdoc cref="PropagateCompletion{TSource, TTarget}(ChannelReader{TSource}, ChannelWriter{TTarget}, CancellationToken)"/>/>
+	[ExcludeFromCodeCoverage]
+	public static Channel<TSourceIn, TSourceOut> PropagateCompletion<TSourceIn, TSourceOut, TTargetIn, TTargetOut>(
+		this Channel<TSourceIn, TSourceOut> source, Channel<TTargetIn, TTargetOut> target, CancellationToken cancellationToken = default)
+		=> target is null
+		? throw new ArgumentNullException(nameof(target))
+		: source.PropagateCompletion(target.Writer, cancellationToken);
 
 	/// <summary>
 	/// Uses <see cref="ChannelWriter{T}.WaitToWriteAsync(CancellationToken)"/> to peek and see if the channel can still be written to.
@@ -109,7 +179,7 @@ public static partial class Extensions
 			return ThrowChannelClosedExceptionIfFalse(waitForWrite, ifClosedMessage);
 
 		if (waitForWrite.Result)
-			return new ValueTask();
+			return default;
 
 		if (string.IsNullOrWhiteSpace(ifClosedMessage)) throw new ChannelClosedException();
 		throw new ChannelClosedException(ifClosedMessage);
@@ -271,13 +341,7 @@ public static partial class Extensions
 	/// <summary>
 	/// Writes all entries from the source to a channel and calls complete when finished.
 	/// </summary>
-	/// <typeparam name="T">The input type of the channel.</typeparam>
-	/// <param name="source">The source data to use.</param>
-	/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
-	/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
-	/// <returns>The channel reader containing the results.</returns>
+	/// <inheritdoc cref="ToChannelAsync{T}(IEnumerable{ValueTask{T}}, int, bool, int, CancellationToken)"/>
 	public static ChannelReader<T> ToChannel<T>(this IAsyncEnumerable<T> source,
 		int capacity = -1, bool singleReader = false,
 		bool deferredExecution = false,
@@ -288,12 +352,7 @@ public static partial class Extensions
 	/// <summary>
 	/// Writes all entries from the source to a channel and calls complete when finished.
 	/// </summary>
-	/// <typeparam name="T">The input type of the channel.</typeparam>
-	/// <param name="source">The source data to use.</param>
-	/// <param name="channelOptions">The options for configuring the new channel.</param>
-	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
-	/// <returns>The channel reader containing the results.</returns>
+	/// <inheritdoc cref="ToChannelAsync{T}(IEnumerable{ValueTask{T}}, ChannelOptions, int, CancellationToken)"/>
 	public static ChannelReader<T> ToChannel<T>(this IAsyncEnumerable<T> source,
 		ChannelOptions channelOptions,
 		bool deferredExecution = false,
@@ -301,16 +360,12 @@ public static partial class Extensions
 		=> CreateChannel<T>(channelOptions)
 			.Source(source, deferredExecution, cancellationToken);
 
-	/// <summary>
-	/// Writes all entries from the source to a channel and calls complete when finished.
-	/// </summary>
-	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="source">The source data to use.</param>
-	/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
+	/// <param name="capacity">The optional bounded capacity of the channel.</param>
 	/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <param name="deferredExecution">If true, calls await Task.Yield() before writing to the channel.</param>
-	/// <returns>The channel reader containing the results.</returns>
+	/// <inheritdoc cref="ToChannelAsync{T}(IEnumerable{ValueTask{T}}, int, bool, int, CancellationToken)"/>
 	public static ChannelReader<T> ToChannel<T>(this IAsyncEnumerable<T> source,
 		int capacity, bool singleReader,
 		CancellationToken cancellationToken,
@@ -380,12 +435,7 @@ public static partial class Extensions
 	/// <summary>
 	/// Asynchronously executes all entries and writes their results to a channel.
 	/// </summary>
-	/// <typeparam name="T">The input type of the channel.</typeparam>
-	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="channelOptions">The options for configuring the new channel.</param>
-	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
-	/// <returns>The channel reader containing the results.</returns>
+	/// <inheritdoc cref="ToChannelAsync{T}(IEnumerable{ValueTask{T}}, ChannelOptions, int, CancellationToken)"/>
 	public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Func<T>> source,
 		ChannelOptions channelOptions, int maxConcurrency = 1,
 		CancellationToken cancellationToken = default)
@@ -395,28 +445,18 @@ public static partial class Extensions
 	/// <summary>
 	/// Asynchronously executes all entries and writes their results to a channel.
 	/// </summary>
-	/// <typeparam name="T">The input type of the channel.</typeparam>
-	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
-	/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
-	/// <returns>The channel reader containing the results.</returns>
+	/// <inheritdoc cref="ToChannelAsync{T}(IEnumerable{ValueTask{T}}, int, bool, int, CancellationToken)"/>
 	public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Func<T>> source,
 		int capacity = -1, bool singleReader = false, int maxConcurrency = 1,
 		CancellationToken cancellationToken = default)
 		=> CreateChannel<T>(capacity, singleReader)
 			.SourceAsync(maxConcurrency, source, cancellationToken);
 
-	/// <summary>
-	/// Writes all entries from the source to a channel and calls complete when finished.
-	/// </summary>
-	/// <typeparam name="T">The input type of the channel.</typeparam>
 	/// <param name="source">The asynchronous source data to use.</param>
 	/// <param name="channelOptions">The options for configuring the new channel.</param>
 	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
-	/// <returns>The channel reader containing the results.</returns>
+	/// <inheritdoc cref="ToChannelAsync{T}(IEnumerable{ValueTask{T}}, int, bool, int, CancellationToken)"/>
 	public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<ValueTask<T>> source,
 		ChannelOptions channelOptions, int maxConcurrency = 1,
 		CancellationToken cancellationToken = default)
@@ -439,31 +479,14 @@ public static partial class Extensions
 		=> CreateChannel<T>(capacity, singleReader)
 			.SourceAsync(maxConcurrency, source, cancellationToken);
 
-	/// <summary>
-	/// Writes all entries from the source to a channel and calls complete when finished.
-	/// </summary>
-	/// <typeparam name="T">The input type of the channel.</typeparam>
-	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="channelOptions">The options for configuring the new channel.</param>
-	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
-	/// <returns>The channel reader containing the results.</returns>
+	/// <inheritdoc cref="ToChannelAsync{T}(IEnumerable{ValueTask{T}}, ChannelOptions, int, CancellationToken)"/>
 	public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Task<T>> source,
 		ChannelOptions channelOptions, int maxConcurrency = 1,
 		CancellationToken cancellationToken = default)
 		=> CreateChannel<T>(channelOptions)
 			.SourceAsync(maxConcurrency, source, cancellationToken);
 
-	/// <summary>
-	/// Writes all entries from the source to a channel and calls complete when finished.
-	/// </summary>
-	/// <typeparam name="T">The input type of the channel.</typeparam>
-	/// <param name="source">The asynchronous source data to use.</param>
-	/// <param name="capacity">The optional bounded capacity of the channel. Default is unbound.</param>
-	/// <param name="singleReader">True will cause the resultant reader to optimize for the assumption that no concurrent read operations will occur.</param>
-	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
-	/// <returns>The channel reader containing the results.</returns>
+	/// <inheritdoc cref="ToChannelAsync{T}(IEnumerable{ValueTask{T}}, int, bool, int, CancellationToken)"/>
 	public static ChannelReader<T> ToChannelAsync<T>(this IEnumerable<Task<T>> source,
 		int capacity = -1, bool singleReader = false, int maxConcurrency = 1,
 		CancellationToken cancellationToken = default)

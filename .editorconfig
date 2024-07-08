@@ -117,8 +117,8 @@ csharp_style_prefer_index_operator = true:silent
 csharp_style_prefer_null_check_over_type_check = true:warning
 csharp_style_prefer_range_operator = true:silent
 csharp_style_throw_expression = true:warning
-csharp_style_unused_value_assignment_preference = discard_variable
-csharp_style_unused_value_expression_statement_preference = discard_variable
+csharp_style_unused_value_assignment_preference = discard_variable:suggestion
+csharp_style_unused_value_expression_statement_preference = discard_variable:silent
 
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:warning
@@ -236,10 +236,11 @@ dotnet_style_null_propagation = true:warning
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
 dotnet_style_prefer_auto_properties = true:suggestion
 dotnet_style_object_initializer = true:suggestion
-dotnet_style_prefer_collection_expression = true:suggestion
+dotnet_style_prefer_collection_expression = when_types_exactly_match:suggestion
 dotnet_style_collection_initializer = true:suggestion
 dotnet_style_prefer_simplified_boolean_expressions = true:warning
 dotnet_style_prefer_conditional_expression_over_assignment = true:warning
 dotnet_style_prefer_conditional_expression_over_return = true:warning
 dotnet_style_explicit_tuple_names = true:suggestion
 dotnet_diagnostic.CA1510.severity = none
+dotnet_code_quality_unused_parameters = all:suggestion

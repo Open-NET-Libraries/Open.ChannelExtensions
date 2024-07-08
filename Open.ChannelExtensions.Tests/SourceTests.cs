@@ -15,7 +15,7 @@ public static class SourceTests
 		catch (OperationCanceledException)
 		{ }
 
-		await reader.ReadAll(_ => { });
+		await Assert.ThrowsAsync<OperationCanceledException>(() => reader.ReadAll(_ => { }).AsTask());
 		await Assert.ThrowsAsync<TaskCanceledException>(() => reader.Completion);
 	}
 
@@ -26,8 +26,7 @@ public static class SourceTests
 		cts.Cancel();
 		var reader = Enumerable.Range(0, 10_000).ToChannel(10, true, cts.Token);
 
-		var count = await reader.ReadAll(_ => { });
-		Assert.Equal(0, count);
+		await Assert.ThrowsAsync<TaskCanceledException>(() => reader.ReadAll(_ => { }).AsTask());
 		await Assert.ThrowsAsync<TaskCanceledException>(() => reader.Completion);
 	}
 }

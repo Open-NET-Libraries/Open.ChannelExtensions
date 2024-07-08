@@ -35,7 +35,7 @@ public static partial class Extensions
 				.ConfigureAwait(false);
 
 			long count = 0;
-			var next = new ValueTask();
+			ValueTask next = default;
 			foreach (ValueTask<T> e in source)
 			{
 				T? value = await e.ConfigureAwait(false);
@@ -340,7 +340,7 @@ public static partial class Extensions
 				.ConfigureAwait(false);
 
 			long count = 0;
-			var next = new ValueTask();
+			ValueTask next = default;
 			await foreach (T? value in source)
 			{
 				await next.ConfigureAwait(false);

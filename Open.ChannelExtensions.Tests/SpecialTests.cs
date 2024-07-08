@@ -5,7 +5,7 @@ namespace Open.ChannelExtensions.Tests;
 public class SpecialTests
 {
 	[Fact]
-	public void PossibleSourceLoadingIssue()
+	public async Task PossibleSourceLoadingIssue()
 	{
 		const int expectedCount = 10000000;
 		int count_ = 0;
@@ -21,9 +21,7 @@ public class SpecialTests
 
 		queue.CompleteAdding();
 
-#pragma warning disable xUnit1031 // Do not use blocking task operations in test method
-		processingTask.Wait();
-#pragma warning restore xUnit1031 // Do not use blocking task operations in test method
+		await processingTask;
 
 		Assert.Equal(expectedCount, count_);
 
