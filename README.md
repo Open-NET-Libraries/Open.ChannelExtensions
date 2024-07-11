@@ -148,7 +148,7 @@ values.Reader
 
 ```cs
 batches.Reader
-    .Join()
+    .Join() // .SelectMany()
     .ReadAllAsync(async value => {/*...*/});
 ```
 
