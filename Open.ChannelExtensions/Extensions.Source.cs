@@ -254,9 +254,7 @@ public static partial class Extensions
 		TextReader source,
 		CancellationToken cancellationToken)
 		=> Source(target, source, out _, false, cancellationToken);
-
-#if NETSTANDARD2_0
-#else
+	
 	/// <inheritdoc cref="SourceAsync{TWrite, TRead}(Channel{TWrite, TRead}, IEnumerable{ValueTask{TWrite}}, out ValueTask{long}, bool, CancellationToken)"/>
 	public static ChannelReader<TRead> Source<TWrite, TRead>(
 		this Channel<TWrite, TRead> target,
@@ -288,5 +286,4 @@ public static partial class Extensions
 		IAsyncEnumerable<TWrite> source,
 		CancellationToken cancellationToken)
 		=> Source(target, source, false, cancellationToken);
-#endif
 }

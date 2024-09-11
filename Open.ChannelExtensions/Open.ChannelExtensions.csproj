@@ -54,6 +54,10 @@
 		<PackageReference Include="System.Collections.Immutable" Version="8.*" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+	</ItemGroup>
+
 	<!-- Disable the nullable warnings when compiling for .NET Standard 2.0 -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 		<NoWarn>$(NoWarn);nullable</NoWarn>
