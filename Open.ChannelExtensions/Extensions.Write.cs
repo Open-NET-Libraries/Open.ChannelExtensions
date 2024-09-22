@@ -308,7 +308,7 @@ public static partial class Extensions
 		bool complete,
 		CancellationToken cancellationToken)
 		=> WriteAllLines(target, source, complete, false, cancellationToken);
-	
+
 	/// <summary>
 	/// Asynchronously writes all entries from the source to the channel.
 	/// </summary>

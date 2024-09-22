@@ -28,7 +28,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 		if (source.Completion.IsCompleted)
 		{
 			Buffer = null;
-			_completion = Task.CompletedTask;
+			_completion = source.Completion;
 		}
 		else
 		{
@@ -94,10 +94,8 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
 	{
 		var buffer = Buffer;
-		if (buffer is null) return new ValueTask<bool>(false);
-
-		var completion = buffer.Reader.Completion;
-		if (completion.IsCompleted)
+		var completion = buffer is null ? _completion : buffer.Reader.Completion;
+		if (buffer is null || completion.IsCompleted)
 		{
 			return completion.IsFaulted
 				? new ValueTask<bool>(Task.FromException<bool>(completion.Exception!))

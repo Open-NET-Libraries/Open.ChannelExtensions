@@ -101,7 +101,6 @@ public static partial class Extensions
 
 				if (results.Count == max)
 					return results;
-
 			}
 			while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false));
 		}

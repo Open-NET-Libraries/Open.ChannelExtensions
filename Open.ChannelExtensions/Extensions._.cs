@@ -103,7 +103,8 @@ public static partial class Extensions
 		if (cancellationToken.IsCancellationRequested)
 			return source;
 
-		source.Completion.ContinueWith(t => {
+		source.Completion.ContinueWith(t =>
+		{
 			if (t.IsFaulted)
 				target.TryComplete(t.Exception);
 			else
@@ -335,7 +336,6 @@ public static partial class Extensions
 		bool deferredExecution = false)
 		=> CreateChannel<T>(capacity, singleReader)
 			.Source(source, deferredExecution, cancellationToken);
-
 
 	/// <summary>
 	/// Writes all entries from the source to a channel and calls complete when finished.

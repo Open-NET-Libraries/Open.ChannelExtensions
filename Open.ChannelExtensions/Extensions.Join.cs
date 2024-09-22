@@ -78,8 +78,6 @@ public static partial class Extensions
 	public static ChannelReader<T> Join<T>(this ChannelReader<T[]> source, bool singleReader = false)
 		=> new JoiningChannelReader<T[], T>(source, singleReader);
 
-#if NETSTANDARD2_0
-#else
 	/// <summary>
 	/// Joins collections of the same type into a single channel reader in the order provided.
 	/// </summary>
@@ -126,5 +124,4 @@ public static partial class Extensions
 			}
 		}
 	}
-#endif
 }
