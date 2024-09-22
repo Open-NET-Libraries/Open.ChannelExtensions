@@ -175,6 +175,6 @@ public sealed class MergingChannelReader<T> : ChannelReader<T>
 		if (others is not null) builder.AddRange(others);
 		Debug.Assert(builder.Count == builder.Capacity);
 
-		return new (builder.MoveToImmutable());
+		return new(builder.MoveToImmutable());
 	}
 }

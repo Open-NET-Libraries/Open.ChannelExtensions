@@ -496,7 +496,8 @@ public static class BasicTests
 		var source = Enumerable.Range(0, total).ToChannel(300);
 
 		var evenFilter = source
-			.PipeFilterAsync(out var unmatched, 10, 100, static async e => {
+			.PipeFilterAsync(out var unmatched, 10, 100, static async e =>
+			{
 				await Task.Yield();
 				return e % 2 == 0;
 			})

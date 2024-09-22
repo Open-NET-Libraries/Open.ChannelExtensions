@@ -1,38 +1,46 @@
-﻿namespace Open.ChannelExtensions.Tests;
-public static class PipelineExceptionTests
+﻿using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace Open.ChannelExtensions.Tests;
+public class PipelineExceptionTests
 {
 	const int BatchSize = 20;
 	const int Elements = 100;
+	readonly Channel<int> _channel;
+	int _thrown = -2;
 
-	[Theory]
-	[InlineData(BatchSize - 1)]
-	[InlineData(BatchSize)]
-	[InlineData(BatchSize + 1)]
-	[InlineData(-1)]
-	[InlineData(Elements)]
-	public static async Task Regular(int elementToThrow)
+	public PipelineExceptionTests()
 	{
-		var channel = Channel.CreateBounded<int>(10000);
-
-		for (int i = 0; i < Elements; i++)
+		_channel = Channel.CreateBounded<int>(10000);
+		for (var i = 0; i < 100; i++)
 		{
-			await channel.Writer.WriteAsync(i);
+			if (!_channel.Writer.TryWrite(i))
+				throw new Exception("Failed to write " + i);
 		}
+	}
 
-		var task = channel.Reader
-			.Pipe(1, element => elementToThrow == -1 || element == elementToThrow ? throw new Exception() : element)
-			.Pipe(2, evt => evt * 2)
-			//.Batch(20)
-			.PipeAsync(1, evt => new ValueTask<int>(evt))
-			.ReadAll(_ => { });
+	Func<int, int> CreateThrowIfEqual(int elementToThrow) => element =>
+	{
+		if (elementToThrow != -1 && element != elementToThrow)
+			return element;
+		_thrown = element;
+		throw new Exception("Thrown at " + element);
+	};
 
+	ChannelReader<int> PrepareStage1(int elementToThrow) =>
+		_channel.Reader
+			.Pipe(1, CreateThrowIfEqual(elementToThrow))
+			.Pipe(2, evt => evt * 2);
+
+	async Task AssertException(ValueTask<long> task, int elementToThrow)
+	{
 		if (elementToThrow == Elements)
-			channel.Writer.Complete(new Exception());
+			_channel.Writer.Complete(new Exception());
 		else
-			channel.Writer.Complete();
+			_channel.Writer.Complete();
 
 		await Assert.ThrowsAsync<AggregateException>(async () => await task);
-		await Assert.ThrowsAsync<ChannelClosedException>(async () => await channel.CompleteAsync());
+		await Assert.ThrowsAsync<ChannelClosedException>(async () => await _channel.CompleteAsync());
 	}
 
 	[Theory]
@@ -42,28 +50,49 @@ public static class PipelineExceptionTests
 	[InlineData(BatchSize)]
 	[InlineData(BatchSize + 1)]
 	[InlineData(-1)]
-	public static async Task Batched(int elementToThrow)
+	[InlineData(Elements)]
+	public Task Regular(int elementToThrow)
 	{
-		var channel = Channel.CreateBounded<int>(10000);
+		var task = PrepareStage1(elementToThrow)
+			//.Batch(20)
+			.PipeAsync(1, evt => new ValueTask<int>(evt))
+			.ReadAll(_ => { });
 
-		for (int i = 0; i < Elements; i++)
-		{
-			await channel.Writer.WriteAsync(i);
-		}
+		return AssertException(task, elementToThrow);
+	}
 
-		var task = channel.Reader
-			.Pipe(1, element => elementToThrow == -1 || element == elementToThrow ? throw new Exception() : element)
-			.Pipe(2, evt => evt * 2)
+	[Theory]
+	[InlineData(0)]
+	[InlineData(1)]
+	[InlineData(BatchSize - 1)]
+	[InlineData(BatchSize)]
+	[InlineData(BatchSize + 1)]
+	[InlineData(-1)]
+	[InlineData(Elements)]
+	public Task Batched(int elementToThrow)
+	{
+		var task = PrepareStage1(elementToThrow)
+			.Batch(20)
+			.ReadAll(_ => { });
+
+		return AssertException(task, elementToThrow);
+	}
+
+	[Theory]
+	[InlineData(0)]
+	[InlineData(1)]
+	[InlineData(BatchSize - 1)]
+	[InlineData(BatchSize)]
+	[InlineData(BatchSize + 1)]
+	[InlineData(-1)]
+	[InlineData(Elements)]
+	public Task BatchPiped(int elementToThrow)
+	{
+		var task = PrepareStage1(elementToThrow)
 			.Batch(20)
 			.PipeAsync(1, evt => new ValueTask<List<int>>(evt))
 			.ReadAll(_ => { });
 
-		if (elementToThrow == Elements)
-			channel.Writer.Complete(new Exception());
-		else
-			channel.Writer.Complete();
-
-		await Assert.ThrowsAsync<AggregateException>(async () => await task);
-		await Assert.ThrowsAsync<ChannelClosedException>(async () => await channel.CompleteAsync());
+		return AssertException(task, elementToThrow);
 	}
 }

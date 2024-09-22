@@ -19,10 +19,10 @@ A set of extensions for optimizing/simplifying System.Threading.Channels usage.
 
 ### Special `ChannelReader` Operations
 
-* `Filter`
-* `Transform`
-* `Batch`
-* `Join`
+* `Filter`: reads from the channel until a match is found.
+* `Transform`: applies a transform function upon successfully reading an item from the channel.
+* `Batch`: attempts to group items into a `List<T>` (or a `Queue<T>`) before being available for reading.
+* `Join`: combines batches into a single channel.
 
 ---
 ## Installation
@@ -127,6 +127,9 @@ await channel.WriteAllConcurrentlyAsync(
 
 ### Filter & Transform
 
+Both of these extensions operate synchronously after an item is read from the channel.
+> Any predicate or selector function must trap errors of the downstream read will fail and data may not be recoverable.
+
 ```cs
 // Filter and transform when reading.
 channel.Reader
@@ -139,16 +142,18 @@ channel.Reader
 
 ```cs
 values.Reader
-    .Batch(10 /*batch size*/)
+    .Batch(10 /*batch size*/) // Groups into List<T>.
     .WithTimeout(1000) // Any non-empty batches are flushed every second.
     .ReadAllAsync(async batch => {/*...*/});
 ```
 
 ### Joining
 
+The inverse of batching.
+
 ```cs
 batches.Reader
-    .Join()
+    .Join() // Combines the batches into a single channel.
     .ReadAllAsync(async value => {/*...*/});
 ```
 
