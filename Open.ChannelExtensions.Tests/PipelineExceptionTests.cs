@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace Open.ChannelExtensions.Tests;
+﻿namespace Open.ChannelExtensions.Tests;
 public class PipelineExceptionTests
 {
 	const int BatchSize = 20;
 	const int Elements = 100;
 	readonly Channel<int> _channel;
+
+#pragma warning disable IDE0052 // Remove unread private members
+	// for debugging
 	int _thrown = -2;
+#pragma warning restore IDE0052 // Remove unread private members
 
 	public PipelineExceptionTests()
 	{
@@ -15,7 +16,7 @@ public class PipelineExceptionTests
 		for (var i = 0; i < 100; i++)
 		{
 			if (!_channel.Writer.TryWrite(i))
-				throw new Exception("Failed to write " + i);
+				throw new Exception($"Failed to write {i}");
 		}
 	}
 
@@ -23,8 +24,9 @@ public class PipelineExceptionTests
 	{
 		if (elementToThrow != -1 && element != elementToThrow)
 			return element;
+
 		_thrown = element;
-		throw new Exception("Thrown at " + element);
+		throw new Exception($"Thrown at {element}");
 	};
 
 	ChannelReader<int> PrepareStage1(int elementToThrow) =>

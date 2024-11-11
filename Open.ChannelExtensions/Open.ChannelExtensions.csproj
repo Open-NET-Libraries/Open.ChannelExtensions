@@ -31,7 +31,7 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<!-- Don't enforce collection expressions as they don't work in .NET 6. -->
-		<NoWarn>IDE0301;IDE0303;IDE0304</NoWarn>
+		<NoWarn>IDE0130;IDE0301;IDE0303;IDE0304;</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
