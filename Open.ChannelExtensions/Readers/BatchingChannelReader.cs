@@ -161,11 +161,11 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 				}
 
 				Debug.Assert(GetBatchSize(c) <= _batchSize);
-				var full = GetBatchSize(c) == _batchSize;
+				var full = GetBatchSize(c) >= _batchSize;
 				while (!full && source.TryRead(out item))
 				{
 					AddBatchItem(c, item);
-					full = GetBatchSize(c) == _batchSize;
+					full = GetBatchSize(c) >= _batchSize;
 				}
 
 				if (!full) break;
