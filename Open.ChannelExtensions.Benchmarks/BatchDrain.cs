@@ -16,17 +16,6 @@ public class BatchDrain
 	private readonly Queue<List<int>> _listPool = new();
 	private readonly Queue<Queue<int>> _queuePool = new();
 
-	private int _noOpTarget;
-
-	private int NoOp(int value) => _noOpTarget = value;
-
-	[GlobalCleanup]
-	public void GlobalCleanup()
-	{
-		// Ensure the compiler doesn't optimize away the target.
-		Console.WriteLine("NoOp Target: {0}", _noOpTarget);
-	}
-
 	[IterationSetup]
 	public void IterationSetup()
 	{
@@ -56,58 +45,38 @@ public class BatchDrain
 	public async Task BatchListDrain()
 		=> await _channel!.Reader
 			.Batch(BatchSize)
-			.ReadAll(e =>
-			{
-				for (var i = 0; i < e.Count; i++)
-					_noOpTarget -= NoOp(e[i]);
-			});
+			.Join(true)
+			.ReadAll(static _ => { });
 
 	[Benchmark]
 	public async Task BatchListDrainPooled()
-	=> await _channel!.Reader
-		.Batch(BatchSize, batchFactory: _ => _listPool.Dequeue())
-		.ReadAll(e =>
-		{
-			for(var i = 0; i < e.Count; i++)
-				_noOpTarget -= NoOp(e[i]);
-
-			e.Clear(); // Simulate resetting the size.
-			_listPool.Enqueue(e);
-		});
+		=> await _channel!.Reader
+			.Batch(BatchSize, batchFactory: _ => _listPool.Dequeue())
+			.Join(true, e =>
+			{
+				e.Clear(); // Simulate resetting the size.
+				_listPool.Enqueue(e);
+			})
+			.ReadAll(static _ => { });
 
 	[Benchmark]
 	public async Task BatchQueueDrain()
 		=> await _channel!.Reader
 			.BatchToQueues(BatchSize)
-			.ReadAll(e =>
-			{
-				while (e.TryDequeue(out var value))
-					_noOpTarget -= NoOp(value);
-			});
+			.Join(true)
+			.ReadAll(static _ => { });
 
 	[Benchmark]
 	public async Task BatchQueueDrainPooled()
 		=> await _channel!.Reader
 			.BatchToQueues(BatchSize, batchFactory: _ => _queuePool.Dequeue())
-			.ReadAll(e =>
-			{
-				while(e.TryDequeue(out var value))
-					_noOpTarget -= NoOp(value);
-
-				_queuePool.Enqueue(e);
-			});
+			.Join(true, _queuePool.Enqueue)
+			.ReadAll(static _ => { });
 
 	[Benchmark]
 	public async Task BatchMemoryOwnerDrain()
 		=> await _channel!.Reader
 			.BatchAsMemory(BatchSize)
-			.ReadAll(e =>
-			{
-				var span = e.Memory.Span;
-				var len = span.Length;
-				for (var i = 0; i < len; i++)
-					_noOpTarget -= NoOp(span[i]);
-
-				e.Dispose();
-			});
+			.Join(true)
+			.ReadAll(static _ => { });
 }
