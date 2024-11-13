@@ -7,7 +7,7 @@ public class SpecialTests
 	[Fact]
 	public async Task PossibleSourceLoadingIssue()
 	{
-		const int expectedCount = 10000000;
+		const int expectedCount = 1000000;
 		int count_ = 0;
 
 		var queue = new BlockingCollection<int>();

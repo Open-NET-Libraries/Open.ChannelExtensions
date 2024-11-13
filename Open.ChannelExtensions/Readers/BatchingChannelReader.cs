@@ -1,4 +1,6 @@
-﻿namespace Open.ChannelExtensions;
+﻿using System.Buffers;
+
+namespace Open.ChannelExtensions;
 
 /// <summary>
 /// A ChannelReader that batches results.
@@ -114,7 +116,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 	/// <summary>
 	/// Trims the excess capacity of a batch before releasing.
 	/// </summary>
-	protected abstract void TrimBatch(TBatch batch);
+	protected abstract void TrimBatch(ref TBatch batch, bool isVerifiedFull);
 
 	/// <summary>
 	/// Adds an item to the batch.
@@ -170,6 +172,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 
 				if (!full) break;
 
+				TrimBatch(ref c, full);
 				Emit(ref c);
 
 				if (!flush)
@@ -181,7 +184,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 
 			flushBatch:
 
-			TrimBatch(c);
+			TrimBatch(ref c, false);
 			Emit(ref c);
 
 		finalizeTimer:
@@ -254,7 +257,7 @@ public class QueueBatchingChannelReader<T>(ChannelReader<T> source, int batchSiz
 	protected override void AddBatchItem(Queue<T> batch, T item)
 	{
 		Debug.Assert(batch is not null);
-		batch!.Enqueue(item);
+		batch.Enqueue(item);
 	}
 
 	/// <inheritdoc />
@@ -266,15 +269,15 @@ public class QueueBatchingChannelReader<T>(ChannelReader<T> source, int batchSiz
 	protected override int GetBatchSize(Queue<T> batch)
 	{
 		Debug.Assert(batch is not null);
-		return batch!.Count;
+		return batch.Count;
 	}
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override void TrimBatch(Queue<T> batch)
+	protected override void TrimBatch(ref Queue<T> batch, bool isVerifiedFull)
 	{
 		Debug.Assert(batch is not null);
-		batch!.TrimExcess();
+		if(!isVerifiedFull) batch.TrimExcess();
 	}
 }
 
@@ -299,14 +302,66 @@ public class BatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bo
 	protected override int GetBatchSize(List<T> batch)
 	{
 		Debug.Assert(batch is not null);
-		return batch!.Count;
+		return batch.Count;
 	}
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override void TrimBatch(List<T> batch)
+	protected override void TrimBatch(ref List<T> batch, bool isVerifiedFull)
 	{
 		Debug.Assert(batch is not null);
-		batch!.TrimExcess();
+		if(!isVerifiedFull) batch!.TrimExcess();
+	}
+}
+
+/// <inheritdoc />
+public class MemoryPooledBatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
+	: BatchingChannelReader<T, IMemoryOwner<T>>(source, batchSize, singleReader, syncCont)
+{
+	private int _currentBatchLength;
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override void AddBatchItem(IMemoryOwner<T> batch, T item)
+	{
+		Debug.Assert(batch is not null);
+		Debug.Assert(batch.Memory.Length > _currentBatchLength);
+		batch.Memory.Span[_currentBatchLength++] = item;
+	}
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override IMemoryOwner<T> CreateBatch(int capacity)
+	{
+		_currentBatchLength = 0;
+		return MemoryPool<T>.Shared.Rent(capacity);
+	}
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override int GetBatchSize(IMemoryOwner<T> batch)
+	{
+		Debug.Assert(batch is not null);
+		// We can do this because the calling code is highly synchronized.
+		return _currentBatchLength;
+	}
+
+	/// <inheritdoc />
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected override void TrimBatch(ref IMemoryOwner<T> batch, bool isVerifiedFull)
+	{
+		Debug.Assert(batch is not null);
+		int len = batch.Memory.Length;
+		Debug.Assert(len >= _currentBatchLength);
+		//Debug.Assert(_currentBatchLength <= batchSize);
+		if (len == _currentBatchLength) return;
+		batch = new Batch(batch, batch.Memory.Slice(0, _currentBatchLength));
+	}
+
+	private readonly struct Batch(IMemoryOwner<T> owner, Memory<T> memory)
+		: IMemoryOwner<T>
+	{
+		public Memory<T> Memory { get; } = memory;
+		public void Dispose() => owner.Dispose();
 	}
 }
