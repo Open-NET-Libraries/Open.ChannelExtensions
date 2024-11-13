@@ -6,17 +6,24 @@ namespace Open.ChannelExtensions;
 /// A ChannelReader that batches results.
 /// Use the .Batch extension instead of constructing this directly.
 /// </summary>
-public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<T, TBatch>
+public abstract class BatchingChannelReader<T, TBatch>
+	: BufferingChannelReader<T, TBatch>
 	where TBatch : class
 {
 	private readonly int _batchSize;
 	private TBatch? _batch;
 
 	/// <summary>
+	/// The delegate used to create new batches.
+	/// </summary>
+	protected Func<int, TBatch> BatchFactory { get; }
+
+	/// <summary>
 	/// Constructs a BatchingChannelReader.
 	/// Use the .Batch extension instead of constructing this directly.
 	/// </summary>
 	protected BatchingChannelReader(
+		Func<int, TBatch> batchFactory,
 		ChannelReader<T> source,
 		int batchSize,
 		bool singleReader,
@@ -24,6 +31,7 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 		: base(source, singleReader, syncCont)
 	{
 		if (batchSize < 1) throw new ArgumentOutOfRangeException(nameof(batchSize), batchSize, "Must be at least 1.");
+		BatchFactory = batchFactory ?? throw new ArgumentNullException(nameof(batchFactory));
 		Contract.EndContractBlock();
 
 		_batchSize = batchSize;
@@ -111,7 +119,9 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 	/// <summary>
 	/// Creates a batch for consumption.
 	/// </summary>
-	protected abstract TBatch CreateBatch(int capacity);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	protected virtual TBatch CreateBatch(int capacity)
+		=> BatchFactory(capacity);
 
 	/// <summary>
 	/// Trims the excess capacity of a batch before releasing.
@@ -249,8 +259,18 @@ public abstract class BatchingChannelReader<T, TBatch> : BufferingChannelReader<
 }
 
 /// <inheritdoc />
-public class QueueBatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
-	: BatchingChannelReader<T, Queue<T>>(source, batchSize, singleReader, syncCont)
+public class QueueBatchingChannelReader<T>(
+	ChannelReader<T> source,
+	int batchSize,
+	bool singleReader,
+	bool syncCont = false,
+	Func<int, Queue<T>>? batchFactory = null)
+	: BatchingChannelReader<T, Queue<T>>(
+		batchFactory ?? (static capacity => new Queue<T>(capacity)),
+		source,
+		batchSize,
+		singleReader,
+		syncCont)
 {
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -259,10 +279,6 @@ public class QueueBatchingChannelReader<T>(ChannelReader<T> source, int batchSiz
 		Debug.Assert(batch is not null);
 		batch.Enqueue(item);
 	}
-
-	/// <inheritdoc />
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override Queue<T> CreateBatch(int capacity) => new(capacity);
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -282,8 +298,18 @@ public class QueueBatchingChannelReader<T>(ChannelReader<T> source, int batchSiz
 }
 
 /// <inheritdoc />
-public class BatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
-	: BatchingChannelReader<T, List<T>>(source, batchSize, singleReader, syncCont)
+public class BatchingChannelReader<T>(
+	ChannelReader<T> source,
+	int batchSize,
+	bool singleReader,
+	bool syncCont = false,
+	Func<int, List<T>>? batchFactory = null)
+	: BatchingChannelReader<T, List<T>>(
+		batchFactory ?? (static capacity => new List<T>(capacity)),
+		source,
+		batchSize,
+		singleReader,
+		syncCont)
 {
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -292,10 +318,6 @@ public class BatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bo
 		Debug.Assert(batch is not null);
 		batch!.Add(item);
 	}
-
-	/// <inheritdoc />
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	protected override List<T> CreateBatch(int capacity) => new(capacity);
 
 	/// <inheritdoc />
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -315,8 +337,17 @@ public class BatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bo
 }
 
 /// <inheritdoc />
-public class MemoryPooledBatchingChannelReader<T>(ChannelReader<T> source, int batchSize, bool singleReader, bool syncCont = false)
-	: BatchingChannelReader<T, IMemoryOwner<T>>(source, batchSize, singleReader, syncCont)
+public class MemoryPooledBatchingChannelReader<T>(
+	ChannelReader<T> source,
+	int batchSize,
+	bool singleReader,
+	bool syncCont = false)
+	: BatchingChannelReader<T, IMemoryOwner<T>>(
+		static _ => throw new InvalidOperationException("Should never occur. Method is overridden."),
+		source,
+		batchSize,
+		singleReader,
+		syncCont)
 {
 	private int _currentBatchLength;
 

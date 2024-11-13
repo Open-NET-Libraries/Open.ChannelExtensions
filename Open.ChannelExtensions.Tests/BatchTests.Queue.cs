@@ -181,7 +181,6 @@ public static class BatchTestsOfQueue
 		using var tokenSource = new CancellationTokenSource(6000);
 		Assert.Equal(2, await reader.ReadAllAsync(tokenSource.Token, async (batch, i) =>
 		{
-
 			switch (i)
 			{
 				case 0:
@@ -386,8 +385,6 @@ public static class BatchTestsOfQueue
 		var i = 0;
 		await foreach (var batch in c.Reader.ReadBatchQueueEnumerableAsyncBakedIn(2, TimeSpan.FromMilliseconds(500), CancellationToken.None))
 		{
-
-
 			switch (i)
 			{
 				case 0:
