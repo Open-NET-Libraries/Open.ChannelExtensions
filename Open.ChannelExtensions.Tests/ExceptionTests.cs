@@ -96,7 +96,9 @@ public static class ExceptionTests
 	}
 
 	[Fact]
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 	[SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Needs to happen synchronously")]
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 	public static void ChannelClosed()
 	{
 		var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(1000)
