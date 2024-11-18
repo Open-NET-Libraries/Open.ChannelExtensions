@@ -24,8 +24,8 @@ public static class BatchTestsOfQueue
 			.BatchToQueues(2)
 			.ReadAllAsync(async (batch, i) =>
 			{
-				var a = batch.Dequeue();
-				var b = batch.Dequeue();
+				int a = batch.Dequeue();
+				int b = batch.Dequeue();
 				switch (i)
 				{
 					case 0:
@@ -71,8 +71,8 @@ public static class BatchTestsOfQueue
 			.BatchToQueues(2)
 			.ReadAllAsync(async (batch, i) =>
 			{
-				var a = batch.Dequeue();
-				var b = batch.Dequeue();
+				int a = batch.Dequeue();
+				int b = batch.Dequeue();
 
 				switch (i)
 				{
@@ -117,7 +117,7 @@ public static class BatchTestsOfQueue
 		});
 
 		using var tokenSource = new CancellationTokenSource(10000);
-		var reader = c.Reader.BatchToQueues(3);
+		BatchingChannelReader<int, Queue<int>> reader = c.Reader.BatchToQueues(3);
 		Assert.Equal(2, await reader.ReadAllAsync(tokenSource.Token, async (batch, i) =>
 		{
 			switch (i)
@@ -126,9 +126,9 @@ public static class BatchTestsOfQueue
 				{
 					Assert.Equal(3, batch.Count);
 
-					var e1 = batch.Dequeue();
-					var e2 = batch.Dequeue();
-					var e3 = batch.Dequeue();
+					int e1 = batch.Dequeue();
+					int e2 = batch.Dequeue();
+					int e3 = batch.Dequeue();
 
 					Assert.Equal(1, e1);
 					Assert.Equal(2, e2);
@@ -142,8 +142,8 @@ public static class BatchTestsOfQueue
 				{
 					Assert.Equal(2, batch.Count);
 
-					var e1 = batch.Dequeue();
-					var e2 = batch.Dequeue();
+					int e1 = batch.Dequeue();
+					int e2 = batch.Dequeue();
 
 					Assert.Equal(4, e1);
 					Assert.Equal(5, e2);
@@ -162,7 +162,7 @@ public static class BatchTestsOfQueue
 	public static async Task ForceBatchTest2()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.BatchToQueues(3);
+		BatchingChannelReader<int, Queue<int>> reader = c.Reader.BatchToQueues(3);
 		_ = Task.Run(async () =>
 		{
 			await Task.Delay(1000);
@@ -186,9 +186,9 @@ public static class BatchTestsOfQueue
 				case 0:
 				{
 					Assert.Equal(3, batch.Count);
-					var e1 = batch.Dequeue();
-					var e2 = batch.Dequeue();
-					var e3 = batch.Dequeue();
+					int e1 = batch.Dequeue();
+					int e2 = batch.Dequeue();
+					int e3 = batch.Dequeue();
 					Assert.Equal(1, e1);
 					Assert.Equal(2, e2);
 					Assert.Equal(3, e3);
@@ -199,8 +199,8 @@ public static class BatchTestsOfQueue
 				case 1:
 				{
 					Assert.Equal(2, batch.Count);
-					var e1 = batch.Dequeue();
-					var e2 = batch.Dequeue();
+					int e1 = batch.Dequeue();
+					int e2 = batch.Dequeue();
 					Assert.Equal(4, e1);
 					Assert.Equal(5, e2);
 					Debug.WriteLine("Second batch received.");
@@ -218,11 +218,11 @@ public static class BatchTestsOfQueue
 	public static async Task TimeoutTest0()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.BatchToQueues(10).WithTimeout(500);
-		var complete = false;
+		BatchingChannelReader<int, Queue<int>> reader = c.Reader.BatchToQueues(10).WithTimeout(500);
+		bool complete = false;
 		_ = Task.Run(async () =>
 		{
-			for (var i = 0; i < 5; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
@@ -253,17 +253,17 @@ public static class BatchTestsOfQueue
 	public static async Task TimeoutTest1()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.BatchToQueues(10).WithTimeout(500);
+		BatchingChannelReader<int, Queue<int>> reader = c.Reader.BatchToQueues(10).WithTimeout(500);
 		_ = Task.Run(async () =>
 		{
-			for (var i = 0; i < 15; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
 
 			await Task.Delay(1000);
 
-			for (var i = 0; i < 15; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
@@ -295,7 +295,7 @@ public static class BatchTestsOfQueue
 	public static async Task BatchReadBehavior()
 	{
 		var c = Channel.CreateBounded<int>(new BoundedChannelOptions(20) { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.BatchToQueues(10);
+		BatchingChannelReader<int, Queue<int>> reader = c.Reader.BatchToQueues(10);
 
 		var queue = new Queue<int>(Enumerable.Range(0, 100));
 		int e;
@@ -308,7 +308,7 @@ public static class BatchTestsOfQueue
 		await Dequeue();
 
 		Assert.True(59 <= queue.Count);
-		Assert.True(reader.TryRead(out var batch));
+		Assert.True(reader.TryRead(out Queue<int> batch));
 		Assert.Equal(10, batch.Count);
 		// At this point nothing is waiting so either a wait must occur or a read to trigger a new batch.
 
@@ -382,15 +382,15 @@ public static class BatchTestsOfQueue
 			Debug.WriteLine("Writing Complete.");
 			c.Writer.Complete();
 		});
-		var i = 0;
-		await foreach (var batch in c.Reader.ReadBatchQueueEnumerableAsyncBakedIn(2, TimeSpan.FromMilliseconds(500), CancellationToken.None))
+		int i = 0;
+		await foreach (Queue<int> batch in c.Reader.ReadBatchQueueEnumerableAsyncBakedIn(2, TimeSpan.FromMilliseconds(500), CancellationToken.None))
 		{
 			switch (i)
 			{
 				case 0:
 				{
-					var a = batch.Dequeue();
-					var b = batch.Dequeue();
+					int a = batch.Dequeue();
+					int b = batch.Dequeue();
 					Assert.Equal(1, a);
 					Assert.Equal(2, b);
 					Debug.WriteLine("First batch received: " + string.Join(',', batch.Select(item => item)));
@@ -424,7 +424,7 @@ public static class BatchTestsOfQueue
 		TimeSpan timeout,
 		[EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
-		var reader = channelReader.BatchToQueues(batchSize);
+		BatchingChannelReader<T, Queue<T>> reader = channelReader.BatchToQueues(batchSize);
 		reader = reader.WithTimeout(timeout); // stack overflow here
 		while (true)
 		{

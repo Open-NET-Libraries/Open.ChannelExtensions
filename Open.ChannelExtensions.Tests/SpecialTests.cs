@@ -11,10 +11,10 @@ public class SpecialTests
 		int count = 0;
 
 		var queue = new BlockingCollection<int>();
-		var processingTask = Task.Run(()=> StartProcessingTask2(queue.GetConsumingEnumerable()));
+		var processingTask = Task.Run(() => StartProcessingTask2(queue.GetConsumingEnumerable()));
 
 		Console.WriteLine("Starting to fill queue.");
-		for (var i = 0; i < expectedCount; i++)
+		for (int i = 0; i < expectedCount; i++)
 			queue.Add(i);
 
 		Console.WriteLine("Queue fill complete.");

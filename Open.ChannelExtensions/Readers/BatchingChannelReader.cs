@@ -43,10 +43,10 @@ public abstract class BatchingChannelReader<T, TBatch>
 	/// </summary>
 	public bool ForceBatch() => TryPipeItems(true);
 
-	void ForceBatch(object? obj) => ForceBatch();
+	private void ForceBatch(object? obj) => ForceBatch();
 
-	long _timeout = -1;
-	Timer? _timer;
+	private long _timeout = -1;
+	private Timer? _timer;
 
 	/// <summary>
 	/// Specifies a timeout by which a batch will be emitted there is at least one item but has been waiting
@@ -94,7 +94,7 @@ public abstract class BatchingChannelReader<T, TBatch>
 	{
 		try
 		{
-			var ok = _timer?.Change(timeout, 0);
+			bool? ok = _timer?.Change(timeout, 0);
 			Debug.Assert(ok ?? true);
 		}
 		catch (ObjectDisposedException)
@@ -148,8 +148,8 @@ public abstract class BatchingChannelReader<T, TBatch>
 		{
 			if (Buffer.Reader.Completion.IsCompleted) return false;
 
-			var batched = false;
-			var newBatch = false;
+			bool batched = false;
+			bool newBatch = false;
 			TBatch? c = _batch;
 			ChannelReader<T>? source = Source;
 			if (source?.Completion.IsCompleted != false)
@@ -173,7 +173,7 @@ public abstract class BatchingChannelReader<T, TBatch>
 				}
 
 				Debug.Assert(GetBatchSize(c) <= _batchSize);
-				var full = GetBatchSize(c) == _batchSize;
+				bool full = GetBatchSize(c) == _batchSize;
 				while (!full && source.TryRead(out item))
 				{
 					AddBatchItem(c, item);
@@ -226,7 +226,7 @@ public abstract class BatchingChannelReader<T, TBatch>
 		if (source is null || bufferWait.IsCompleted)
 			return await bufferWait.ConfigureAwait(false);
 
-		var b = bufferWait.AsTask();
+		Task<bool> b = bufferWait.AsTask();
 		using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 		CancellationToken token = tokenSource.Token;
 
@@ -293,7 +293,7 @@ public class QueueBatchingChannelReader<T>(
 	protected override void TrimBatch(ref Queue<T> batch, bool isVerifiedFull)
 	{
 		Debug.Assert(batch is not null);
-		if(!isVerifiedFull) batch.TrimExcess();
+		if (!isVerifiedFull) batch.TrimExcess();
 	}
 }
 
@@ -332,7 +332,7 @@ public class BatchingChannelReader<T>(
 	protected override void TrimBatch(ref List<T> batch, bool isVerifiedFull)
 	{
 		Debug.Assert(batch is not null);
-		if(!isVerifiedFull) batch!.TrimExcess();
+		if (!isVerifiedFull) batch!.TrimExcess();
 	}
 }
 

@@ -117,12 +117,12 @@ public static class ExceptionTests
 			SingleWriter = true,
 			SingleReader = true,
 		});
-		var reader = channel.Source(Enumerable.Range(0, 10_000));
+		ChannelReader<int> reader = channel.Source(Enumerable.Range(0, 10_000));
 		await reader.ReadAll(_ => { });
 
 		await Assert.ThrowsAsync<ChannelClosedException>(async () =>
 		{
-			channel.Source(Enumerable.Range(0, 10_000), out var completion);
+			channel.Source(Enumerable.Range(0, 10_000), out ValueTask<long> completion);
 			await completion;
 		});
 	}

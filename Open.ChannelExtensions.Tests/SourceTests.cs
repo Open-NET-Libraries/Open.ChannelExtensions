@@ -5,7 +5,7 @@ public static class SourceTests
 	public static async Task ToChannelCancelledAfterwriteStarts()
 	{
 		var cts = new CancellationTokenSource();
-		var reader = Enumerable.Range(0, 10_000).ToChannel(10, true, cts.Token);
+		ChannelReader<int> reader = Enumerable.Range(0, 10_000).ToChannel(10, true, cts.Token);
 		cts.Cancel();
 
 		try
@@ -24,7 +24,7 @@ public static class SourceTests
 	{
 		var cts = new CancellationTokenSource();
 		cts.Cancel();
-		var reader = Enumerable.Range(0, 10_000).ToChannel(10, true, cts.Token);
+		ChannelReader<int> reader = Enumerable.Range(0, 10_000).ToChannel(10, true, cts.Token);
 
 		await Assert.ThrowsAsync<TaskCanceledException>(() => reader.ReadAll(_ => { }).AsTask());
 		await Assert.ThrowsAsync<TaskCanceledException>(() => reader.Completion);

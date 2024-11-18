@@ -13,7 +13,7 @@ public class PipelineExceptionTests
 	public PipelineExceptionTests()
 	{
 		_channel = Channel.CreateBounded<int>(10000);
-		for (var i = 0; i < 100; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			if (!_channel.Writer.TryWrite(i))
 				throw new Exception($"Failed to write {i}");
@@ -29,8 +29,8 @@ public class PipelineExceptionTests
 		throw new Exception($"Thrown at {element}");
 	};
 
-	ChannelReader<int> PrepareStage1(int elementToThrow) =>
-		_channel.Reader
+	ChannelReader<int> PrepareStage1(int elementToThrow)
+		=> _channel.Reader
 			.Pipe(1, CreateThrowIfEqual(elementToThrow))
 			.Pipe(2, evt => evt * 2);
 
@@ -55,7 +55,7 @@ public class PipelineExceptionTests
 	[InlineData(Elements)]
 	public Task Regular(int elementToThrow)
 	{
-		var task = PrepareStage1(elementToThrow)
+		ValueTask<long> task = PrepareStage1(elementToThrow)
 			//.Batch(20)
 			.PipeAsync(1, evt => new ValueTask<int>(evt))
 			.ReadAll(_ => { });
@@ -73,7 +73,7 @@ public class PipelineExceptionTests
 	[InlineData(Elements)]
 	public Task Batched(int elementToThrow)
 	{
-		var task = PrepareStage1(elementToThrow)
+		ValueTask<long> task = PrepareStage1(elementToThrow)
 			.Batch(20)
 			.ReadAll(_ => { });
 
@@ -90,7 +90,7 @@ public class PipelineExceptionTests
 	[InlineData(Elements)]
 	public Task BatchPiped(int elementToThrow)
 	{
-		var task = PrepareStage1(elementToThrow)
+		ValueTask<long> task = PrepareStage1(elementToThrow)
 			.Batch(20)
 			.PipeAsync(1, evt => new ValueTask<List<int>>(evt))
 			.ReadAll(_ => { });

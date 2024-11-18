@@ -38,7 +38,7 @@ public static partial class Extensions
 		if (others is null || others.Length == 0)
 			return new MergingChannelReader<T>(ImmutableArray.Create(primary, secondary));
 
-		var builder = ImmutableArray.CreateBuilder<ChannelReader<T>>(2 + others.Length);
+		ImmutableArray<ChannelReader<T>>.Builder builder = ImmutableArray.CreateBuilder<ChannelReader<T>>(2 + others.Length);
 		builder.Add(primary);
 		builder.Add(secondary);
 		builder.AddRange(others);

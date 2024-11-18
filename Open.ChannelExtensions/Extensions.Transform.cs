@@ -2,7 +2,7 @@
 
 public static partial class Extensions
 {
-	sealed class TransformingChannelReader<T, TResult> : ChannelReader<TResult>
+	private sealed class TransformingChannelReader<T, TResult> : ChannelReader<TResult>
 	{
 		public TransformingChannelReader(ChannelReader<T> source, Func<T, TResult> transform)
 		{

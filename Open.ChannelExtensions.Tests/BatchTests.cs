@@ -112,7 +112,7 @@ public static class BatchTests
 		});
 
 		using var tokenSource = new CancellationTokenSource(10000);
-		var reader = c.Reader.Batch(3);
+		BatchingChannelReader<int, List<int>> reader = c.Reader.Batch(3);
 		Assert.Equal(2, await reader.ReadAllAsync(tokenSource.Token, async (batch, i) =>
 			{
 				switch (i)
@@ -141,7 +141,7 @@ public static class BatchTests
 	public static async Task ForceBatchTest2()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.Batch(3);
+		BatchingChannelReader<int, List<int>> reader = c.Reader.Batch(3);
 		_ = Task.Run(async () =>
 		{
 			await Task.Delay(1000);
@@ -186,11 +186,11 @@ public static class BatchTests
 	public static async Task TimeoutTest0()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.Batch(10).WithTimeout(500);
-		var complete = false;
+		BatchingChannelReader<int, List<int>> reader = c.Reader.Batch(10).WithTimeout(500);
+		bool complete = false;
 		_ = Task.Run(async () =>
 		{
-			for (var i = 0; i < 5; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
@@ -221,17 +221,17 @@ public static class BatchTests
 	public static async Task TimeoutTest1()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.Batch(10).WithTimeout(500);
+		BatchingChannelReader<int, List<int>> reader = c.Reader.Batch(10).WithTimeout(500);
 		_ = Task.Run(async () =>
 		{
-			for (var i = 0; i < 15; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
 
 			await Task.Delay(1000);
 
-			for (var i = 0; i < 15; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
@@ -263,7 +263,7 @@ public static class BatchTests
 	public static async Task BatchReadBehavior()
 	{
 		var c = Channel.CreateBounded<int>(new BoundedChannelOptions(20) { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.Batch(10);
+		BatchingChannelReader<int, List<int>> reader = c.Reader.Batch(10);
 
 		var queue = new Queue<int>(Enumerable.Range(0, 100));
 		int e;
@@ -276,7 +276,7 @@ public static class BatchTests
 		await Dequeue();
 
 		Assert.True(59 <= queue.Count);
-		Assert.True(reader.TryRead(out var batch));
+		Assert.True(reader.TryRead(out List<int> batch));
 		Assert.Equal(10, batch.Count);
 		// At this point nothing is waiting so either a wait must occur or a read to trigger a new batch.
 
@@ -350,8 +350,8 @@ public static class BatchTests
 			Debug.WriteLine("Writing Complete.");
 			c.Writer.Complete();
 		});
-		var i = 0;
-		await foreach (var batch in c.Reader.ReadBatchEnumerableAsyncBakedIn(2, TimeSpan.FromMilliseconds(500), CancellationToken.None))
+		int i = 0;
+		await foreach (IList<int> batch in c.Reader.ReadBatchEnumerableAsyncBakedIn(2, TimeSpan.FromMilliseconds(500), CancellationToken.None))
 		{
 			switch (i)
 			{
@@ -385,7 +385,7 @@ public static class BatchTests
 		TimeSpan timeout,
 		[EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
-		var reader = channelReader.Batch(batchSize);
+		BatchingChannelReader<T, List<T>> reader = channelReader.Batch(batchSize);
 		reader = reader.WithTimeout(timeout); // stack overflow here
 		while (true)
 		{
@@ -417,7 +417,7 @@ public static class BatchTests
 		const int MAX_CACHE_WRITE_PARALLELISM = 8;
 
 		using var cts = new CancellationTokenSource(30_000);
-		var cancellationToken = cts.Token;
+		CancellationToken cancellationToken = cts.Token;
 		var channel = Channel.CreateBounded<int>(new BoundedChannelOptions(20) { SingleReader = false, SingleWriter = true });
 
 		int remaining = SIZE;
@@ -425,7 +425,7 @@ public static class BatchTests
 		{
 			int n = 50;
 
-			while(remaining > 0)
+			while (remaining > 0)
 			{
 				await Task.Delay(20);
 				for (int i = 0; remaining > 0 && i < n; i++)
@@ -442,7 +442,7 @@ public static class BatchTests
 		});
 
 		int count = 0;
-		var total = await channel.Reader
+		long total = await channel.Reader
 			.Batch(100)
 			.WithTimeout(HTTP_BATCH_TIMEOUT)
 			.PipeAsync(

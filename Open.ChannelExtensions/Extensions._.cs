@@ -50,7 +50,7 @@ public static partial class Extensions
 				AllowSynchronousContinuations = syncCont
 			});
 
-	static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write, string? message = null)
+	private static async ValueTask ThrowChannelClosedExceptionIfFalse(ValueTask<bool> write, string? message = null)
 	{
 		if (!await write.ConfigureAwait(false))
 		{
@@ -72,19 +72,19 @@ public static partial class Extensions
 	// Avoid potential lambda allocation.
 	internal static IEnumerable<ValueTask<T>> WrapValueTask<T>(this IEnumerable<T> source)
 	{
-		foreach (var e in source)
+		foreach (T? e in source)
 			yield return new ValueTask<T>(e);
 	}
 
 	internal static IEnumerable<ValueTask<T>> WrapValueTask<T>(this IEnumerable<Task<T>> source)
 	{
-		foreach (var e in source)
+		foreach (Task<T> e in source)
 			yield return new ValueTask<T>(e);
 	}
 
 	internal static IEnumerable<ValueTask<T>> WrapValueTask<T>(this IEnumerable<Func<T>> source)
 	{
-		foreach (var e in source)
+		foreach (Func<T> e in source)
 			yield return new ValueTask<T>(e());
 	}
 

@@ -25,8 +25,8 @@ public static class BatchTestsOfMemoryOwner
 			.BatchAsMemory(2)
 			.ReadAllAsync(async (owner, i) =>
 			{
-				using var _ = owner;
-				var batch = owner.Memory;
+				using IMemoryOwner<int> _ = owner;
+				Memory<int> batch = owner.Memory;
 				switch (i)
 				{
 					case 0:
@@ -72,8 +72,8 @@ public static class BatchTestsOfMemoryOwner
 			.BatchAsMemory(2)
 			.ReadAllAsync(async (owner, i) =>
 			{
-				using var __ = owner;
-				var batch = owner.Memory;
+				using IMemoryOwner<int> __ = owner;
+				Memory<int> batch = owner.Memory;
 
 				switch (i)
 				{
@@ -118,11 +118,11 @@ public static class BatchTestsOfMemoryOwner
 		});
 
 		using var tokenSource = new CancellationTokenSource(10000);
-		var reader = c.Reader.BatchAsMemory(3);
+		BatchingChannelReader<int, IMemoryOwner<int>> reader = c.Reader.BatchAsMemory(3);
 		Assert.Equal(2, await reader.ReadAllAsync(tokenSource.Token, async (owner, i) =>
 		{
-			using var _ = owner;
-			var batch = owner.Memory;
+			using IMemoryOwner<int> _ = owner;
+			Memory<int> batch = owner.Memory;
 
 			switch (i)
 			{
@@ -150,7 +150,7 @@ public static class BatchTestsOfMemoryOwner
 	public static async Task ForceBatchTest2()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.BatchAsMemory(3);
+		BatchingChannelReader<int, IMemoryOwner<int>> reader = c.Reader.BatchAsMemory(3);
 		_ = Task.Run(async () =>
 		{
 			await Task.Delay(1000);
@@ -169,8 +169,8 @@ public static class BatchTestsOfMemoryOwner
 		using var tokenSource = new CancellationTokenSource(6000);
 		Assert.Equal(2, await reader.ReadAllAsync(tokenSource.Token, async (owner, i) =>
 		{
-			using var _ = owner;
-			var batch = owner.Memory;
+			using IMemoryOwner<int> _ = owner;
+			Memory<int> batch = owner.Memory;
 
 			switch (i)
 			{
@@ -198,11 +198,11 @@ public static class BatchTestsOfMemoryOwner
 	public static async Task TimeoutTest0()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.BatchAsMemory(10).WithTimeout(500);
-		var complete = false;
+		BatchingChannelReader<int, IMemoryOwner<int>> reader = c.Reader.BatchAsMemory(10).WithTimeout(500);
+		bool complete = false;
 		_ = Task.Run(async () =>
 		{
-			for (var i = 0; i < 5; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
@@ -215,8 +215,8 @@ public static class BatchTestsOfMemoryOwner
 		using var tokenSource = new CancellationTokenSource(6000);
 		Assert.Equal(1, await reader.ReadAllAsync(tokenSource.Token, async (owner, i) =>
 		{
-			using var _ = owner;
-			var batch = owner.Memory;
+			using IMemoryOwner<int> _ = owner;
+			Memory<int> batch = owner.Memory;
 			switch (i)
 			{
 				case 0:
@@ -235,17 +235,17 @@ public static class BatchTestsOfMemoryOwner
 	public static async Task TimeoutTest1()
 	{
 		var c = Channel.CreateUnbounded<int>(new UnboundedChannelOptions { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.BatchAsMemory(10).WithTimeout(500);
+		BatchingChannelReader<int, IMemoryOwner<int>> reader = c.Reader.BatchAsMemory(10).WithTimeout(500);
 		_ = Task.Run(async () =>
 		{
-			for (var i = 0; i < 15; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
 
 			await Task.Delay(1000);
 
-			for (var i = 0; i < 15; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				c.Writer.TryWrite(i);
 			}
@@ -255,8 +255,8 @@ public static class BatchTestsOfMemoryOwner
 		using var tokenSource = new CancellationTokenSource(6000);
 		Assert.Equal(4, await reader.ReadAllAsync(tokenSource.Token, async (owner, i) =>
 		{
-			using var _ = owner;
-			var batch = owner.Memory;
+			using IMemoryOwner<int> _ = owner;
+			Memory<int> batch = owner.Memory;
 
 			switch (i)
 			{
@@ -280,7 +280,7 @@ public static class BatchTestsOfMemoryOwner
 	public static async Task BatchReadBehavior()
 	{
 		var c = Channel.CreateBounded<int>(new BoundedChannelOptions(20) { SingleReader = false, SingleWriter = false });
-		var reader = c.Reader.BatchAsMemory(10);
+		BatchingChannelReader<int, IMemoryOwner<int>> reader = c.Reader.BatchAsMemory(10);
 
 		var queue = new Queue<int>(Enumerable.Range(0, 100));
 		int e;
@@ -372,11 +372,11 @@ public static class BatchTestsOfMemoryOwner
 			Debug.WriteLine("Writing Complete.");
 			c.Writer.Complete();
 		});
-		var i = 0;
-		await foreach (var owner in c.Reader.ReadBatchMemoryEnumerableAsyncBakedIn(2, TimeSpan.FromMilliseconds(500), CancellationToken.None))
+		int i = 0;
+		await foreach (IMemoryOwner<int> owner in c.Reader.ReadBatchMemoryEnumerableAsyncBakedIn(2, TimeSpan.FromMilliseconds(500), CancellationToken.None))
 		{
-			using var _ = owner;
-			var batch = owner.Memory;
+			using IMemoryOwner<int> _ = owner;
+			Memory<int> batch = owner.Memory;
 
 			switch (i)
 			{
@@ -407,7 +407,7 @@ public static class BatchTestsOfMemoryOwner
 		TimeSpan timeout,
 		[EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
-		var reader = channelReader.BatchAsMemory(batchSize);
+		BatchingChannelReader<T, IMemoryOwner<T>> reader = channelReader.BatchAsMemory(batchSize);
 		reader = reader.WithTimeout(timeout); // stack overflow here
 		while (true)
 		{

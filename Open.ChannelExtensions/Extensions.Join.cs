@@ -4,7 +4,7 @@ namespace Open.ChannelExtensions;
 
 public static partial class Extensions
 {
-	sealed class JoiningChannelReader<TList, T>(
+	private sealed class JoiningChannelReader<TList, T>(
 		ChannelReader<TList> source,
 		bool singleReader,
 		Action<TList>? recycler = null)
@@ -36,7 +36,7 @@ public static partial class Extensions
 		}
 	}
 
-	sealed class QueueJoiningChannelReader<T>(
+	private sealed class QueueJoiningChannelReader<T>(
 		ChannelReader<Queue<T>> source,
 		bool singleReader, Action<Queue<T>>? recycler)
 		: BufferingChannelReader<Queue<T>, T>(source, singleReader)
@@ -66,7 +66,7 @@ public static partial class Extensions
 		}
 	}
 
-	sealed class MemoryJoiningChannelReader<T>(
+	private sealed class MemoryJoiningChannelReader<T>(
 		ChannelReader<IMemoryOwner<T>> source,
 		bool singleReader)
 		: BufferingChannelReader<IMemoryOwner<T>, T>(source, singleReader)
@@ -84,10 +84,10 @@ public static partial class Extensions
 				{
 					if (!source.TryRead(out batch))
 						return false;
-					var mem = batch.Memory;
+					Memory<T> mem = batch.Memory;
 					int len = mem.Length;
-					var span = mem.Span;
-					for (var i = 0; i < len; i++)
+					Span<T> span = mem.Span;
+					for (int i = 0; i < len; i++)
 					{
 						// Assume this will always be true for our internal unbound channel.
 						Buffer.Writer.TryWrite(span[i]);
@@ -203,7 +203,7 @@ public static partial class Extensions
 				await source
 					.ReadAllAsync(async (batch, _) =>
 					{
-						await foreach (T? e in batch)
+						await foreach (T? e in batch.ConfigureAwait(false))
 						{
 							await writer
 								.WriteAsync(e)

@@ -4,7 +4,7 @@ namespace Open.ChannelExtensions;
 
 public static partial class Extensions
 {
-	const string ChannelClosedMessage = "The target channel was closed before writing could begin.";
+	private const string ChannelClosedMessage = "The target channel was closed before writing could begin.";
 
 	/// <summary>
 	/// Asynchronously writes all entries from the source to the channel.
@@ -339,7 +339,7 @@ public static partial class Extensions
 
 			long count = 0;
 			ValueTask next = default;
-			await foreach (T? value in source)
+			await foreach (T? value in source.ConfigureAwait(false))
 			{
 				await next.ConfigureAwait(false);
 				count++;

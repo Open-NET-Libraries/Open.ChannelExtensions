@@ -37,7 +37,7 @@ public sealed class MergingChannelReader<T> : ChannelReader<T>
 			// Wait for any of the tasks to complete and let it throw if it faults.
 			while (completions.Count != 0)
 			{
-				var completed = await Task.WhenAny(completions).ConfigureAwait(false);
+				Task completed = await Task.WhenAny(completions).ConfigureAwait(false);
 				// Propagate the exception.
 				await completed.ConfigureAwait(false);
 				completions.Remove(completed);
@@ -68,21 +68,21 @@ public sealed class MergingChannelReader<T> : ChannelReader<T>
 	/// <inheritdoc />
 	public override Task Completion { get; }
 
-	readonly int _count;
-	int _next = -1;
+	private readonly int _count;
+	private int _next = -1;
 
 	/// <inheritdoc />
 	public override bool TryRead(out T item)
 	{
 		int previous = -1;
 		// Try as many times as there are sources before giving up.
-		for (var attempt = 0; attempt < _count; attempt++)
+		for (int attempt = 0; attempt < _count; attempt++)
 		{
 			// If the value overflows, it will be negative, which is fine, we'll adapt.
-			var i = Interlocked.Increment(ref _next) % _count;
+			int i = Interlocked.Increment(ref _next) % _count;
 			if (i < 0) i += _count;
 
-			var source = _sources[i];
+			ChannelReader<T> source = _sources[i];
 
 			if (source.TryRead(out T? s))
 			{
@@ -106,7 +106,7 @@ public sealed class MergingChannelReader<T> : ChannelReader<T>
 	/// <inheritdoc />
 	public override ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
 	{
-		var completion = Completion;
+		Task completion = Completion;
 		if (Completion.IsCompleted)
 		{
 			return completion.IsFaulted
@@ -125,13 +125,13 @@ public sealed class MergingChannelReader<T> : ChannelReader<T>
 	{
 	retry:
 		// We don't care about ones that have already completed.
-		var active = _sources.Where(s => s.Completion.Status != TaskStatus.RanToCompletion).ToArray();
+		ChannelReader<T>[] active = _sources.Where(s => s.Completion.Status != TaskStatus.RanToCompletion).ToArray();
 		if (active.Length == 0) return false;
 
-		var next = await Task.WhenAny(active.Select(s => s.WaitToReadAsync(cancellationToken).AsTask())).ConfigureAwait(false);
+		Task<bool> next = await Task.WhenAny(active.Select(s => s.WaitToReadAsync(cancellationToken).AsTask())).ConfigureAwait(false);
 
 		// Allow for possible exception to be thrown.
-		var result = await next.ConfigureAwait(false);
+		bool result = await next.ConfigureAwait(false);
 		if (result) return true;
 
 		// If result was false, then there's one less and we should try again.

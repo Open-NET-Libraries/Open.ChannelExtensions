@@ -2,7 +2,7 @@
 
 public static partial class Extensions
 {
-	sealed class FilteringChannelReader<T> : ChannelReader<T>
+	private sealed class FilteringChannelReader<T> : ChannelReader<T>
 	{
 		public FilteringChannelReader(ChannelReader<T> source, Func<T, bool> predicate)
 		{

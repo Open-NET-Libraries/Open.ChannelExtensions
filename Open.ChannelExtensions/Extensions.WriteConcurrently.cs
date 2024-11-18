@@ -91,6 +91,7 @@ public static partial class Extensions
 						? default
 						: target.WriteAsync(value, cancellationToken);
 				}
+
 				await next.ConfigureAwait(false);
 				if (potentiallyCancelled) cancellationToken.ThrowIfCancellationRequested();
 				return count;
@@ -107,7 +108,7 @@ public static partial class Extensions
 		}
 	}
 
-	static bool TryMoveNextSynchronized<T>(
+	private static bool TryMoveNextSynchronized<T>(
 		IEnumerator<T> source,
 		out T value)
 	{

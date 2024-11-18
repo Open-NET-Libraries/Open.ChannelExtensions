@@ -10,7 +10,7 @@ public static class AssumptionTests
 		{
 			CancellationToken token = tokenSource.Token;
 
-			var t = channel.Reader.WaitToReadAsync(token);
+			ValueTask<bool> t = channel.Reader.WaitToReadAsync(token);
 			tokenSource.Cancel();
 
 			// NOTE: a cancelled WaitToReadAsync will throw. 
@@ -21,8 +21,8 @@ public static class AssumptionTests
 		{
 			CancellationToken token = tokenSource.Token;
 
-			var t1 = channel.Reader.WaitToReadAsync(token);
-			var t2 = channel.Reader.WaitToReadAsync();
+			ValueTask<bool> t1 = channel.Reader.WaitToReadAsync(token);
+			ValueTask<bool> t2 = channel.Reader.WaitToReadAsync();
 			tokenSource.Cancel();
 
 			// NOTE: a cancelled WhenAny will not throw!

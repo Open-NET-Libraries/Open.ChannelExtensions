@@ -109,7 +109,7 @@ static class Program
 		{
 			Console.WriteLine("Async Enumerable test...");
 			var sw = Stopwatch.StartNew();
-			await foreach (var e in Enumerable
+			await foreach (int e in Enumerable
 				.Repeat(Delay, repeat)
 				.Select((t, i) => t(i))
 				.ToChannelAsync()

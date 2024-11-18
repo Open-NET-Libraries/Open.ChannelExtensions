@@ -58,14 +58,14 @@ public static class BasicTests
 	public static async Task ReadAllAsEnumerables1()
 	{
 		var channel = Channel.CreateUnbounded<int>();
-		var read = channel.Reader.ReadAllAsEnumerables(e =>
+		ValueTask read = channel.Reader.ReadAllAsEnumerables(e =>
 		{
 			Thread.Sleep(100);
 			Assert.Equal(1000, e.Count());
 		});
 
 		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
-		for (var i = 0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			await Task.Delay(1000);
 			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
@@ -79,14 +79,14 @@ public static class BasicTests
 	public static async Task ReadAllAsEnumerablesAsync1()
 	{
 		var channel = Channel.CreateUnbounded<int>();
-		var read = channel.Reader.ReadAllAsEnumerablesAsync(async e =>
+		ValueTask read = channel.Reader.ReadAllAsEnumerablesAsync(async e =>
 		{
 			await Task.Delay(100);
 			Assert.Equal(1000, e.Count());
 		});
 
 		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
-		for (var i = 0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			await Task.Delay(1000);
 			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
@@ -101,9 +101,9 @@ public static class BasicTests
 	{
 		var channel = Channel.CreateUnbounded<int>();
 		int total = 0;
-		var read = channel.Reader.ReadAllConcurrentlyAsEnumerablesAsync(3, async e =>
+		Task read = channel.Reader.ReadAllConcurrentlyAsEnumerablesAsync(3, async e =>
 		{
-			foreach (var i in e)
+			foreach (int i in e)
 			{
 				await Task.Delay(1);
 				Interlocked.Increment(ref total);
@@ -111,7 +111,7 @@ public static class BasicTests
 		});
 
 		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
-		for (var i = 0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			await Task.Delay(1000);
 			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
@@ -128,11 +128,11 @@ public static class BasicTests
 	{
 		var channel = Channel.CreateUnbounded<int>();
 		int total = 0;
-		var read = channel.Reader.ReadAllConcurrentlyAsEnumerables(3, e =>
+		Task read = channel.Reader.ReadAllConcurrentlyAsEnumerables(3, e =>
 		{
-			foreach (var i in e)
+			foreach (int i in e)
 			{
-				for (var n = 0; n < 2000000; n++)
+				for (int n = 0; n < 2000000; n++)
 				{
 					// loop delay
 				}
@@ -141,7 +141,7 @@ public static class BasicTests
 		});
 
 		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
-		for (var i = 0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			await Task.Delay(1000);
 			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
@@ -158,10 +158,10 @@ public static class BasicTests
 	{
 		var channel = Channel.CreateUnbounded<int>();
 		int total = 0;
-		var read = channel.Reader.ReadAllAsEnumerables(e => total += e.Count());
+		ValueTask read = channel.Reader.ReadAllAsEnumerables(e => total += e.Count());
 
 		await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
-		for (var i = 0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			await Task.Delay(1000);
 			await channel.Writer.WriteAll(Enumerable.Range(0, 1000));
@@ -468,18 +468,18 @@ public static class BasicTests
 		const int each = 5_000;
 		const int total = 2 * each;
 
-		var source = Enumerable.Range(0, total).ToChannel(300);
+		ChannelReader<int> source = Enumerable.Range(0, total).ToChannel(300);
 
-		var evenFilter = source
-			.PipeFilter(out var unmatched, 100, 10,
+		ValueTask<List<int>> evenFilter = source
+			.PipeFilter(out ChannelReader<int> unmatched, 100, 10,
 				static e => e % 2 == 0)
 			.ToListAsync(each);
 
-		var oddFilter = unmatched
+		ValueTask<List<int>> oddFilter = unmatched
 			.ToListAsync(each);
 
-		var even = await evenFilter;
-		var odd = await oddFilter;
+		List<int> even = await evenFilter;
+		List<int> odd = await oddFilter;
 
 		even.Count.Should().Be(each);
 		odd.Count.Should().Be(each);
@@ -493,21 +493,21 @@ public static class BasicTests
 		const int each = 5_000;
 		const int total = 2 * each;
 
-		var source = Enumerable.Range(0, total).ToChannel(300);
+		ChannelReader<int> source = Enumerable.Range(0, total).ToChannel(300);
 
-		var evenFilter = source
-			.PipeFilterAsync(out var unmatched, 10, 100, static async e =>
+		ValueTask<List<int>> evenFilter = source
+			.PipeFilterAsync(out ChannelReader<int> unmatched, 10, 100, static async e =>
 			{
 				await Task.Yield();
 				return e % 2 == 0;
 			})
 			.ToListAsync(each);
 
-		var oddFilter = unmatched
+		ValueTask<List<int>> oddFilter = unmatched
 			.ToListAsync(each);
 
-		var even = await evenFilter;
-		var odd = await oddFilter;
+		List<int> even = await evenFilter;
+		List<int> odd = await oddFilter;
 
 		even.Count.Should().Be(each);
 		odd.Count.Should().Be(each);
@@ -539,7 +539,7 @@ public static class BasicTests
 		await Assert.ThrowsAsync<OperationCanceledException>(
 			async () =>
 			{
-				var reader = Enumerable.Repeat(0, 10)
+				ChannelReader<int> reader = Enumerable.Repeat(0, 10)
 					.ToChannel()
 					.PipeAsync(1, async _ => await AsyncReceiver());
 

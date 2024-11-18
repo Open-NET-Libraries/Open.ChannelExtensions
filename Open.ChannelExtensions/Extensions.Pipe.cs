@@ -37,6 +37,7 @@ public static partial class Extensions
 				target.TryComplete(ex);
 				complete = false;
 			}
+
 			throw;
 		}
 		finally
@@ -369,18 +370,18 @@ public static partial class Extensions
 		Func<T, bool> predicate,
 		CancellationToken cancellationToken = default)
 	{
-		var singleWriter = maxConcurrency == 1;
+		bool singleWriter = maxConcurrency == 1;
 
-		var matchedChannel = CreateChannel<T>(options);
-		var matchedWriter = matchedChannel.Writer;
+		Channel<T> matchedChannel = CreateChannel<T>(options);
+		ChannelWriter<T> matchedWriter = matchedChannel.Writer;
 
-		var unmatchedChannel = CreateChannel<T>(options);
-		var unmatchedWriter = unmatchedChannel.Writer;
+		Channel<T> unmatchedChannel = CreateChannel<T>(options);
+		ChannelWriter<T> unmatchedWriter = unmatchedChannel.Writer;
 
 		source
 			.ReadAllConcurrentlyAsync(maxConcurrency, e =>
 			{
-				var writer = predicate(e) ? matchedWriter : unmatchedWriter;
+				ChannelWriter<T> writer = predicate(e) ? matchedWriter : unmatchedWriter;
 				return writer.WriteAsync(e, cancellationToken);
 			}, cancellationToken)
 			.ContinueWith(t =>
@@ -412,18 +413,18 @@ public static partial class Extensions
 		Func<T, ValueTask<bool>> predicate,
 		CancellationToken cancellationToken = default)
 	{
-		var singleWriter = maxConcurrency == 1;
+		bool singleWriter = maxConcurrency == 1;
 
-		var matchedChannel = CreateChannel<T>(options);
-		var matchedWriter = matchedChannel.Writer;
+		Channel<T> matchedChannel = CreateChannel<T>(options);
+		ChannelWriter<T> matchedWriter = matchedChannel.Writer;
 
-		var unmatchedChannel = CreateChannel<T>(options);
-		var unmatchedWriter = unmatchedChannel.Writer;
+		Channel<T> unmatchedChannel = CreateChannel<T>(options);
+		ChannelWriter<T> unmatchedWriter = unmatchedChannel.Writer;
 
 		source
 			.ReadAllConcurrentlyAsync(maxConcurrency, async e =>
 			{
-				var writer = await predicate(e).ConfigureAwait(false) ? matchedWriter : unmatchedWriter;
+				ChannelWriter<T> writer = await predicate(e).ConfigureAwait(false) ? matchedWriter : unmatchedWriter;
 				await writer.WriteAsync(e, cancellationToken).ConfigureAwait(false);
 			}, cancellationToken)
 			.ContinueWith(t =>
@@ -465,7 +466,7 @@ public static partial class Extensions
 		Func<T, bool> predicate,
 		CancellationToken cancellationToken = default)
 	{
-		var options = CreateOptions(capacity, false, false, maxConcurrency == 1);
+		ChannelOptions options = CreateOptions(capacity, false, false, maxConcurrency == 1);
 		return PipeFilter(source, out unmatched, options, maxConcurrency, predicate, cancellationToken);
 	}
 
@@ -485,7 +486,7 @@ public static partial class Extensions
 		Func<T, ValueTask<bool>> predicate,
 		CancellationToken cancellationToken = default)
 	{
-		var options = CreateOptions(capacity, false, false, maxConcurrency == 1);
+		ChannelOptions options = CreateOptions(capacity, false, false, maxConcurrency == 1);
 		return PipeFilterAsync(source, out unmatched, options, maxConcurrency, predicate, cancellationToken);
 	}
 
