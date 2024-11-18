@@ -76,9 +76,12 @@ public abstract class BatchingChannelReader<T, TBatch>
 		if (_batch is null) return this;
 
 		// Might be in the middle of a batch so we need to update the timeout.
-		lock (Buffer)
+		lock (SyncLock)
 		{
+			// Analyzer did not take into account thread safety.
+#pragma warning disable CA1508 // Avoid dead conditional code
 			if (_batch is not null) RefreshTimeout();
+#pragma warning restore CA1508 // Avoid dead conditional code
 		}
 
 		return this;
@@ -144,7 +147,7 @@ public abstract class BatchingChannelReader<T, TBatch>
 		if (Buffer?.Reader.Completion.IsCompleted != false)
 			return false;
 
-		lock (Buffer)
+		lock (SyncLock)
 		{
 			if (Buffer.Reader.Completion.IsCompleted) return false;
 

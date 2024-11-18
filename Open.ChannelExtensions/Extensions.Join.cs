@@ -18,7 +18,7 @@ public static partial class Extensions
 				return false;
 
 			TList? batch;
-			lock (Buffer)
+			lock (SyncLock)
 			{
 				if (!source.TryRead(out batch))
 					return false;
@@ -48,7 +48,7 @@ public static partial class Extensions
 				return false;
 
 			Queue<T>? batch;
-			lock (Buffer)
+			lock (SyncLock)
 			{
 				if (!source.TryRead(out batch))
 					return false;
@@ -80,7 +80,7 @@ public static partial class Extensions
 			IMemoryOwner<T>? batch = null;
 			try
 			{
-				lock (Buffer)
+				lock (SyncLock)
 				{
 					if (!source.TryRead(out batch))
 						return false;

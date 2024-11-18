@@ -18,6 +18,16 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	protected Channel<TOut>? Buffer { get; }
 
 	/// <summary>
+	/// The synchronization lock for the buffer.
+	/// </summary>
+	[SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>")]
+#if NET9_0_OR_GREATER
+	protected readonly System.Threading.Lock SyncLock = new();
+#else
+	protected readonly object SyncLock = new();
+#endif
+
+	/// <summary>
 	/// Base constructor for a BufferingChannelReader.
 	/// </summary>
 	protected BufferingChannelReader(ChannelReader<TIn> source, bool singleReader, bool syncCont = false)
@@ -39,7 +49,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 			{
 				OnBeforeFinalFlush();
 				// Need to be sure writing is done before we continue...
-				lock (Buffer)
+				lock (SyncLock)
 				{
 					/* When the source is complete,
 					 * we dump all remaining into the buffer 
