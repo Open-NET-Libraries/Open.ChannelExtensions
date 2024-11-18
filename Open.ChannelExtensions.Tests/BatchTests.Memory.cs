@@ -47,6 +47,7 @@ public static class BatchTestsOfMemoryOwner
 					default:
 						throw new Exception("Shouldn't arrive here.");
 				}
+
 				await Task.Delay(500);
 			});
 	}
@@ -99,6 +100,7 @@ public static class BatchTestsOfMemoryOwner
 					default:
 						throw new Exception("Shouldn't arrive here.");
 				}
+
 				await Task.Delay(500);
 			});
 	}
@@ -142,6 +144,7 @@ public static class BatchTestsOfMemoryOwner
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			await Task.Delay(500);
 		}));
 	}
@@ -190,6 +193,7 @@ public static class BatchTestsOfMemoryOwner
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			await Task.Delay(500);
 		}));
 	}
@@ -227,6 +231,7 @@ public static class BatchTestsOfMemoryOwner
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			await Task.Delay(100);
 		}));
 	}
@@ -249,6 +254,7 @@ public static class BatchTestsOfMemoryOwner
 			{
 				c.Writer.TryWrite(i);
 			}
+
 			c.Writer.Complete();
 		});
 
@@ -272,6 +278,7 @@ public static class BatchTestsOfMemoryOwner
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			await Task.Delay(100);
 		}));
 	}
@@ -395,8 +402,10 @@ public static class BatchTestsOfMemoryOwner
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			i++;
 		}
+
 		Assert.Equal(3, i);
 		await c.Reader.Completion; // Propagate possible failure
 	}

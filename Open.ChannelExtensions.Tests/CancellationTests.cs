@@ -20,6 +20,7 @@ public static class CancellationTests
 						Interlocked.Increment(ref count);
 						tokenSource.Cancel();
 					}
+
 					token.ThrowIfCancellationRequested();
 				});
 		}
@@ -52,6 +53,7 @@ public static class CancellationTests
 						Interlocked.Increment(ref count);
 						tokenSource.Cancel();
 					}
+
 					token.ThrowIfCancellationRequested();
 				});
 		}

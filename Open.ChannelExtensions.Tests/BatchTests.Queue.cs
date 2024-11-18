@@ -46,6 +46,7 @@ public static class BatchTestsOfQueue
 					default:
 						throw new Exception("Shouldn't arrive here.");
 				}
+
 				await Task.Delay(500);
 			});
 	}
@@ -98,6 +99,7 @@ public static class BatchTestsOfQueue
 					default:
 						throw new Exception("Shouldn't arrive here.");
 				}
+
 				await Task.Delay(500);
 			});
 	}
@@ -154,6 +156,7 @@ public static class BatchTestsOfQueue
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			await Task.Delay(500);
 		}));
 	}
@@ -210,6 +213,7 @@ public static class BatchTestsOfQueue
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			await Task.Delay(500);
 		}));
 	}
@@ -245,6 +249,7 @@ public static class BatchTestsOfQueue
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			await Task.Delay(100);
 		}));
 	}
@@ -267,6 +272,7 @@ public static class BatchTestsOfQueue
 			{
 				c.Writer.TryWrite(i);
 			}
+
 			c.Writer.Complete();
 		});
 
@@ -287,6 +293,7 @@ public static class BatchTestsOfQueue
 				default:
 					throw new Exception("Shouldn't arrive here.");
 			}
+
 			await Task.Delay(100);
 		}));
 	}
@@ -412,8 +419,10 @@ public static class BatchTestsOfQueue
 				default:
 					throw new Exception("Shouldn't arrive here. Got batch: " + string.Join(',', batch.Select(item => item)));
 			}
+
 			i++;
 		}
+
 		Assert.Equal(3, i);
 		await c.Reader.Completion; // Propagate possible failure
 	}

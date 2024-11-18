@@ -392,6 +392,7 @@ public static partial class Extensions
 			{
 				await receiver(reader.ReadAvailable(cancellationToken)).ConfigureAwait(false);
 			}
+
 			return;
 		}
 

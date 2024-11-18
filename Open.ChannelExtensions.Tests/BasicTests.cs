@@ -136,6 +136,7 @@ public static class BasicTests
 				{
 					// loop delay
 				}
+
 				Interlocked.Increment(ref total);
 			}
 		});

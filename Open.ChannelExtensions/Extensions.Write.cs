@@ -43,6 +43,7 @@ public static partial class Extensions
 				count++;
 				next = target.WriteAsync(value, cancellationToken);
 			}
+
 			await next.ConfigureAwait(false);
 			return count;
 		}
@@ -54,6 +55,7 @@ public static partial class Extensions
 				target.TryComplete(ex);
 				complete = false;
 			}
+
 			throw;
 		}
 		finally
@@ -272,6 +274,7 @@ public static partial class Extensions
 				count++;
 				next = target.WriteAsync(line, cancellationToken);
 			}
+
 			await next.ConfigureAwait(false);
 			if (more) cancellationToken.ThrowIfCancellationRequested();
 			return count;
@@ -284,6 +287,7 @@ public static partial class Extensions
 				target.TryComplete(ex);
 				complete = false;
 			}
+
 			throw;
 		}
 		finally
@@ -345,6 +349,7 @@ public static partial class Extensions
 				count++;
 				next = target.WriteAsync(value, cancellationToken);
 			}
+
 			await next.ConfigureAwait(false);
 			return count;
 		}
@@ -356,6 +361,7 @@ public static partial class Extensions
 				target.TryComplete(ex);
 				complete = false;
 			}
+
 			throw;
 		}
 		finally
