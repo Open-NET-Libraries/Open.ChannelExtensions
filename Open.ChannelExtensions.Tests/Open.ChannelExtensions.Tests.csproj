@@ -5,7 +5,6 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<IsPackable>false</IsPackable>
-		<RunSettingsFilePath>D:\Users\essence\Development\- GitHub\- Open-NET-Libraries\Open.ChannelExtensions\Open.ChannelExtensions.Tests\bin\Debug\net9.0\fine-code-coverage\coverage-tool-output\Open.ChannelExtensions.Tests-fcc-mscodecoverage-generated.runsettings</RunSettingsFilePath>
 	</PropertyGroup>
 
 	<ItemGroup>

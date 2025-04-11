@@ -23,7 +23,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Version>9.1.0</Version>
-		<PackageReleaseNotes>Added .Merge, .PipeAsync, and .PropagateCompletion extensions.</PackageReleaseNotes>
+		<PackageReleaseNotes>Ensure the current task scheduler is used and that it can be configured.</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
