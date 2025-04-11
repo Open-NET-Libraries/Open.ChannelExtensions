@@ -8,9 +8,34 @@ public static partial class Extensions
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="reader">The channel reader to read from.</param>
 	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
+	/// <param name="taskCreationOptions">The task creation options to use.</param>
+	/// <param name="scheduler">The task scheduler to use.</param>
 	/// <param name="receiver">The async receiver function.</param>
-	/// <param name="cancellationToken">An optional cancellation token.</param>
+	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task that completes when no more reading is to be done.</returns>
+	public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
+		int maxConcurrency,
+		TaskScheduler scheduler,
+		TaskCreationOptions taskCreationOptions,
+		Func<T, ValueTask> receiver,
+		CancellationToken cancellationToken = default)
+		=> Task.Factory
+			.StartNew(
+				() => ReadAllConcurrentlyAsync(reader, maxConcurrency, receiver, cancellationToken),
+				cancellationToken,
+				taskCreationOptions,
+				scheduler)
+			.Unwrap();
+
+	/// <inheritdoc cref="ReadAllConcurrentlyAsync{T}(ChannelReader{T}, int, TaskScheduler, TaskCreationOptions, Func{T, ValueTask}, CancellationToken)"/>
+	public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
+		int maxConcurrency,
+		TaskScheduler scheduler,
+		Func<T, ValueTask> receiver,
+		CancellationToken cancellationToken = default)
+		=> ReadAllConcurrentlyAsync(reader, maxConcurrency, scheduler, TaskCreationOptions.None, receiver, cancellationToken);
+
+	/// <inheritdoc cref="ReadAllConcurrentlyAsync{T}(ChannelReader{T}, int, TaskScheduler, TaskCreationOptions, Func{T, ValueTask}, CancellationToken)"/>
 	public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
 		int maxConcurrency,
 		Func<T, ValueTask> receiver,
@@ -37,7 +62,7 @@ public static partial class Extensions
 			var readers = new Task<long>[maxConcurrency];
 			var scheduler = TaskScheduler.Current;
 			for (int r = 0; r < maxConcurrency; ++r)
-				readers[r] = Read();
+				readers[r] = Task.Factory.StartNew(Read, cancellationToken, TaskCreationOptions.None, scheduler).Unwrap();
 
 			// This produces the most accurate/reliable exception and cancellation results.
 			return await Task
@@ -73,21 +98,32 @@ public static partial class Extensions
 		}
 	}
 
-	/// <summary>
-	/// Reads items from the channel and passes them to the receiver.
-	/// </summary>
-	/// <typeparam name="T">The item type.</typeparam>
-	/// <param name="reader">The channel reader to read from.</param>
-	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
-	/// <param name="cancellationToken">The cancellation token.</param>
-	/// <param name="receiver">The async receiver function.</param>
-	/// <returns>A task that completes when no more reading is to be done.</returns>
+	/// <inheritdoc cref="ReadAllConcurrentlyAsync{T}(ChannelReader{T}, int, TaskScheduler, TaskCreationOptions, Func{T, ValueTask}, CancellationToken)"/>
 	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
 	public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
 		int maxConcurrency,
 		CancellationToken cancellationToken,
 		Func<T, ValueTask> receiver)
 		=> ReadAllConcurrentlyAsync(reader, maxConcurrency, receiver, cancellationToken);
+
+	/// <inheritdoc cref="ReadAllConcurrentlyAsync{T}(ChannelReader{T}, int, TaskScheduler, TaskCreationOptions, Func{T, ValueTask}, CancellationToken)"/>
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
+	public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
+		int maxConcurrency,
+		TaskScheduler scheduler,
+		TaskCreationOptions taskCreationOptions,
+		CancellationToken cancellationToken,
+		Func<T, ValueTask> receiver)
+		=> ReadAllConcurrentlyAsync(reader, maxConcurrency, scheduler, taskCreationOptions, receiver, cancellationToken);
+
+	/// <inheritdoc cref="ReadAllConcurrentlyAsync{T}(ChannelReader{T}, int, TaskScheduler, TaskCreationOptions, Func{T, ValueTask}, CancellationToken)"/>
+	[SuppressMessage("Design", "CA1068:CancellationToken parameters must come last", Justification = "Provided for aesthetic convenience.")]
+	public static Task<long> ReadAllConcurrentlyAsync<T>(this ChannelReader<T> reader,
+		int maxConcurrency,
+		TaskScheduler scheduler,
+		CancellationToken cancellationToken,
+		Func<T, ValueTask> receiver)
+		=> ReadAllConcurrentlyAsync(reader, maxConcurrency, scheduler, TaskCreationOptions.None, receiver, cancellationToken);
 
 	/// <summary>
 	/// Reads items from the channel and passes them to the receiver.

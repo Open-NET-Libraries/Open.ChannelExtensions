@@ -54,20 +54,48 @@ public static partial class Extensions
 	/// <typeparam name="T">The type contained by the source channel and written to the target..</typeparam>
 	/// <param name="source">The source channel.</param>
 	/// <param name="target">The target channel.</param>
+	/// <param name="scheduler">The task scheduler to use for the operation.</param>
+	/// <param name="taskCreationOptions">The options to use for starting the task.</param>
 	/// <param name="cancellationToken">An optional cancellation token.</param>
 	/// <returns>The channel reader of the target.</returns>
 	public static ChannelReader<T> PipeTo<T>(this ChannelReader<T> source,
 		Channel<T> target,
+		TaskScheduler scheduler,
+		TaskCreationOptions taskCreationOptions = TaskCreationOptions.None,
 		CancellationToken cancellationToken = default)
 	{
 		if (source is null) throw new ArgumentNullException(nameof(source));
 		if (target is null) throw new ArgumentNullException(nameof(target));
 		Contract.EndContractBlock();
 
-		Task.Run(() => PipeTo(source, target.Writer, true, cancellationToken));
+		_ = Task.Factory.StartNew(
+			() => PipeTo(source, target.Writer, true, cancellationToken),
+			cancellationToken,
+			taskCreationOptions,
+			scheduler);
 
 		return target.Reader;
 	}
+
+	/// <inheritdoc cref="PipeTo{T}(ChannelReader{T}, Channel{T}, TaskScheduler, TaskCreationOptions, CancellationToken)"/>
+	public static ChannelReader<T> PipeTo<T>(this ChannelReader<T> source,
+		Channel<T> target,
+		TaskScheduler scheduler,
+		CancellationToken cancellationToken)
+		=> PipeTo<T>(source, target, scheduler, TaskCreationOptions.None, cancellationToken);
+
+	/// <inheritdoc cref="PipeTo{T}(ChannelReader{T}, Channel{T}, TaskScheduler, TaskCreationOptions, CancellationToken)"/>
+	public static ChannelReader<T> PipeTo<T>(this ChannelReader<T> source,
+		Channel<T> target,
+		CancellationToken cancellationToken)
+		=> PipeTo<T>(source, target, TaskScheduler.Current, TaskCreationOptions.None, cancellationToken);
+
+	/// <inheritdoc cref="PipeTo{T}(ChannelReader{T}, Channel{T}, TaskScheduler, TaskCreationOptions, CancellationToken)"/>
+	public static ChannelReader<T> PipeTo<T>(this ChannelReader<T> source,
+		Channel<T> target,
+		TaskCreationOptions taskCreationOptions = TaskCreationOptions.None,
+		CancellationToken cancellationToken = default)
+		=> PipeTo<T>(source, target, TaskScheduler.Current, taskCreationOptions, cancellationToken);
 
 	/// <summary>
 	/// Reads all entries concurrently and applies the values to the provided transform function before buffering the results into another channel for consumption.
