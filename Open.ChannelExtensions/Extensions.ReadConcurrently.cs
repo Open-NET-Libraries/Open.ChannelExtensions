@@ -26,47 +26,50 @@ public static partial class Extensions
 		if (maxConcurrency == 1)
 			return reader.ReadAllAsync(receiver, cancellationToken, true).AsTask();
 
-#pragma warning disable IDE0079 // Remove unnecessary suppression
-#pragma warning disable CA2000 // Dispose objects before losing scope
-		var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-#pragma warning restore CA2000 // Dispose objects before losing scope
-#pragma warning restore IDE0079 // Remove unnecessary suppression
-		CancellationToken token = tokenSource.Token;
-		var readers = new Task<long>[maxConcurrency];
-		for (int r = 0; r < maxConcurrency; ++r)
-			readers[r] = Read();
+		// Leverage async to simplify this function and make it easy to dispose the token source.
+		return ReadAllConcurrentlyAsyncCore(reader, maxConcurrency, receiver, cancellationToken);
 
-		return Task
-			.WhenAll(readers)
-			.ContinueWith(t =>
-				{
-					tokenSource.Dispose();
-#pragma warning disable IDE0079 // Remove unnecessary suppression
-#pragma warning disable CA1849 // Call async methods when in an async method
-					return t.IsFaulted
+		static async Task<long> ReadAllConcurrentlyAsyncCore(
+			ChannelReader<T> reader, int maxConcurrency, Func<T, ValueTask> receiver, CancellationToken cancellationToken)
+		{
+			using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			CancellationToken token = tokenSource.Token;
+			var readers = new Task<long>[maxConcurrency];
+			var scheduler = TaskScheduler.Current;
+			for (int r = 0; r < maxConcurrency; ++r)
+				readers[r] = Read();
+
+			// This produces the most accurate/reliable exception and cancellation results.
+			return await Task
+				.WhenAll(readers)
+				.ContinueWith(
+					t => t.IsFaulted
 						? Task.FromException<long>(t.Exception!)
 						: t.IsCanceled
 						? Task.FromCanceled<long>(token)
-						: Task.FromResult(t.Result.Sum());
-#pragma warning restore CA1849 // Call async methods when in an async method
-#pragma warning restore IDE0079 // Remove unnecessary suppression
-				},
-				CancellationToken.None,
-				TaskContinuationOptions.ExecuteSynchronously,
-				TaskScheduler.Current)
-			.Unwrap();
+						: SumAsync(t),
+					CancellationToken.None,
+					TaskContinuationOptions.ExecuteSynchronously,
+					scheduler)
+				.Unwrap()
+				.ConfigureAwait(false);
 
-		async Task<long> Read()
-		{
-			try
+			async Task<long> Read()
 			{
-				return await reader.ReadUntilCancelledAsync(token, (T item, long _) => receiver(item), true).ConfigureAwait(false);
+				try
+				{
+					return await reader.ReadUntilCancelledAsync(token, (T item, long _) => receiver(item), true).ConfigureAwait(false);
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine(ex.ToString());
+					await tokenSource.CancelAsync().ConfigureAwait(false);
+					throw;
+				}
 			}
-			catch
-			{
-				await tokenSource.CancelAsync().ConfigureAwait(false);
-				throw;
-			}
+
+			static async Task<long> SumAsync(Task<long[]> counts)
+				=> (await counts.ConfigureAwait(false)).Sum();
 		}
 	}
 
