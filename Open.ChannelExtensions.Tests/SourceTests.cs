@@ -1,8 +1,9 @@
 ﻿namespace Open.ChannelExtensions.Tests;
+
 public static class SourceTests
 {
 	[Fact]
-	public static async Task ToChannelCancelledAfterwriteStarts()
+	public static async Task ToChannelCancelledAfterWriteStarts()
 	{
 		var cts = new CancellationTokenSource();
 		ChannelReader<int> reader = Enumerable.Range(0, 10_000).ToChannel(10, true, cts.Token);

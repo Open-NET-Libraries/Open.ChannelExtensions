@@ -1,8 +1,9 @@
 ﻿namespace Open.ChannelExtensions.Tests;
+
 public static class PropagationTests
 {
 	[Fact]
-	public static async Task PropagateCompleteionTest()
+	public static async Task PropagateCompletionTest()
 	{
 		var inputChannel = Channel.CreateBounded<int>(100);
 		var outputChannel = Channel.CreateBounded<int>(100);

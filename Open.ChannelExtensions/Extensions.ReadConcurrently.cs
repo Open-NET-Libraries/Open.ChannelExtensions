@@ -8,8 +8,8 @@ public static partial class Extensions
 	/// <typeparam name="T">The item type.</typeparam>
 	/// <param name="reader">The channel reader to read from.</param>
 	/// <param name="maxConcurrency">The maximum number of concurrent operations.  Greater than 1 may likely cause results to be out of order.</param>
-	/// <param name="taskCreationOptions">The task creation options to use.</param>
 	/// <param name="scheduler">The task scheduler to use.</param>
+	/// <param name="taskCreationOptions">The task creation options to use.</param>
 	/// <param name="receiver">The async receiver function.</param>
 	/// <param name="cancellationToken">The cancellation token.</param>
 	/// <returns>A task that completes when no more reading is to be done.</returns>
@@ -83,7 +83,7 @@ public static partial class Extensions
 			{
 				try
 				{
-					return await reader.ReadUntilCancelledAsync(token, (T item, long _) => receiver(item), true).ConfigureAwait(false);
+					return await reader.ReadUntilCancelledAsync(token, (item, _) => receiver(item), true).ConfigureAwait(false);
 				}
 				catch (Exception ex)
 				{
