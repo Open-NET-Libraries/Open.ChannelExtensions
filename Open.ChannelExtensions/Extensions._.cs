@@ -109,7 +109,7 @@ public static partial class Extensions
 				target.TryComplete(t.Exception);
 			else
 				target.TryComplete();
-		}, cancellationToken);
+		}, cancellationToken, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Current);
 
 		return source;
 	}

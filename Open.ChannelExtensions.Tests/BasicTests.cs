@@ -9,7 +9,7 @@ public static class BasicTests
 	[InlineData(testSize1)]
 	[InlineData(testSize2)]
 	[SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly", Justification = "Testing only.")]
-	[SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
+	[SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression")]
 	public static async Task DeferredWriteRead(int testSize)
 	{
 		IEnumerable<int> range = Enumerable.Range(0, testSize);

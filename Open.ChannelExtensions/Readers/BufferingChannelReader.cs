@@ -20,7 +20,7 @@ public abstract class BufferingChannelReader<TIn, TOut> : ChannelReader<TOut>
 	/// <summary>
 	/// The synchronization lock for the buffer.
 	/// </summary>
-	[SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "<Pending>")]
+	[SuppressMessage("Design", "CA1051:Do not declare visible instance fields")]
 #if NET9_0_OR_GREATER
 	protected readonly System.Threading.Lock SyncLock = new();
 #else
