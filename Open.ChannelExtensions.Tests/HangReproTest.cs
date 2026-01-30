@@ -1,4 +1,4 @@
-using System.Text.Json;
+using System.Runtime.CompilerServices;
 
 namespace Open.ChannelExtensions.Tests;
 
@@ -42,7 +42,7 @@ public static class HangReproTest
 		Assert.All(counts, count => Assert.True(count >= 40, $"Count was {count}, expected at least 40"));
 	}
 
-	private static async IAsyncEnumerable<int> GetSource([System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
+	private static async IAsyncEnumerable<int> GetSource([EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
 		foreach (var value in Enumerable.Range(0, Random.Shared.Next(80, 120)))
 		{

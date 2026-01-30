@@ -256,6 +256,8 @@ public abstract class BatchingChannelReader<T, TBatch>
 		// Await the source task to check if it completed and get its result
 		// This prevents a tight loop when the source is closed
 		await sTask.ConfigureAwait(false);
+		// Check if buffer completed while we were waiting (e.g., timeout forced a batch)
+		// If so, return immediately without trying to pipe more items
 		if (b.IsCompleted)
 			return await b.ConfigureAwait(false);
 
