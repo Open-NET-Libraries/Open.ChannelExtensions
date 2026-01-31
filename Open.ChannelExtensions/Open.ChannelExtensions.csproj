@@ -22,7 +22,7 @@
 		<RepositoryType>git</RepositoryType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>9.1.1</Version>
+		<Version>9.1.2</Version>
 		<PackageReleaseNotes>Ensure the current task scheduler is used and that it can be configured.</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
