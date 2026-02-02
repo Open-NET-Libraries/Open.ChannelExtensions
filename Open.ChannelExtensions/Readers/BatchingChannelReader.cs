@@ -245,21 +245,12 @@ public abstract class BatchingChannelReader<T, TBatch>
 		}
 
 		// WhenAny will not throw when a task is cancelled.
-		Task<bool> sTask = s.AsTask();
-		await Task.WhenAny(sTask, b).ConfigureAwait(false);
+		await Task.WhenAny(s.AsTask(), b).ConfigureAwait(false);
 		if (b.IsCompleted) // Assuming it was bufferWait that completed.
 		{
 			await tokenSource.CancelAsync().ConfigureAwait(false);
 			return await b.ConfigureAwait(false);
 		}
-
-		// Await the source task to check if it completed and get its result
-		// This prevents a tight loop when the source is closed
-		await sTask.ConfigureAwait(false);
-		// Check if buffer completed while we were waiting (e.g., timeout forced a batch)
-		// If so, return immediately without trying to pipe more items
-		if (b.IsCompleted)
-			return await b.ConfigureAwait(false);
 
 		TryPipeItems(false);
 
