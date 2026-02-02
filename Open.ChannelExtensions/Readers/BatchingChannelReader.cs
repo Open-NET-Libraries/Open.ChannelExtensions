@@ -95,10 +95,14 @@ public abstract class BatchingChannelReader<T, TBatch>
 
 	private void TryUpdateTimer(long timeout)
 	{
+		var t = _timer;;
+		if (t is null) return;
+
 		try
 		{
-			bool? ok = _timer?.Change(timeout, 0);
-			Debug.Assert(ok ?? true);
+			t.Change(timeout, 0);
+			// bool? ok = t.Change(timeout, 0);
+			// Debug.Assert(ok ?? true);
 		}
 		catch (ObjectDisposedException)
 		{

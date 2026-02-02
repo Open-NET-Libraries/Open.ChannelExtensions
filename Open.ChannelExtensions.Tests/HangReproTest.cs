@@ -26,10 +26,8 @@ public static class HangReproTest
 					await GetSource()
 						.ToChannel(singleReader: true, cancellationToken: token)
 						.Batch(Random.Shared.Next(15, 30), singleReader: true)
-						.ReadAllAsync(async batch =>
-						{
-							await Task.Delay(Random.Shared.Next(2, 15), token);
-						}, token);
+						.WithTimeout(TimeSpan.FromMilliseconds(100))
+						.ReadAllAsync(async batch => await Task.Delay(Random.Shared.Next(2, 15), token), token);
 
 					counts[x] += 1;
 				}
