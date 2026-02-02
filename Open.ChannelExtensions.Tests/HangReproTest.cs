@@ -66,7 +66,7 @@ public static class HangReproTest
 						await GetSource()
 							// Use bounded channel to avoid .NET runtime bug with unbounded channels.
 							// See: https://github.com/dotnet/runtime/issues/123544
-							.ToChannel(capacity: 10000, singleReader: true)
+							.ToChannel(capacity: 10_000_000, singleReader: true)
 							.Batch(Random.Shared.Next(25, 50))
 							// WithTimeout is required to flush partial batches when source completes.
 							.WithTimeout(TimeSpan.FromMilliseconds(100))
