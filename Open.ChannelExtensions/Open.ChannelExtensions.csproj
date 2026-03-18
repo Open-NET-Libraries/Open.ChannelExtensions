@@ -22,7 +22,7 @@
 		<RepositoryType>git</RepositoryType>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>9.2.0</Version>
+		<Version>9.3.0</Version>
 		<PackageReleaseNotes>Lowered .NET Standard 2.0/2.1 dependency versions to 6.0.0 to reduce minimum requirements for consumers.</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>

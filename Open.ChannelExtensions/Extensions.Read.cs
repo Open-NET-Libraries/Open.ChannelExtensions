@@ -1074,4 +1074,25 @@ public static partial class Extensions
 		await ReadAll(reader, list.Add).ConfigureAwait(false);
 		return list;
 	}
+
+#if NETSTANDARD2_0
+	/// <summary>
+	/// Creates an <see cref="IAsyncEnumerable{T}"/> that enables reading all of the data from the channel.
+	/// </summary>
+	/// <remarks>Polyfill for netstandard2.0 where the built-in instance method is not available.</remarks>
+	public static async IAsyncEnumerable<T> ReadAllAsync<T>(
+		this ChannelReader<T> reader,
+		[EnumeratorCancellation] CancellationToken cancellationToken = default)
+	{
+		if (reader is null) throw new ArgumentNullException(nameof(reader));
+
+		while (await reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
+		{
+			while (reader.TryRead(out T? item))
+			{
+				yield return item;
+			}
+		}
+	}
+#endif
 }
