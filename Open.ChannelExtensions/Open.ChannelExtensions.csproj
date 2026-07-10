@@ -49,6 +49,7 @@
 		</None>
 	</ItemGroup>
 
+	<!-- Minimum version only (not exact-pinned): keeps the floor low so netstandard consumers aren't forced to a newer minimum, while still allowing their own app's dependency graph to resolve a higher version if needed. -->
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'">
 		<PackageReference Include="System.Threading.Channels" Version="6.0.0" />
 		<PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
